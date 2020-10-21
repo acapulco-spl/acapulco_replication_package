@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_-_oasMdOEeqVG4qzJ9WxtQ" name="De_FeatureC">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_-_oascdOEeqVG4qzJ9WxtQ" name="De_FeatureC">
+    <annotations xmi:id="_-_oassdOEeqVG4qzJ9WxtQ" key="featureModel" value=""/>
+    <annotations xmi:id="_-_oas8dOEeqVG4qzJ9WxtQ" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_-_oatMdOEeqVG4qzJ9WxtQ" key="features" value=""/>
+    <lhs xmi:id="_-_oatcdOEeqVG4qzJ9WxtQ" name="Lhs">
+      <nodes xmi:id="_-_pBwMdOEeqVG4qzJ9WxtQ" name="" incoming="_-_pBx8dOEeqVG4qzJ9WxtQ">
+        <annotations xmi:id="_-_pBwcdOEeqVG4qzJ9WxtQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureC"/>
+        <attributes xmi:id="_-_pBwsdOEeqVG4qzJ9WxtQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureAAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_-_pBw8dOEeqVG4qzJ9WxtQ" name="" outgoing="_-_pBx8dOEeqVG4qzJ9WxtQ _-_pByMdOEeqVG4qzJ9WxtQ">
+        <annotations xmi:id="_-_pBxMdOEeqVG4qzJ9WxtQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureA"/>
+      </nodes>
+      <nodes xmi:id="_-_pBxcdOEeqVG4qzJ9WxtQ" name="" incoming="_-_pByMdOEeqVG4qzJ9WxtQ">
+        <annotations xmi:id="_-_pBxsdOEeqVG4qzJ9WxtQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureAAlternative"/>
+      </nodes>
+      <edges xmi:id="_-_pBx8dOEeqVG4qzJ9WxtQ" source="_-_pBw8dOEeqVG4qzJ9WxtQ" target="_-_pBwMdOEeqVG4qzJ9WxtQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureA/FeatureAAlternative"/>
+      </edges>
+      <edges xmi:id="_-_pByMdOEeqVG4qzJ9WxtQ" source="_-_pBw8dOEeqVG4qzJ9WxtQ" target="_-_pBxcdOEeqVG4qzJ9WxtQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureA/FeatureAAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_-_pBycdOEeqVG4qzJ9WxtQ" name="Rhs">
+      <nodes xmi:id="_-_pBysdOEeqVG4qzJ9WxtQ" name="" incoming="_-_pB0sdOEeqVG4qzJ9WxtQ">
+        <annotations xmi:id="_-_pBy8dOEeqVG4qzJ9WxtQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureC"/>
+        <attributes xmi:id="_-_pBzMdOEeqVG4qzJ9WxtQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureAAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_-_pBzcdOEeqVG4qzJ9WxtQ" name="" outgoing="_-_pB0sdOEeqVG4qzJ9WxtQ _-_pB08dOEeqVG4qzJ9WxtQ">
+        <annotations xmi:id="_-_pBzsdOEeqVG4qzJ9WxtQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureA"/>
+      </nodes>
+      <nodes xmi:id="_-_pBz8dOEeqVG4qzJ9WxtQ" name="" incoming="_-_pB08dOEeqVG4qzJ9WxtQ">
+        <annotations xmi:id="_-_pB0MdOEeqVG4qzJ9WxtQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureAAlternative"/>
+        <attributes xmi:id="_-_pB0cdOEeqVG4qzJ9WxtQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureAAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_-_pB0sdOEeqVG4qzJ9WxtQ" source="_-_pBzcdOEeqVG4qzJ9WxtQ" target="_-_pBysdOEeqVG4qzJ9WxtQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureA/FeatureAAlternative"/>
+      </edges>
+      <edges xmi:id="_-_pB08dOEeqVG4qzJ9WxtQ" source="_-_pBzcdOEeqVG4qzJ9WxtQ" target="_-_pBz8dOEeqVG4qzJ9WxtQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureA/FeatureAAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_-_pB1MdOEeqVG4qzJ9WxtQ" origin="_-_pBwMdOEeqVG4qzJ9WxtQ" image="_-_pBysdOEeqVG4qzJ9WxtQ"/>
+    <mappings xmi:id="_-_pB1cdOEeqVG4qzJ9WxtQ" origin="_-_pBw8dOEeqVG4qzJ9WxtQ" image="_-_pBzcdOEeqVG4qzJ9WxtQ"/>
+    <mappings xmi:id="_-_pB1sdOEeqVG4qzJ9WxtQ" origin="_-_pBxcdOEeqVG4qzJ9WxtQ" image="_-_pBz8dOEeqVG4qzJ9WxtQ"/>
+  </units>
+</henshin:Module>

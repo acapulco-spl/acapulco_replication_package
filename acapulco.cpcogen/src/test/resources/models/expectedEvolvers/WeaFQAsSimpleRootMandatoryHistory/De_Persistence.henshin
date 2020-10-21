@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_1lEisMqZEeq-ZIACRjr_1w" name="De_Persistence">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_1lEiscqZEeq-ZIACRjr_1w" name="De_Persistence">
+    <annotations xmi:id="_1lEissqZEeq-ZIACRjr_1w" key="featureModel" value="xor((Security &amp; Auth), (Usability &amp; Usability_ActAlternative), (Security &amp; Encr), (Usability &amp; Log &amp; Auth), (Usability &amp; Log &amp; Encr))"/>
+    <annotations xmi:id="_1lEis8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_1lEitMqZEeq-ZIACRjr_1w" key="features" value="Usability_ActAlternative, Log, Auth, Encr, Security, Usability"/>
+    <lhs xmi:id="_1lEitcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_1lEitsqZEeq-ZIACRjr_1w" name="" incoming="_1lEi08qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEit8qZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Usability_ActAlternative"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+      </nodes>
+      <nodes xmi:id="_1lEiuMqZEeq-ZIACRjr_1w" name="" incoming="_1lEi1MqZEeq-ZIACRjr_1w" outgoing="_1lEi3sqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEiucqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Encr | Usability &amp; Log &amp; Encr"/>
+        <type href="FeatureModelConfiguration.ecore#//Encr"/>
+      </nodes>
+      <nodes xmi:id="_1lEiusqZEeq-ZIACRjr_1w" name="" outgoing="_1lEi18qZEeq-ZIACRjr_1w _1lEi2sqZEeq-ZIACRjr_1w _1lEi28qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEiu8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple"/>
+      </nodes>
+      <nodes xmi:id="_1lEivMqZEeq-ZIACRjr_1w" name="" incoming="_1lEi1cqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEivcqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//Signin"/>
+      </nodes>
+      <nodes xmi:id="_1lEivsqZEeq-ZIACRjr_1w" name="" incoming="_1lEi1sqZEeq-ZIACRjr_1w" outgoing="_1lEi3cqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEiv8qZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+      </nodes>
+      <nodes xmi:id="_1lEiwMqZEeq-ZIACRjr_1w" name="" incoming="_1lEi18qZEeq-ZIACRjr_1w" outgoing="_1lEi1MqZEeq-ZIACRjr_1w _1lEi2MqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEiwcqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security | Usability &amp; Log"/>
+        <type href="FeatureModelConfiguration.ecore#//Security"/>
+      </nodes>
+      <nodes xmi:id="_1lEiwsqZEeq-ZIACRjr_1w" name="" incoming="_1lEi2MqZEeq-ZIACRjr_1w" outgoing="_1lEi1cqZEeq-ZIACRjr_1w _1lEi1sqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEiw8qZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//Auth"/>
+      </nodes>
+      <nodes xmi:id="_1lEixMqZEeq-ZIACRjr_1w" name="" incoming="_1lEi2cqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEixcqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Log"/>
+        <type href="FeatureModelConfiguration.ecore#//History"/>
+      </nodes>
+      <nodes xmi:id="_1lEixsqZEeq-ZIACRjr_1w" name="" incoming="_1lEi2sqZEeq-ZIACRjr_1w" outgoing="_1lEi08qZEeq-ZIACRjr_1w _1lEi3MqZEeq-ZIACRjr_1w _1lEi38qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEix8qZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <nodes xmi:id="_1lEiyMqZEeq-ZIACRjr_1w" name="" incoming="_1lEi28qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEiycqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Persistence"/>
+        <attributes xmi:id="_1lEiysqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEiy8qZEeq-ZIACRjr_1w" name="" incoming="_1lEi3MqZEeq-ZIACRjr_1w" outgoing="_1lEi2cqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEizMqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Log"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+      </nodes>
+      <nodes xmi:id="_1lEizcqZEeq-ZIACRjr_1w" name="" incoming="_1lEi3cqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEizsqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative"/>
+      </nodes>
+      <nodes xmi:id="_1lEiz8qZEeq-ZIACRjr_1w" name="" incoming="_1lEi3sqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi0MqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Encr | Usability &amp; Log &amp; Encr"/>
+        <type href="FeatureModelConfiguration.ecore#//EncrAlternative"/>
+      </nodes>
+      <nodes xmi:id="_1lEi0cqZEeq-ZIACRjr_1w" name="" incoming="_1lEi38qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi0sqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Usability_ActAlternative"/>
+        <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative"/>
+      </nodes>
+      <edges xmi:id="_1lEi08qZEeq-ZIACRjr_1w" source="_1lEixsqZEeq-ZIACRjr_1w" target="_1lEitsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi1MqZEeq-ZIACRjr_1w" source="_1lEiwMqZEeq-ZIACRjr_1w" target="_1lEiuMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Security/SecurityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi1cqZEeq-ZIACRjr_1w" source="_1lEiwsqZEeq-ZIACRjr_1w" target="_1lEivMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/signin"/>
+      </edges>
+      <edges xmi:id="_1lEi1sqZEeq-ZIACRjr_1w" source="_1lEiwsqZEeq-ZIACRjr_1w" target="_1lEivsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/authmethod"/>
+      </edges>
+      <edges xmi:id="_1lEi18qZEeq-ZIACRjr_1w" source="_1lEiusqZEeq-ZIACRjr_1w" target="_1lEiwMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple/WeaFQAsSimpleAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi2MqZEeq-ZIACRjr_1w" source="_1lEiwMqZEeq-ZIACRjr_1w" target="_1lEiwsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Security/SecurityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi2cqZEeq-ZIACRjr_1w" source="_1lEiy8qZEeq-ZIACRjr_1w" target="_1lEixMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Log/history"/>
+      </edges>
+      <edges xmi:id="_1lEi2sqZEeq-ZIACRjr_1w" source="_1lEiusqZEeq-ZIACRjr_1w" target="_1lEixsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple/WeaFQAsSimpleAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi28qZEeq-ZIACRjr_1w" source="_1lEiusqZEeq-ZIACRjr_1w" target="_1lEiyMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple/WeaFQAsSimpleAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi3MqZEeq-ZIACRjr_1w" source="_1lEixsqZEeq-ZIACRjr_1w" target="_1lEiy8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi3cqZEeq-ZIACRjr_1w" source="_1lEivsqZEeq-ZIACRjr_1w" target="_1lEizcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi3sqZEeq-ZIACRjr_1w" source="_1lEiuMqZEeq-ZIACRjr_1w" target="_1lEiz8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Encr/EncrAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEi38qZEeq-ZIACRjr_1w" source="_1lEixsqZEeq-ZIACRjr_1w" target="_1lEi0cqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_1lEi4MqZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_1lEi4cqZEeq-ZIACRjr_1w" name="" incoming="_1lEjCcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi4sqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Usability_ActAlternative"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+      </nodes>
+      <nodes xmi:id="_1lEi48qZEeq-ZIACRjr_1w" name="" incoming="_1lEjCsqZEeq-ZIACRjr_1w" outgoing="_1lEjFMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi5MqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Encr | Usability &amp; Log &amp; Encr"/>
+        <type href="FeatureModelConfiguration.ecore#//Encr"/>
+        <attributes xmi:id="_1lEi5cqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//SecurityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi5sqZEeq-ZIACRjr_1w" name="" outgoing="_1lEjDcqZEeq-ZIACRjr_1w _1lEjEMqZEeq-ZIACRjr_1w _1lEjEcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi58qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple"/>
+      </nodes>
+      <nodes xmi:id="_1lEi6MqZEeq-ZIACRjr_1w" name="" incoming="_1lEjC8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi6cqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//Signin"/>
+        <attributes xmi:id="_1lEi6sqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//Signin/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi68qZEeq-ZIACRjr_1w" name="" incoming="_1lEjDMqZEeq-ZIACRjr_1w" outgoing="_1lEjE8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi7MqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+        <attributes xmi:id="_1lEi7cqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethod/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi7sqZEeq-ZIACRjr_1w" name="" incoming="_1lEjDcqZEeq-ZIACRjr_1w" outgoing="_1lEjCsqZEeq-ZIACRjr_1w _1lEjDsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi78qZEeq-ZIACRjr_1w" key="presenceCondition" value="Security | Usability &amp; Log"/>
+        <type href="FeatureModelConfiguration.ecore#//Security"/>
+        <attributes xmi:id="_1lEi8MqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi8cqZEeq-ZIACRjr_1w" name="" incoming="_1lEjDsqZEeq-ZIACRjr_1w" outgoing="_1lEjC8qZEeq-ZIACRjr_1w _1lEjDMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi8sqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//Auth"/>
+        <attributes xmi:id="_1lEi88qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//SecurityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi9MqZEeq-ZIACRjr_1w" name="" incoming="_1lEjD8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi9cqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Log"/>
+        <type href="FeatureModelConfiguration.ecore#//History"/>
+        <attributes xmi:id="_1lEi9sqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//History/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi98qZEeq-ZIACRjr_1w" name="" incoming="_1lEjEMqZEeq-ZIACRjr_1w" outgoing="_1lEjCcqZEeq-ZIACRjr_1w _1lEjEsqZEeq-ZIACRjr_1w _1lEjFcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi-MqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+        <attributes xmi:id="_1lEi-cqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi-sqZEeq-ZIACRjr_1w" name="" incoming="_1lEjEcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi-8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Persistence"/>
+        <attributes xmi:id="_1lEi_MqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEi_cqZEeq-ZIACRjr_1w" name="" incoming="_1lEjEsqZEeq-ZIACRjr_1w" outgoing="_1lEjD8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEi_sqZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Log"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+        <attributes xmi:id="_1lEi_8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEjAMqZEeq-ZIACRjr_1w" name="" incoming="_1lEjE8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEjAcqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Auth | Usability &amp; Log &amp; Auth"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative"/>
+        <attributes xmi:id="_1lEjAsqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEjA8qZEeq-ZIACRjr_1w" name="" incoming="_1lEjFMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEjBMqZEeq-ZIACRjr_1w" key="presenceCondition" value="Security &amp; Encr | Usability &amp; Log &amp; Encr"/>
+        <type href="FeatureModelConfiguration.ecore#//EncrAlternative"/>
+        <attributes xmi:id="_1lEjBcqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//EncrAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lEjBsqZEeq-ZIACRjr_1w" name="" incoming="_1lEjFcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lEjB8qZEeq-ZIACRjr_1w" key="presenceCondition" value="Usability &amp; Usability_ActAlternative"/>
+        <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative"/>
+        <attributes xmi:id="_1lEjCMqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_1lEjCcqZEeq-ZIACRjr_1w" source="_1lEi98qZEeq-ZIACRjr_1w" target="_1lEi4cqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjCsqZEeq-ZIACRjr_1w" source="_1lEi7sqZEeq-ZIACRjr_1w" target="_1lEi48qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Security/SecurityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjC8qZEeq-ZIACRjr_1w" source="_1lEi8cqZEeq-ZIACRjr_1w" target="_1lEi6MqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/signin"/>
+      </edges>
+      <edges xmi:id="_1lEjDMqZEeq-ZIACRjr_1w" source="_1lEi8cqZEeq-ZIACRjr_1w" target="_1lEi68qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/authmethod"/>
+      </edges>
+      <edges xmi:id="_1lEjDcqZEeq-ZIACRjr_1w" source="_1lEi5sqZEeq-ZIACRjr_1w" target="_1lEi7sqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple/WeaFQAsSimpleAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjDsqZEeq-ZIACRjr_1w" source="_1lEi7sqZEeq-ZIACRjr_1w" target="_1lEi8cqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Security/SecurityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjD8qZEeq-ZIACRjr_1w" source="_1lEi_cqZEeq-ZIACRjr_1w" target="_1lEi9MqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Log/history"/>
+      </edges>
+      <edges xmi:id="_1lEjEMqZEeq-ZIACRjr_1w" source="_1lEi5sqZEeq-ZIACRjr_1w" target="_1lEi98qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple/WeaFQAsSimpleAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjEcqZEeq-ZIACRjr_1w" source="_1lEi5sqZEeq-ZIACRjr_1w" target="_1lEi-sqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimple/WeaFQAsSimpleAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjEsqZEeq-ZIACRjr_1w" source="_1lEi98qZEeq-ZIACRjr_1w" target="_1lEi_cqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjE8qZEeq-ZIACRjr_1w" source="_1lEi68qZEeq-ZIACRjr_1w" target="_1lEjAMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjFMqZEeq-ZIACRjr_1w" source="_1lEi48qZEeq-ZIACRjr_1w" target="_1lEjA8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Encr/EncrAlternative"/>
+      </edges>
+      <edges xmi:id="_1lEjFcqZEeq-ZIACRjr_1w" source="_1lEi98qZEeq-ZIACRjr_1w" target="_1lEjBsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_1lEjFsqZEeq-ZIACRjr_1w" origin="_1lEitsqZEeq-ZIACRjr_1w" image="_1lEi4cqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjF8qZEeq-ZIACRjr_1w" origin="_1lEiuMqZEeq-ZIACRjr_1w" image="_1lEi48qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjGMqZEeq-ZIACRjr_1w" origin="_1lEiusqZEeq-ZIACRjr_1w" image="_1lEi5sqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjGcqZEeq-ZIACRjr_1w" origin="_1lEivMqZEeq-ZIACRjr_1w" image="_1lEi6MqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjGsqZEeq-ZIACRjr_1w" origin="_1lEivsqZEeq-ZIACRjr_1w" image="_1lEi68qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjG8qZEeq-ZIACRjr_1w" origin="_1lEiwMqZEeq-ZIACRjr_1w" image="_1lEi7sqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjHMqZEeq-ZIACRjr_1w" origin="_1lEiwsqZEeq-ZIACRjr_1w" image="_1lEi8cqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjHcqZEeq-ZIACRjr_1w" origin="_1lEixMqZEeq-ZIACRjr_1w" image="_1lEi9MqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjHsqZEeq-ZIACRjr_1w" origin="_1lEixsqZEeq-ZIACRjr_1w" image="_1lEi98qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjH8qZEeq-ZIACRjr_1w" origin="_1lEiyMqZEeq-ZIACRjr_1w" image="_1lEi-sqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjIMqZEeq-ZIACRjr_1w" origin="_1lEiy8qZEeq-ZIACRjr_1w" image="_1lEi_cqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjIcqZEeq-ZIACRjr_1w" origin="_1lEizcqZEeq-ZIACRjr_1w" image="_1lEjAMqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjIsqZEeq-ZIACRjr_1w" origin="_1lEiz8qZEeq-ZIACRjr_1w" image="_1lEjA8qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lEjI8qZEeq-ZIACRjr_1w" origin="_1lEi0cqZEeq-ZIACRjr_1w" image="_1lEjBsqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

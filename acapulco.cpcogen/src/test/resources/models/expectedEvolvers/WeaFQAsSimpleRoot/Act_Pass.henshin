@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_2KMB8MqZEeq-ZIACRjr_1w" name="Act_Pass">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_2KMB8cqZEeq-ZIACRjr_1w" name="Act_Pass">
+    <annotations xmi:id="_2KMB8sqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_2KMB88qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_2KMB9MqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_2KMB9cqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_2KMB9sqZEeq-ZIACRjr_1w" name="" incoming="_2KMCAcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMB98qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Signin"/>
+      </nodes>
+      <nodes xmi:id="_2KMB-MqZEeq-ZIACRjr_1w" name="" incoming="_2KMCAsqZEeq-ZIACRjr_1w" outgoing="_2KMCAcqZEeq-ZIACRjr_1w _2KMCA8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMB-cqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Auth"/>
+      </nodes>
+      <nodes xmi:id="_2KMB-sqZEeq-ZIACRjr_1w" name="" incoming="_2KMCA8qZEeq-ZIACRjr_1w" outgoing="_2KMCBMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMB-8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+      </nodes>
+      <nodes xmi:id="_2KMB_MqZEeq-ZIACRjr_1w" name="" incoming="_2KMCBMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMB_cqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Pass"/>
+        <attributes xmi:id="_2KMB_sqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KMB_8qZEeq-ZIACRjr_1w" name="" outgoing="_2KMCAsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMCAMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Security"/>
+      </nodes>
+      <edges xmi:id="_2KMCAcqZEeq-ZIACRjr_1w" source="_2KMB-MqZEeq-ZIACRjr_1w" target="_2KMB9sqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/signin"/>
+      </edges>
+      <edges xmi:id="_2KMCAsqZEeq-ZIACRjr_1w" source="_2KMB_8qZEeq-ZIACRjr_1w" target="_2KMB-MqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Security/SecurityAlternative"/>
+      </edges>
+      <edges xmi:id="_2KMCA8qZEeq-ZIACRjr_1w" source="_2KMB-MqZEeq-ZIACRjr_1w" target="_2KMB-sqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/authmethod"/>
+      </edges>
+      <edges xmi:id="_2KMCBMqZEeq-ZIACRjr_1w" source="_2KMB-sqZEeq-ZIACRjr_1w" target="_2KMB_MqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_2KMCBcqZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_2KMCBsqZEeq-ZIACRjr_1w" name="" incoming="_2KMCFcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMCB8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Signin"/>
+        <attributes xmi:id="_2KMCCMqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//Signin/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KMCCcqZEeq-ZIACRjr_1w" name="" incoming="_2KMCFsqZEeq-ZIACRjr_1w" outgoing="_2KMCFcqZEeq-ZIACRjr_1w _2KMCF8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMCCsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Auth"/>
+        <attributes xmi:id="_2KMCC8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//SecurityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KMCDMqZEeq-ZIACRjr_1w" name="" incoming="_2KMCF8qZEeq-ZIACRjr_1w" outgoing="_2KMCGMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMCDcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+        <attributes xmi:id="_2KMCDsqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethod/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KMCD8qZEeq-ZIACRjr_1w" name="" incoming="_2KMCGMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMCEMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Pass"/>
+        <attributes xmi:id="_2KMCEcqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KMCEsqZEeq-ZIACRjr_1w" name="" outgoing="_2KMCFsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KMCE8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Security"/>
+        <attributes xmi:id="_2KMCFMqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_2KMCFcqZEeq-ZIACRjr_1w" source="_2KMCCcqZEeq-ZIACRjr_1w" target="_2KMCBsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/signin"/>
+      </edges>
+      <edges xmi:id="_2KMCFsqZEeq-ZIACRjr_1w" source="_2KMCEsqZEeq-ZIACRjr_1w" target="_2KMCCcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Security/SecurityAlternative"/>
+      </edges>
+      <edges xmi:id="_2KMCF8qZEeq-ZIACRjr_1w" source="_2KMCCcqZEeq-ZIACRjr_1w" target="_2KMCDMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Auth/authmethod"/>
+      </edges>
+      <edges xmi:id="_2KMCGMqZEeq-ZIACRjr_1w" source="_2KMCDMqZEeq-ZIACRjr_1w" target="_2KMCD8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_2KMCGcqZEeq-ZIACRjr_1w" origin="_2KMB9sqZEeq-ZIACRjr_1w" image="_2KMCBsqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2KMCGsqZEeq-ZIACRjr_1w" origin="_2KMB-MqZEeq-ZIACRjr_1w" image="_2KMCCcqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2KMCG8qZEeq-ZIACRjr_1w" origin="_2KMB-sqZEeq-ZIACRjr_1w" image="_2KMCDMqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2KMCHMqZEeq-ZIACRjr_1w" origin="_2KMB_MqZEeq-ZIACRjr_1w" image="_2KMCD8qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2KMCHcqZEeq-ZIACRjr_1w" origin="_2KMB_8qZEeq-ZIACRjr_1w" image="_2KMCEsqZEeq-ZIACRjr_1w"/>
+    <multiRules xmi:id="_2KMCHsqZEeq-ZIACRjr_1w">
+      <lhs xmi:id="_2KMCH8qZEeq-ZIACRjr_1w" name="Lhs">
+        <nodes xmi:id="_2KMCIMqZEeq-ZIACRjr_1w" name="" outgoing="_2KMCJMqZEeq-ZIACRjr_1w">
+          <annotations xmi:id="_2KMCIcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+        </nodes>
+        <nodes xmi:id="_2KMCIsqZEeq-ZIACRjr_1w" name="" incoming="_2KMCJMqZEeq-ZIACRjr_1w">
+          <annotations xmi:id="_2KMCI8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative"/>
+        </nodes>
+        <edges xmi:id="_2KMCJMqZEeq-ZIACRjr_1w" source="_2KMCIMqZEeq-ZIACRjr_1w" target="_2KMCIsqZEeq-ZIACRjr_1w">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+        </edges>
+      </lhs>
+      <rhs xmi:id="_2KMCJcqZEeq-ZIACRjr_1w" name="Rhs">
+        <nodes xmi:id="_2KMCJsqZEeq-ZIACRjr_1w" name="" outgoing="_2KMCK8qZEeq-ZIACRjr_1w">
+          <annotations xmi:id="_2KMCJ8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+        </nodes>
+        <nodes xmi:id="_2KMCKMqZEeq-ZIACRjr_1w" name="" incoming="_2KMCK8qZEeq-ZIACRjr_1w">
+          <annotations xmi:id="_2KMCKcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative"/>
+          <attributes xmi:id="_2KMCKsqZEeq-ZIACRjr_1w" value="false">
+            <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+          </attributes>
+        </nodes>
+        <edges xmi:id="_2KMCK8qZEeq-ZIACRjr_1w" source="_2KMCJsqZEeq-ZIACRjr_1w" target="_2KMCKMqZEeq-ZIACRjr_1w">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+        </edges>
+      </rhs>
+      <mappings xmi:id="_2KMCLMqZEeq-ZIACRjr_1w" origin="_2KMCIMqZEeq-ZIACRjr_1w" image="_2KMCJsqZEeq-ZIACRjr_1w"/>
+      <mappings xmi:id="_2KMCLcqZEeq-ZIACRjr_1w" origin="_2KMCIsqZEeq-ZIACRjr_1w" image="_2KMCKMqZEeq-ZIACRjr_1w"/>
+      <multiMappings xmi:id="_2KMCLsqZEeq-ZIACRjr_1w" origin="_2KMB-sqZEeq-ZIACRjr_1w" image="_2KMCIMqZEeq-ZIACRjr_1w"/>
+      <multiMappings xmi:id="_2KMCL8qZEeq-ZIACRjr_1w" origin="_2KMCDMqZEeq-ZIACRjr_1w" image="_2KMCJsqZEeq-ZIACRjr_1w"/>
+    </multiRules>
+  </units>
+</henshin:Module>

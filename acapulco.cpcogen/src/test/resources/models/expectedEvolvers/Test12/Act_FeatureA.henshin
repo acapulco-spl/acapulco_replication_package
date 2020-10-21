@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_w1wGYMeEEeqB_6LdE68kZg" name="Act_FeatureA">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_w1wGYceEEeqB_6LdE68kZg" name="Act_FeatureA">
+    <annotations xmi:id="_w1wGYseEEeqB_6LdE68kZg" key="featureModel" value=""/>
+    <annotations xmi:id="_w1wGY8eEEeqB_6LdE68kZg" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_w1wGZMeEEeqB_6LdE68kZg" key="features" value=""/>
+    <lhs xmi:id="_w1wGZceEEeqB_6LdE68kZg" name="Lhs">
+      <nodes xmi:id="_w1wGZseEEeqB_6LdE68kZg" name="">
+        <annotations xmi:id="_w1wGZ8eEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureA"/>
+        <attributes xmi:id="_w1wGaMeEEeqB_6LdE68kZg" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureA/selected"/>
+        </attributes>
+      </nodes>
+    </lhs>
+    <rhs xmi:id="_w1wGaceEEeqB_6LdE68kZg" name="Rhs">
+      <nodes xmi:id="_w1wGaseEEeqB_6LdE68kZg" name="">
+        <annotations xmi:id="_w1wGa8eEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureA"/>
+        <attributes xmi:id="_w1wGbMeEEeqB_6LdE68kZg" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureA/selected"/>
+        </attributes>
+      </nodes>
+    </rhs>
+    <mappings xmi:id="_w1wGbceEEeqB_6LdE68kZg" origin="_w1wGZseEEeqB_6LdE68kZg" image="_w1wGaseEEeqB_6LdE68kZg"/>
+  </units>
+</henshin:Module>

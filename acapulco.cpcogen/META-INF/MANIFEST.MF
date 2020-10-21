@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MDEOptimiser4ExtendedFM
+Bundle-SymbolicName: acapulco.cpcogen
+Bundle-Version: 1.0.0.qualifier
+Export-Package: emf.utils,
+ acapulco.activationdiagrams,
+ acapulco.featuremodel,
+ acapulco.featuremodel.configuration,
+ acapulco.featuremodel.extendedfm,
+ acapulco.fitnessfunction,
+ acapulco.fitnessfunction.qas,
+ acapulco.rulesgeneration,
+ acapulco.rulesgeneration.activationdiagrams,
+ acapulco.rulesgeneration.activationdiagrams.orimplications,
+ acapulco.rulesgeneration.activationdiagrams.presenceconditions,
+ acapulco.rulesgeneration.activationdiagrams.principles,
+ acapulco.rulesgeneration.activationdiagrams.vbrulefeatures
+Require-Bundle: org.eclipse.emf.common,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.henshin.model,
+ org.junit.jupiter.api,
+ acapulco.featureide,
+ acapulco.model
+Import-Package: org.sat4j.specs;version=2.3.1
+
+

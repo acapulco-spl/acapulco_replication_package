@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: aCaPulCO
+Bundle-SymbolicName: acapulco.engine
+Bundle-Version: 1.0.0.qualifier
+Export-Package: .,
+ acapulco,
+ acapulco.engine,
+ acapulco.engine.variability
+Require-Bundle: org.eclipse.emf.henshin.model,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ acapulco.metrics,
+ acapulco.thirdpartyplugins
+Import-Package: jmetal.core

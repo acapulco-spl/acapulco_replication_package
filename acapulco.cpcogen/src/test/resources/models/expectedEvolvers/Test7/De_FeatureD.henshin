@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_ZegesMd6EeqdyphsZCDGkQ" name="De_FeatureD">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_Zegescd6EeqdyphsZCDGkQ" name="De_FeatureD">
+    <annotations xmi:id="_Zegessd6EeqdyphsZCDGkQ" key="featureModel" value=""/>
+    <annotations xmi:id="_Zeges8d6EeqdyphsZCDGkQ" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_ZegetMd6EeqdyphsZCDGkQ" key="features" value=""/>
+    <lhs xmi:id="_Zegetcd6EeqdyphsZCDGkQ" name="Lhs">
+      <nodes xmi:id="_Zegetsd6EeqdyphsZCDGkQ" name="" incoming="_Zegev8d6EeqdyphsZCDGkQ">
+        <annotations xmi:id="_Zeget8d6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureD"/>
+        <attributes xmi:id="_ZegeuMd6EeqdyphsZCDGkQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureD/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_Zegeucd6EeqdyphsZCDGkQ" name="" outgoing="_ZegewMd6EeqdyphsZCDGkQ">
+        <annotations xmi:id="_Zegeusd6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureB"/>
+      </nodes>
+      <nodes xmi:id="_Zegeu8d6EeqdyphsZCDGkQ" name="" incoming="_ZegewMd6EeqdyphsZCDGkQ" outgoing="_Zegev8d6EeqdyphsZCDGkQ">
+        <annotations xmi:id="_ZegevMd6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureC"/>
+      </nodes>
+      <nodes xmi:id="_Zegevcd6EeqdyphsZCDGkQ" name="">
+        <annotations xmi:id="_Zegevsd6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+      </nodes>
+      <edges xmi:id="_Zegev8d6EeqdyphsZCDGkQ" source="_Zegeu8d6EeqdyphsZCDGkQ" target="_Zegetsd6EeqdyphsZCDGkQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureC/featured"/>
+      </edges>
+      <edges xmi:id="_ZegewMd6EeqdyphsZCDGkQ" source="_Zegeucd6EeqdyphsZCDGkQ" target="_Zegeu8d6EeqdyphsZCDGkQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureB/featurec"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_Zegewcd6EeqdyphsZCDGkQ" name="Rhs">
+      <nodes xmi:id="_Zegewsd6EeqdyphsZCDGkQ" name="" incoming="_Zegezsd6EeqdyphsZCDGkQ">
+        <annotations xmi:id="_Zegew8d6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureD"/>
+        <attributes xmi:id="_ZegexMd6EeqdyphsZCDGkQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureD/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_Zegexcd6EeqdyphsZCDGkQ" name="" outgoing="_Zegez8d6EeqdyphsZCDGkQ">
+        <annotations xmi:id="_Zegexsd6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureB"/>
+        <attributes xmi:id="_Zegex8d6EeqdyphsZCDGkQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureB/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_ZegeyMd6EeqdyphsZCDGkQ" name="" incoming="_Zegez8d6EeqdyphsZCDGkQ" outgoing="_Zegezsd6EeqdyphsZCDGkQ">
+        <annotations xmi:id="_Zegeycd6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureC"/>
+        <attributes xmi:id="_Zegeysd6EeqdyphsZCDGkQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureC/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_Zegey8d6EeqdyphsZCDGkQ" name="">
+        <annotations xmi:id="_ZegezMd6EeqdyphsZCDGkQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+        <attributes xmi:id="_Zegezcd6EeqdyphsZCDGkQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//ToSelect/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_Zegezsd6EeqdyphsZCDGkQ" source="_ZegeyMd6EeqdyphsZCDGkQ" target="_Zegewsd6EeqdyphsZCDGkQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureC/featured"/>
+      </edges>
+      <edges xmi:id="_Zegez8d6EeqdyphsZCDGkQ" source="_Zegexcd6EeqdyphsZCDGkQ" target="_ZegeyMd6EeqdyphsZCDGkQ">
+        <type href="FeatureModelConfiguration.ecore#//FeatureB/featurec"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_Zege0Md6EeqdyphsZCDGkQ" origin="_Zegetsd6EeqdyphsZCDGkQ" image="_Zegewsd6EeqdyphsZCDGkQ"/>
+    <mappings xmi:id="_Zege0cd6EeqdyphsZCDGkQ" origin="_Zegeucd6EeqdyphsZCDGkQ" image="_Zegexcd6EeqdyphsZCDGkQ"/>
+    <mappings xmi:id="_Zege0sd6EeqdyphsZCDGkQ" origin="_Zegeu8d6EeqdyphsZCDGkQ" image="_ZegeyMd6EeqdyphsZCDGkQ"/>
+    <mappings xmi:id="_Zege08d6EeqdyphsZCDGkQ" origin="_Zegevcd6EeqdyphsZCDGkQ" image="_Zegey8d6EeqdyphsZCDGkQ"/>
+  </units>
+</henshin:Module>

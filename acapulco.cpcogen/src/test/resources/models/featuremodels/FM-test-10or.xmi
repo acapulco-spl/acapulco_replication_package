@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ASCII"?>
+<mdeoptimiser4efm:FeatureModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mdeoptimiser4efm="http://www.example.org/mdeoptimiser4efm"
+    name="Test10or">
+  <ownedRoot
+      name="Test10"
+      optional="false">
+    <ownedFeatures
+        name="ToSelect"/>
+    <ownedFeatures
+        xsi:type="mdeoptimiser4efm:GroupFeature"
+        name="FeatureA"
+        childMinCardinality="1"
+        childMaxCardinality="4">
+      <ownedFeatures
+          name="FeatureB"/>
+      <ownedFeatures
+          name="FeatureC">
+        <ownedFeatures
+            name="FeatureE"
+            optional="false"/>
+      </ownedFeatures>
+      <ownedFeatures
+          xsi:type="mdeoptimiser4efm:GroupFeature"
+          name="FeatureD"
+          childMinCardinality="1"
+          childMaxCardinality="2">
+        <ownedFeatures
+            name="FeatureF"/>
+        <ownedFeatures
+            name="FeatureG"/>
+      </ownedFeatures>
+      <ownedFeatures
+          name="FeatureH"/>
+    </ownedFeatures>
+  </ownedRoot>
+  <crossTreeConstraints
+      leftFeature="ToSelect"
+      rightFeature="FeatureC"/>
+</mdeoptimiser4efm:FeatureModel>

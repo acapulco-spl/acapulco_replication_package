@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ASCII"?>
+<mdeoptimiser4efm:FeatureModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:mdeoptimiser4efm="http://www.example.org/mdeoptimiser4efm" name="Test1">
+  <ownedRoot name="Test1" optional="false">
+    <ownedFeatures name="ToSelect"/>
+    <ownedFeatures name="FeatureA"/>
+    <ownedFeatures name="FeatureB"/>
+  </ownedRoot>
+  <crossTreeConstraints leftFeature="ToSelect" rightFeature="FeatureA"/>
+  <crossTreeConstraints leftFeature="FeatureA" rightFeature="FeatureB"/>
+</mdeoptimiser4efm:FeatureModel>

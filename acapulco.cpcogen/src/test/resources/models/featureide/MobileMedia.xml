@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<struct>
+		<and abstract="true" mandatory="true" name="MobileMedia">
+			<or mandatory="true" name="MediaSelection">
+				<feature name="Photo"/>
+				<feature name="Music"/>
+				<feature name="Video"/>
+			</or>
+			<and mandatory="true" name="MediaManagement">
+				<and name="Favourites">
+					<feature mandatory="true" name="SetFavourites"/>
+					<feature mandatory="true" name="ViewFavourites"/>
+				</and>
+				<feature name="CopyMedia"/>
+				<and name="SMSTransfer">
+					<feature mandatory="true" name="ReceivePhoto"/>
+					<feature mandatory="true" name="SendPhoto"/>
+				</and>
+			</and>
+			<alt mandatory="true" name="ScreenSize">
+				<feature name="Screen1"/>
+				<feature name="Screen2"/>
+				<feature name="Screen3"/>
+			</alt>
+		</and>
+	</struct>
+	<constraints>
+		<rule>
+			<imp>
+				<var>SMSTransfer</var>
+				<var>CopyMedia</var>
+			</imp>
+		</rule>
+	</constraints>
+</featureModel>

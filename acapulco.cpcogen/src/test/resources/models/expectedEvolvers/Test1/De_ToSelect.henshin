@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_NwDCYMdMEeq0SLL6kfZWzA" name="De_ToSelect">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_NwDCYcdMEeq0SLL6kfZWzA" name="De_ToSelect">
+    <annotations xmi:id="_NwDCYsdMEeq0SLL6kfZWzA" key="featureModel" value=""/>
+    <annotations xmi:id="_NwDCY8dMEeq0SLL6kfZWzA" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_NwDCZMdMEeq0SLL6kfZWzA" key="features" value=""/>
+    <lhs xmi:id="_NwDCZcdMEeq0SLL6kfZWzA" name="Lhs">
+      <nodes xmi:id="_NwDCZsdMEeq0SLL6kfZWzA" name="">
+        <annotations xmi:id="_NwDCZ8dMEeq0SLL6kfZWzA" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+        <attributes xmi:id="_NwDCaMdMEeq0SLL6kfZWzA" value="true">
+          <type href="FeatureModelConfiguration.ecore#//ToSelect/selected"/>
+        </attributes>
+      </nodes>
+    </lhs>
+    <rhs xmi:id="_NwDCacdMEeq0SLL6kfZWzA" name="Rhs">
+      <nodes xmi:id="_NwDCasdMEeq0SLL6kfZWzA" name="">
+        <annotations xmi:id="_NwDCa8dMEeq0SLL6kfZWzA" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+        <attributes xmi:id="_NwDCbMdMEeq0SLL6kfZWzA" value="false">
+          <type href="FeatureModelConfiguration.ecore#//ToSelect/selected"/>
+        </attributes>
+      </nodes>
+    </rhs>
+    <mappings xmi:id="_NwDCbcdMEeq0SLL6kfZWzA" origin="_NwDCZsdMEeq0SLL6kfZWzA" image="_NwDCasdMEeq0SLL6kfZWzA"/>
+  </units>
+</henshin:Module>

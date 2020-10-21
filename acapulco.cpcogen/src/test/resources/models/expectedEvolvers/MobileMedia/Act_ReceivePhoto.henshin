@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_mV4M8MqfEeqQgK3p5oOUSQ" name="Act_ReceivePhoto">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_mV4M8cqfEeqQgK3p5oOUSQ" name="Act_ReceivePhoto">
+    <annotations xmi:id="_mV4M8sqfEeqQgK3p5oOUSQ" key="featureModel" value=""/>
+    <annotations xmi:id="_mV4M88qfEeqQgK3p5oOUSQ" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_mV4M9MqfEeqQgK3p5oOUSQ" key="features" value=""/>
+    <lhs xmi:id="_mV4M9cqfEeqQgK3p5oOUSQ" name="Lhs">
+      <nodes xmi:id="_mV4M9sqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NAcqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4M98qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//SendPhoto"/>
+      </nodes>
+      <nodes xmi:id="_mV4M-MqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NAsqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4M-cqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//CopyMedia"/>
+      </nodes>
+      <nodes xmi:id="_mV4M-sqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NA8qfEeqQgK3p5oOUSQ" outgoing="_mV4NAcqfEeqQgK3p5oOUSQ _mV4NBMqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4M-8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//SMSTransfer"/>
+      </nodes>
+      <nodes xmi:id="_mV4M_MqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NBMqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4M_cqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ReceivePhoto"/>
+        <attributes xmi:id="_mV4M_sqfEeqQgK3p5oOUSQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//ReceivePhoto/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mV4M_8qfEeqQgK3p5oOUSQ" name="" outgoing="_mV4NAsqfEeqQgK3p5oOUSQ _mV4NA8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4NAMqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement"/>
+      </nodes>
+      <edges xmi:id="_mV4NAcqfEeqQgK3p5oOUSQ" source="_mV4M-sqfEeqQgK3p5oOUSQ" target="_mV4M9sqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//SMSTransfer/sendphoto"/>
+      </edges>
+      <edges xmi:id="_mV4NAsqfEeqQgK3p5oOUSQ" source="_mV4M_8qfEeqQgK3p5oOUSQ" target="_mV4M-MqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement/copymedia"/>
+      </edges>
+      <edges xmi:id="_mV4NA8qfEeqQgK3p5oOUSQ" source="_mV4M_8qfEeqQgK3p5oOUSQ" target="_mV4M-sqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement/smstransfer"/>
+      </edges>
+      <edges xmi:id="_mV4NBMqfEeqQgK3p5oOUSQ" source="_mV4M-sqfEeqQgK3p5oOUSQ" target="_mV4M_MqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//SMSTransfer/receivephoto"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_mV4NBcqfEeqQgK3p5oOUSQ" name="Rhs">
+      <nodes xmi:id="_mV4NBsqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NFMqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4NB8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//SendPhoto"/>
+        <attributes xmi:id="_mV4NCMqfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//SendPhoto/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mV4NCcqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NFcqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4NCsqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//CopyMedia"/>
+        <attributes xmi:id="_mV4NC8qfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//CopyMedia/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mV4NDMqfEeqQgK3p5oOUSQ" name="" incoming="_mV4NFsqfEeqQgK3p5oOUSQ" outgoing="_mV4NFMqfEeqQgK3p5oOUSQ _mV4NF8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4NDcqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//SMSTransfer"/>
+        <attributes xmi:id="_mV4NDsqfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//SMSTransfer/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mV4ND8qfEeqQgK3p5oOUSQ" name="" incoming="_mV4NF8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4NEMqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ReceivePhoto"/>
+        <attributes xmi:id="_mV4NEcqfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//ReceivePhoto/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mV4NEsqfEeqQgK3p5oOUSQ" name="" outgoing="_mV4NFcqfEeqQgK3p5oOUSQ _mV4NFsqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mV4NE8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement"/>
+      </nodes>
+      <edges xmi:id="_mV4NFMqfEeqQgK3p5oOUSQ" source="_mV4NDMqfEeqQgK3p5oOUSQ" target="_mV4NBsqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//SMSTransfer/sendphoto"/>
+      </edges>
+      <edges xmi:id="_mV4NFcqfEeqQgK3p5oOUSQ" source="_mV4NEsqfEeqQgK3p5oOUSQ" target="_mV4NCcqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement/copymedia"/>
+      </edges>
+      <edges xmi:id="_mV4NFsqfEeqQgK3p5oOUSQ" source="_mV4NEsqfEeqQgK3p5oOUSQ" target="_mV4NDMqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement/smstransfer"/>
+      </edges>
+      <edges xmi:id="_mV4NF8qfEeqQgK3p5oOUSQ" source="_mV4NDMqfEeqQgK3p5oOUSQ" target="_mV4ND8qfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//SMSTransfer/receivephoto"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_mV4NGMqfEeqQgK3p5oOUSQ" origin="_mV4M9sqfEeqQgK3p5oOUSQ" image="_mV4NBsqfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mV4NGcqfEeqQgK3p5oOUSQ" origin="_mV4M-MqfEeqQgK3p5oOUSQ" image="_mV4NCcqfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mV4NGsqfEeqQgK3p5oOUSQ" origin="_mV4M-sqfEeqQgK3p5oOUSQ" image="_mV4NDMqfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mV4NG8qfEeqQgK3p5oOUSQ" origin="_mV4M_MqfEeqQgK3p5oOUSQ" image="_mV4ND8qfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mV4NHMqfEeqQgK3p5oOUSQ" origin="_mV4M_8qfEeqQgK3p5oOUSQ" image="_mV4NEsqfEeqQgK3p5oOUSQ"/>
+  </units>
+</henshin:Module>

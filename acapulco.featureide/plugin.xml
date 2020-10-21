@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="MDEOptimiser4EFM.featureide.objectContribution2"
+            nameFilter="model.xml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="mdeoptimiser4efm.featureide.actions.CreateFMAction"
+               enablesFor="1"
+               id="MDEOptimiser4EFM.featureide.action2"
+               label="Transform to MDEOptimiser4EFM"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>

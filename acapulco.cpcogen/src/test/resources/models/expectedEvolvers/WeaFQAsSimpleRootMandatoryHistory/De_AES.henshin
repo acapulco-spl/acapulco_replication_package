@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_1lrmsMqZEeq-ZIACRjr_1w" name="De_AES">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_1lrmscqZEeq-ZIACRjr_1w" name="De_AES">
+    <annotations xmi:id="_1lrmssqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_1lrms8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_1lrmtMqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_1lrmtcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_1lrmtsqZEeq-ZIACRjr_1w" name="" incoming="_1lrmvcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lrmt8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AES"/>
+        <attributes xmi:id="_1lrmuMqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//EncrAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lrmucqZEeq-ZIACRjr_1w" name="" outgoing="_1lrmvcqZEeq-ZIACRjr_1w _1lrmvsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lrmusqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Encr"/>
+      </nodes>
+      <nodes xmi:id="_1lrmu8qZEeq-ZIACRjr_1w" name="" incoming="_1lrmvsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lrmvMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//EncrAlternative"/>
+      </nodes>
+      <edges xmi:id="_1lrmvcqZEeq-ZIACRjr_1w" source="_1lrmucqZEeq-ZIACRjr_1w" target="_1lrmtsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Encr/EncrAlternative"/>
+      </edges>
+      <edges xmi:id="_1lrmvsqZEeq-ZIACRjr_1w" source="_1lrmucqZEeq-ZIACRjr_1w" target="_1lrmu8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Encr/EncrAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_1lrmv8qZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_1lrmwMqZEeq-ZIACRjr_1w" name="" incoming="_1lrmyMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lrmwcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AES"/>
+        <attributes xmi:id="_1lrmwsqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//EncrAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lrmw8qZEeq-ZIACRjr_1w" name="" outgoing="_1lrmyMqZEeq-ZIACRjr_1w _1lrmycqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lrmxMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Encr"/>
+      </nodes>
+      <nodes xmi:id="_1lrmxcqZEeq-ZIACRjr_1w" name="" incoming="_1lrmycqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lrmxsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//EncrAlternative"/>
+        <attributes xmi:id="_1lrmx8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//EncrAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_1lrmyMqZEeq-ZIACRjr_1w" source="_1lrmw8qZEeq-ZIACRjr_1w" target="_1lrmwMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Encr/EncrAlternative"/>
+      </edges>
+      <edges xmi:id="_1lrmycqZEeq-ZIACRjr_1w" source="_1lrmw8qZEeq-ZIACRjr_1w" target="_1lrmxcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Encr/EncrAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_1lrmysqZEeq-ZIACRjr_1w" origin="_1lrmtsqZEeq-ZIACRjr_1w" image="_1lrmwMqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lrmy8qZEeq-ZIACRjr_1w" origin="_1lrmucqZEeq-ZIACRjr_1w" image="_1lrmw8qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lrmzMqZEeq-ZIACRjr_1w" origin="_1lrmu8qZEeq-ZIACRjr_1w" image="_1lrmxcqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

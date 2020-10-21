@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="FeatureModelConfiguration" nsURI="http://www.kcl.ac.uk/inf/mdeoptimiser/featureModelConfiguration/1.0" nsPrefix="FeatureModelConfiguration">
+  <eClassifiers xsi:type="ecore:EClass" name="Test10Excludes">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="toselect" eType="//ToSelect" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="featurea" eType="//FeatureA" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ToSelect">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureA">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="FeatureAAlternative" upperBound="-1" eType="//FeatureAAlternative" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureB" eSuperTypes="//FeatureAAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureAAlternative" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureC" eSuperTypes="//FeatureAAlternative">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="featuree" lowerBound="1" eType="//FeatureE" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureE">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureD" eSuperTypes="//FeatureAAlternative">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="FeatureDAlternative" upperBound="-1" eType="//FeatureDAlternative" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureF" eSuperTypes="//FeatureDAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureDAlternative" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureG" eSuperTypes="//FeatureDAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureH" eSuperTypes="//FeatureAAlternative"/>
+</ecore:EPackage>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdeoptimiser4efm:FeatureModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdeoptimiser4efm="http://www.example.org/mdeoptimiser4efm" name="MobileMedia">
+  <ownedRoot name="MobileMedia" optional="false">
+    <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="MediaSelection" optional="false" childMinCardinality="1" childMaxCardinality="3">
+      <ownedFeatures name="Photo" optional="true"/>
+      <ownedFeatures name="Music" optional="true"/>
+      <ownedFeatures name="Video" optional="true"/>
+    </ownedFeatures>
+    <ownedFeatures name="MediaManagement" optional="false">
+      <ownedFeatures name="Favourites" optional="true">
+        <ownedFeatures name="SetFavourites" optional="false"/>
+        <ownedFeatures name="ViewFavourites" optional="false"/>
+      </ownedFeatures>
+      <ownedFeatures name="CopyMedia" optional="true"/>
+      <ownedFeatures name="SMSTransfer" optional="true">
+        <ownedFeatures name="ReceivePhoto" optional="false"/>
+        <ownedFeatures name="SendPhoto" optional="false"/>
+      </ownedFeatures>
+    </ownedFeatures>
+    <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="ScreenSize" optional="false" childMinCardinality="1" childMaxCardinality="1">
+      <ownedFeatures name="Screen1" optional="true"/>
+      <ownedFeatures name="Screen2" optional="true"/>
+      <ownedFeatures name="Screen3" optional="true"/>
+    </ownedFeatures>
+  </ownedRoot>
+  <crossTreeConstraints leftFeature="SMSTransfer" rightFeature="CopyMedia"/>
+</mdeoptimiser4efm:FeatureModel>

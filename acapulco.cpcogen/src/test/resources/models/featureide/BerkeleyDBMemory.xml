@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<struct>
+		<and mandatory="true" name="BerkeleyDB">
+			<feature name="HAVE_CRYPTO"/>
+			<feature name="HAVE_HASH"/>
+			<alt name="PAGESIZE">
+				<feature name="PS1K"/>
+				<feature name="PS4K"/>
+				<feature name="PS8K"/>
+				<feature name="PS16K"/>
+				<feature name="PS32K"/>
+			</alt>
+			<feature name="HAVE_REPLICATION"/>
+			<feature name="HAVE_VERIFY"/>
+			<feature name="HAVE_SEQUENCE"/>
+			<alt name="CACHESIZE">
+				<feature name="CS16MB"/>
+				<feature name="CS32MB"/>
+				<feature name="CS64MB"/>
+				<feature name="CS512MB"/>
+			</alt>
+			<feature name="DIAGNOSTIC"/>
+			<feature name="HAVE_STATISTICS"/>
+		</and>
+	</struct>
+</featureModel>

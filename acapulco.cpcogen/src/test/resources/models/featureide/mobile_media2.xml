@@ -1,0 +1,59 @@
+<feature_model name="Mobile Media 2">
+<feature_tree>
+:r MobileMedia2(MobileMedia2)
+	:m MediaSelection(MediaSelection)
+		:g (_r_2) [1,*] 
+			: Photo(Photo)
+			: Music(Music)
+				:m MusicPlayer(MusicPlayer)
+			: Video(Video)
+	:m MediaManagement(MediaManagement)
+		:o Favourites(Favourites)
+			:m SetFavourites(SetFavourites)
+			:m ViewFavourites(ViewFavourites)
+		:o CopyMedia(CopyMedia)
+		:o SMSTransfer(SMSTransfer)
+			:o ReceivePhoto(ReceivePhoto)
+			:o SendPhoto(SendPhoto)
+	:m ScreenSize(ScreenSize)
+		:g (_r_14_15) [1,1] 
+			: Screen1(Screen1)
+			: Screen2(Screen2)
+			: Screen3(Screen3)
+	:m Speakerphone(Speakerphone)
+	:m Calendar(Calendar)
+	:m Radio(Radio)
+	:m CallManager(CallManager)
+	:o TVDigital(TVDigital)
+	:m OS(OS)
+		:g (_r_24_25) [1,1] 
+			: Androide(Androide)
+			: WindowsMobile(WindowsMobile)
+			: Symbia(Symbia)
+			: iOS(iOS)
+	:o TouchScreen(TouchScreen)
+	:o Connectivity(Connectivity)
+		:g (_r_33_34) [1,*] 
+			: Bluetooth(Bluetooth)
+			: WiFi(WiFi)
+				:g (_r_33_34_36_54) [1,*] 
+					: Gmail(Gmail)
+					: GoogleMaps(GoogleMaps)
+					: Youtube(Youtube)
+	:o GPS(GPS)
+	:o ResolutionCamera(ResolutionCamera)
+		:g (_r_38_40) [1,1] 
+			: Resolution3MP(Resolution3MP)
+			: Resolution8MP(Resolution8MP)
+	:m Language(Language)
+		:g (_r_46_49) [1,*] 
+			: Portuguese(Portuguese)
+			: English(English)
+			: Spanish(Spanish)
+</feature_tree>
+<constraints>
+constraint_4:Video or ~ResolutionCamera
+constraint_5:Photo or ~ResolutionCamera
+constraint_3:~CopyMedia or SMSTransfer
+</constraints>
+</feature_model>

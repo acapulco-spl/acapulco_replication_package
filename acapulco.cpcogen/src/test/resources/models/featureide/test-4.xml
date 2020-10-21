@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+    <properties/>
+    <struct>
+        <and abstract="true" mandatory="true" name="Test3">
+            <feature name="ToSelect"/>
+            <alt name="FeatureA">
+                <feature name="FeatureB"/>
+                <feature name="FeatureC"/>
+                <feature name="FeatureD"/>
+            </alt>
+        </and>
+    </struct>
+    <constraints>
+        <rule>
+            <imp>
+                <var>ToSelect</var>
+                <not>
+                    <var>FeatureB</var>
+                </not>
+            </imp>
+        </rule>
+    </constraints>
+    <calculations Auto="true" Constraints="true" Features="true" Redundant="true" Tautology="true"/>
+    <comments/>
+    <featureOrder userDefined="false"/>
+</featureModel>

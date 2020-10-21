@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_mVJNIMqfEeqQgK3p5oOUSQ" name="Act_CopyMedia">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_mVJNIcqfEeqQgK3p5oOUSQ" name="Act_CopyMedia">
+    <annotations xmi:id="_mVJNIsqfEeqQgK3p5oOUSQ" key="featureModel" value=""/>
+    <annotations xmi:id="_mVJNI8qfEeqQgK3p5oOUSQ" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_mVJNJMqfEeqQgK3p5oOUSQ" key="features" value=""/>
+    <lhs xmi:id="_mVJNJcqfEeqQgK3p5oOUSQ" name="Lhs">
+      <nodes xmi:id="_mVJNJsqfEeqQgK3p5oOUSQ" name="" incoming="_mVJNK8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVJNJ8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//CopyMedia"/>
+        <attributes xmi:id="_mVJNKMqfEeqQgK3p5oOUSQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//CopyMedia/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mVJNKcqfEeqQgK3p5oOUSQ" name="" outgoing="_mVJNK8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVJNKsqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement"/>
+      </nodes>
+      <edges xmi:id="_mVJNK8qfEeqQgK3p5oOUSQ" source="_mVJNKcqfEeqQgK3p5oOUSQ" target="_mVJNJsqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement/copymedia"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_mVJNLMqfEeqQgK3p5oOUSQ" name="Rhs">
+      <nodes xmi:id="_mVJNLcqfEeqQgK3p5oOUSQ" name="" incoming="_mVJ0M8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVJNLsqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//CopyMedia"/>
+        <attributes xmi:id="_mVJ0MMqfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//CopyMedia/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mVJ0McqfEeqQgK3p5oOUSQ" name="" outgoing="_mVJ0M8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVJ0MsqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement"/>
+      </nodes>
+      <edges xmi:id="_mVJ0M8qfEeqQgK3p5oOUSQ" source="_mVJ0McqfEeqQgK3p5oOUSQ" target="_mVJNLcqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaManagement/copymedia"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_mVJ0NMqfEeqQgK3p5oOUSQ" origin="_mVJNJsqfEeqQgK3p5oOUSQ" image="_mVJNLcqfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mVJ0NcqfEeqQgK3p5oOUSQ" origin="_mVJNKcqfEeqQgK3p5oOUSQ" image="_mVJ0McqfEeqQgK3p5oOUSQ"/>
+  </units>
+</henshin:Module>

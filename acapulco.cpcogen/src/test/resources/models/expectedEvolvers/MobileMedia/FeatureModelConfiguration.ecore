@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="FeatureModelConfiguration" nsURI="http://www.kcl.ac.uk/inf/mdeoptimiser/featureModelConfiguration/1.0" nsPrefix="FeatureModelConfiguration">
+  <eClassifiers xsi:type="ecore:EClass" name="MobileMedia">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mediaselection" lowerBound="1" eType="//MediaSelection" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mediamanagement" lowerBound="1" eType="//MediaManagement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="screensize" lowerBound="1" eType="//ScreenSize" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MediaSelection">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MediaSelectionAlternative" upperBound="-1" eType="//MediaSelectionAlternative" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Photo" eSuperTypes="//MediaSelectionAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MediaSelectionAlternative" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Music" eSuperTypes="//MediaSelectionAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Video" eSuperTypes="//MediaSelectionAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MediaManagement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="favourites" eType="//Favourites" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="copymedia" eType="//CopyMedia" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smstransfer" eType="//SMSTransfer" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Favourites">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="setfavourites" lowerBound="1" eType="//SetFavourites" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewfavourites" lowerBound="1" eType="//ViewFavourites" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SetFavourites">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewFavourites">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CopyMedia">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMSTransfer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="receivephoto" lowerBound="1" eType="//ReceivePhoto" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sendphoto" lowerBound="1" eType="//SendPhoto" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReceivePhoto">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SendPhoto">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ScreenSize">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ScreenSizeAlternative" upperBound="-1" eType="//ScreenSizeAlternative" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Screen1" eSuperTypes="//ScreenSizeAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ScreenSizeAlternative" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Screen2" eSuperTypes="//ScreenSizeAlternative"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Screen3" eSuperTypes="//ScreenSizeAlternative"/>
+</ecore:EPackage>

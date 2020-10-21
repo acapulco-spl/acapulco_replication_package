@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_2KCQ8MqZEeq-ZIACRjr_1w" name="De_Feedback">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_2KCQ8cqZEeq-ZIACRjr_1w" name="De_Feedback">
+    <annotations xmi:id="_2KCQ8sqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_2KCQ88qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_2KCQ9MqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_2KCQ9cqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_2KCQ9sqZEeq-ZIACRjr_1w" name="" incoming="_2KCQ_cqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KCQ98qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Feedback"/>
+        <attributes xmi:id="_2KCQ-MqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KCQ-cqZEeq-ZIACRjr_1w" name="" outgoing="_2KCQ_cqZEeq-ZIACRjr_1w _2KCQ_sqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KCQ-sqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <nodes xmi:id="_2KCQ-8qZEeq-ZIACRjr_1w" name="" incoming="_2KCQ_sqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KCQ_MqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative"/>
+      </nodes>
+      <edges xmi:id="_2KCQ_cqZEeq-ZIACRjr_1w" source="_2KCQ-cqZEeq-ZIACRjr_1w" target="_2KCQ9sqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_2KCQ_sqZEeq-ZIACRjr_1w" source="_2KCQ-cqZEeq-ZIACRjr_1w" target="_2KCQ-8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_2KCQ_8qZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_2KCRAMqZEeq-ZIACRjr_1w" name="" incoming="_2KCRCMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KCRAcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Feedback"/>
+        <attributes xmi:id="_2KCRAsqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2KCRA8qZEeq-ZIACRjr_1w" name="" outgoing="_2KCRCMqZEeq-ZIACRjr_1w _2KCRCcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KCRBMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <nodes xmi:id="_2KCRBcqZEeq-ZIACRjr_1w" name="" incoming="_2KCRCcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2KCRBsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative"/>
+        <attributes xmi:id="_2KCRB8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_2KCRCMqZEeq-ZIACRjr_1w" source="_2KCRA8qZEeq-ZIACRjr_1w" target="_2KCRAMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_2KCRCcqZEeq-ZIACRjr_1w" source="_2KCRA8qZEeq-ZIACRjr_1w" target="_2KCRBcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_2KCRCsqZEeq-ZIACRjr_1w" origin="_2KCQ9sqZEeq-ZIACRjr_1w" image="_2KCRAMqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2KCRC8qZEeq-ZIACRjr_1w" origin="_2KCQ-cqZEeq-ZIACRjr_1w" image="_2KCRA8qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2KCRDMqZEeq-ZIACRjr_1w" origin="_2KCQ-8qZEeq-ZIACRjr_1w" image="_2KCRBcqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

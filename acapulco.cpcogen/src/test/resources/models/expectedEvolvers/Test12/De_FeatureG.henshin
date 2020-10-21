@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_w2g7YMeEEeqB_6LdE68kZg" name="De_FeatureG">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_w2g7YceEEeqB_6LdE68kZg" name="De_FeatureG">
+    <annotations xmi:id="_w2g7YseEEeqB_6LdE68kZg" key="featureModel" value=""/>
+    <annotations xmi:id="_w2g7Y8eEEeqB_6LdE68kZg" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_w2g7ZMeEEeqB_6LdE68kZg" key="features" value=""/>
+    <lhs xmi:id="_w2g7ZceEEeqB_6LdE68kZg" name="Lhs">
+      <nodes xmi:id="_w2g7ZseEEeqB_6LdE68kZg" name="" incoming="_w2g7cceEEeqB_6LdE68kZg" outgoing="_w2g7cseEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7Z8eEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureG"/>
+        <attributes xmi:id="_w2g7aMeEEeqB_6LdE68kZg" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureDAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_w2g7aceEEeqB_6LdE68kZg" name="" incoming="_w2g7cseEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7aseEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureH"/>
+      </nodes>
+      <nodes xmi:id="_w2g7a8eEEeqB_6LdE68kZg" name="">
+        <annotations xmi:id="_w2g7bMeEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+      </nodes>
+      <nodes xmi:id="_w2g7bceEEeqB_6LdE68kZg" name="" outgoing="_w2g7cceEEeqB_6LdE68kZg _w2g7c8eEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7bseEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureD"/>
+      </nodes>
+      <nodes xmi:id="_w2g7b8eEEeqB_6LdE68kZg" name="" incoming="_w2g7c8eEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7cMeEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureDAlternative"/>
+      </nodes>
+      <edges xmi:id="_w2g7cceEEeqB_6LdE68kZg" source="_w2g7bceEEeqB_6LdE68kZg" target="_w2g7ZseEEeqB_6LdE68kZg">
+        <type href="FeatureModelConfiguration.ecore#//FeatureD/FeatureDAlternative"/>
+      </edges>
+      <edges xmi:id="_w2g7cseEEeqB_6LdE68kZg" source="_w2g7ZseEEeqB_6LdE68kZg" target="_w2g7aceEEeqB_6LdE68kZg">
+        <type href="FeatureModelConfiguration.ecore#//FeatureG/featureh"/>
+      </edges>
+      <edges xmi:id="_w2g7c8eEEeqB_6LdE68kZg" source="_w2g7bceEEeqB_6LdE68kZg" target="_w2g7b8eEEeqB_6LdE68kZg">
+        <type href="FeatureModelConfiguration.ecore#//FeatureD/FeatureDAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_w2g7dMeEEeqB_6LdE68kZg" name="Rhs">
+      <nodes xmi:id="_w2g7dceEEeqB_6LdE68kZg" name="" incoming="_w2g7g8eEEeqB_6LdE68kZg" outgoing="_w2g7hMeEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7dseEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureG"/>
+        <attributes xmi:id="_w2g7d8eEEeqB_6LdE68kZg" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureDAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_w2g7eMeEEeqB_6LdE68kZg" name="" incoming="_w2g7hMeEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7eceEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureH"/>
+        <attributes xmi:id="_w2g7eseEEeqB_6LdE68kZg" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureH/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_w2g7e8eEEeqB_6LdE68kZg" name="">
+        <annotations xmi:id="_w2g7fMeEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+        <attributes xmi:id="_w2g7fceEEeqB_6LdE68kZg" value="false">
+          <type href="FeatureModelConfiguration.ecore#//ToSelect/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_w2g7fseEEeqB_6LdE68kZg" name="" outgoing="_w2g7g8eEEeqB_6LdE68kZg _w2g7hceEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7f8eEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureD"/>
+      </nodes>
+      <nodes xmi:id="_w2g7gMeEEeqB_6LdE68kZg" name="" incoming="_w2g7hceEEeqB_6LdE68kZg">
+        <annotations xmi:id="_w2g7gceEEeqB_6LdE68kZg" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureDAlternative"/>
+        <attributes xmi:id="_w2g7gseEEeqB_6LdE68kZg" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureDAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_w2g7g8eEEeqB_6LdE68kZg" source="_w2g7fseEEeqB_6LdE68kZg" target="_w2g7dceEEeqB_6LdE68kZg">
+        <type href="FeatureModelConfiguration.ecore#//FeatureD/FeatureDAlternative"/>
+      </edges>
+      <edges xmi:id="_w2g7hMeEEeqB_6LdE68kZg" source="_w2g7dceEEeqB_6LdE68kZg" target="_w2g7eMeEEeqB_6LdE68kZg">
+        <type href="FeatureModelConfiguration.ecore#//FeatureG/featureh"/>
+      </edges>
+      <edges xmi:id="_w2g7hceEEeqB_6LdE68kZg" source="_w2g7fseEEeqB_6LdE68kZg" target="_w2g7gMeEEeqB_6LdE68kZg">
+        <type href="FeatureModelConfiguration.ecore#//FeatureD/FeatureDAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_w2g7hseEEeqB_6LdE68kZg" origin="_w2g7ZseEEeqB_6LdE68kZg" image="_w2g7dceEEeqB_6LdE68kZg"/>
+    <mappings xmi:id="_w2g7h8eEEeqB_6LdE68kZg" origin="_w2g7aceEEeqB_6LdE68kZg" image="_w2g7eMeEEeqB_6LdE68kZg"/>
+    <mappings xmi:id="_w2g7iMeEEeqB_6LdE68kZg" origin="_w2g7a8eEEeqB_6LdE68kZg" image="_w2g7e8eEEeqB_6LdE68kZg"/>
+    <mappings xmi:id="_w2g7iceEEeqB_6LdE68kZg" origin="_w2g7bceEEeqB_6LdE68kZg" image="_w2g7fseEEeqB_6LdE68kZg"/>
+    <mappings xmi:id="_w2g7iseEEeqB_6LdE68kZg" origin="_w2g7b8eEEeqB_6LdE68kZg" image="_w2g7gMeEEeqB_6LdE68kZg"/>
+  </units>
+</henshin:Module>

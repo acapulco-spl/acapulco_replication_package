@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_mU4HYMqfEeqQgK3p5oOUSQ" name="Act_Music">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_mU4HYcqfEeqQgK3p5oOUSQ" name="Act_Music">
+    <annotations xmi:id="_mU4HYsqfEeqQgK3p5oOUSQ" key="featureModel" value=""/>
+    <annotations xmi:id="_mU4HY8qfEeqQgK3p5oOUSQ" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_mU4HZMqfEeqQgK3p5oOUSQ" key="features" value=""/>
+    <lhs xmi:id="_mU4HZcqfEeqQgK3p5oOUSQ" name="Lhs">
+      <nodes xmi:id="_mU4HZsqfEeqQgK3p5oOUSQ" name="" incoming="_mU4Ha8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mU4HZ8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Music"/>
+        <attributes xmi:id="_mU4HaMqfEeqQgK3p5oOUSQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//MediaSelectionAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mU4HacqfEeqQgK3p5oOUSQ" name="" outgoing="_mU4Ha8qfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mU4HasqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//MediaSelection"/>
+      </nodes>
+      <edges xmi:id="_mU4Ha8qfEeqQgK3p5oOUSQ" source="_mU4HacqfEeqQgK3p5oOUSQ" target="_mU4HZsqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaSelection/MediaSelectionAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_mU4HbMqfEeqQgK3p5oOUSQ" name="Rhs">
+      <nodes xmi:id="_mU4HbcqfEeqQgK3p5oOUSQ" name="" incoming="_mU4HcsqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mU4HbsqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Music"/>
+        <attributes xmi:id="_mU4Hb8qfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//MediaSelectionAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mU4HcMqfEeqQgK3p5oOUSQ" name="" outgoing="_mU4HcsqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mU4HccqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//MediaSelection"/>
+      </nodes>
+      <edges xmi:id="_mU4HcsqfEeqQgK3p5oOUSQ" source="_mU4HcMqfEeqQgK3p5oOUSQ" target="_mU4HbcqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//MediaSelection/MediaSelectionAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_mU4Hc8qfEeqQgK3p5oOUSQ" origin="_mU4HZsqfEeqQgK3p5oOUSQ" image="_mU4HbcqfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mU4HdMqfEeqQgK3p5oOUSQ" origin="_mU4HacqfEeqQgK3p5oOUSQ" image="_mU4HcMqfEeqQgK3p5oOUSQ"/>
+  </units>
+</henshin:Module>

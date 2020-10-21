@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_2J_0sMqZEeq-ZIACRjr_1w" name="Act_Log">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_2J_0scqZEeq-ZIACRjr_1w" name="Act_Log">
+    <annotations xmi:id="_2J_0ssqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_2J_0s8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_2J_0tMqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_2J_0tcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_2J_0tsqZEeq-ZIACRjr_1w" name="" outgoing="_2J_0u8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2J_0t8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <nodes xmi:id="_2J_0uMqZEeq-ZIACRjr_1w" name="" incoming="_2J_0u8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2J_0ucqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+        <attributes xmi:id="_2J_0usqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_2J_0u8qZEeq-ZIACRjr_1w" source="_2J_0tsqZEeq-ZIACRjr_1w" target="_2J_0uMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_2J_0vMqZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_2J_0vcqZEeq-ZIACRjr_1w" name="" outgoing="_2J_0w8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2J_0vsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+        <attributes xmi:id="_2J_0v8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2J_0wMqZEeq-ZIACRjr_1w" name="" incoming="_2J_0w8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_2J_0wcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+        <attributes xmi:id="_2J_0wsqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_2J_0w8qZEeq-ZIACRjr_1w" source="_2J_0vcqZEeq-ZIACRjr_1w" target="_2J_0wMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_2J_0xMqZEeq-ZIACRjr_1w" origin="_2J_0tsqZEeq-ZIACRjr_1w" image="_2J_0vcqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_2J_0xcqZEeq-ZIACRjr_1w" origin="_2J_0uMqZEeq-ZIACRjr_1w" image="_2J_0wMqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

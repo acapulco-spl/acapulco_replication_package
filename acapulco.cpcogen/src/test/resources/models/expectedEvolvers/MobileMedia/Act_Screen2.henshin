@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_mVfLYMqfEeqQgK3p5oOUSQ" name="Act_Screen2">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_mVfycMqfEeqQgK3p5oOUSQ" name="Act_Screen2">
+    <annotations xmi:id="_mVfyccqfEeqQgK3p5oOUSQ" key="featureModel" value=""/>
+    <annotations xmi:id="_mVfycsqfEeqQgK3p5oOUSQ" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_mVfyc8qfEeqQgK3p5oOUSQ" key="features" value=""/>
+    <lhs xmi:id="_mVfydMqfEeqQgK3p5oOUSQ" name="Lhs">
+      <nodes xmi:id="_mVfydcqfEeqQgK3p5oOUSQ" name="" incoming="_mVfyesqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVfydsqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Screen2"/>
+        <attributes xmi:id="_mVfyd8qfEeqQgK3p5oOUSQ" value="false">
+          <type href="FeatureModelConfiguration.ecore#//ScreenSizeAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mVfyeMqfEeqQgK3p5oOUSQ" name="" outgoing="_mVfyesqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVfyecqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ScreenSize"/>
+      </nodes>
+      <edges xmi:id="_mVfyesqfEeqQgK3p5oOUSQ" source="_mVfyeMqfEeqQgK3p5oOUSQ" target="_mVfydcqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//ScreenSize/ScreenSizeAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_mVfye8qfEeqQgK3p5oOUSQ" name="Rhs">
+      <nodes xmi:id="_mVfyfMqfEeqQgK3p5oOUSQ" name="" incoming="_mVfygcqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVfyfcqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Screen2"/>
+        <attributes xmi:id="_mVfyfsqfEeqQgK3p5oOUSQ" value="true">
+          <type href="FeatureModelConfiguration.ecore#//ScreenSizeAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_mVfyf8qfEeqQgK3p5oOUSQ" name="" outgoing="_mVfygcqfEeqQgK3p5oOUSQ">
+        <annotations xmi:id="_mVfygMqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ScreenSize"/>
+      </nodes>
+      <edges xmi:id="_mVfygcqfEeqQgK3p5oOUSQ" source="_mVfyf8qfEeqQgK3p5oOUSQ" target="_mVfyfMqfEeqQgK3p5oOUSQ">
+        <type href="FeatureModelConfiguration.ecore#//ScreenSize/ScreenSizeAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_mVfygsqfEeqQgK3p5oOUSQ" origin="_mVfydcqfEeqQgK3p5oOUSQ" image="_mVfyfMqfEeqQgK3p5oOUSQ"/>
+    <mappings xmi:id="_mVfyg8qfEeqQgK3p5oOUSQ" origin="_mVfyeMqfEeqQgK3p5oOUSQ" image="_mVfyf8qfEeqQgK3p5oOUSQ"/>
+    <multiRules xmi:id="_mVfyhMqfEeqQgK3p5oOUSQ">
+      <lhs xmi:id="_mVfyhcqfEeqQgK3p5oOUSQ" name="Lhs">
+        <nodes xmi:id="_mVfyhsqfEeqQgK3p5oOUSQ" name="" outgoing="_mVfyisqfEeqQgK3p5oOUSQ">
+          <annotations xmi:id="_mVfyh8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//ScreenSize"/>
+        </nodes>
+        <nodes xmi:id="_mVfyiMqfEeqQgK3p5oOUSQ" name="" incoming="_mVfyisqfEeqQgK3p5oOUSQ">
+          <annotations xmi:id="_mVfyicqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//ScreenSizeAlternative"/>
+        </nodes>
+        <edges xmi:id="_mVfyisqfEeqQgK3p5oOUSQ" source="_mVfyhsqfEeqQgK3p5oOUSQ" target="_mVfyiMqfEeqQgK3p5oOUSQ">
+          <type href="FeatureModelConfiguration.ecore#//ScreenSize/ScreenSizeAlternative"/>
+        </edges>
+      </lhs>
+      <rhs xmi:id="_mVfyi8qfEeqQgK3p5oOUSQ" name="Rhs">
+        <nodes xmi:id="_mVfyjMqfEeqQgK3p5oOUSQ" name="" outgoing="_mVfykcqfEeqQgK3p5oOUSQ">
+          <annotations xmi:id="_mVfyjcqfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//ScreenSize"/>
+        </nodes>
+        <nodes xmi:id="_mVfyjsqfEeqQgK3p5oOUSQ" name="" incoming="_mVfykcqfEeqQgK3p5oOUSQ">
+          <annotations xmi:id="_mVfyj8qfEeqQgK3p5oOUSQ" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//ScreenSizeAlternative"/>
+          <attributes xmi:id="_mVfykMqfEeqQgK3p5oOUSQ" value="false">
+            <type href="FeatureModelConfiguration.ecore#//ScreenSizeAlternative/selected"/>
+          </attributes>
+        </nodes>
+        <edges xmi:id="_mVfykcqfEeqQgK3p5oOUSQ" source="_mVfyjMqfEeqQgK3p5oOUSQ" target="_mVfyjsqfEeqQgK3p5oOUSQ">
+          <type href="FeatureModelConfiguration.ecore#//ScreenSize/ScreenSizeAlternative"/>
+        </edges>
+      </rhs>
+      <mappings xmi:id="_mVfyksqfEeqQgK3p5oOUSQ" origin="_mVfyhsqfEeqQgK3p5oOUSQ" image="_mVfyjMqfEeqQgK3p5oOUSQ"/>
+      <mappings xmi:id="_mVfyk8qfEeqQgK3p5oOUSQ" origin="_mVfyiMqfEeqQgK3p5oOUSQ" image="_mVfyjsqfEeqQgK3p5oOUSQ"/>
+      <multiMappings xmi:id="_mVfylMqfEeqQgK3p5oOUSQ" origin="_mVfyeMqfEeqQgK3p5oOUSQ" image="_mVfyhsqfEeqQgK3p5oOUSQ"/>
+      <multiMappings xmi:id="_mVfylcqfEeqQgK3p5oOUSQ" origin="_mVfyf8qfEeqQgK3p5oOUSQ" image="_mVfyjMqfEeqQgK3p5oOUSQ"/>
+    </multiRules>
+  </units>
+</henshin:Module>

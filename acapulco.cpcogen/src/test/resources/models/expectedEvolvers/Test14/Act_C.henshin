@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_2gx6EMeFEeqsOevn8Tpg4w" name="Act_C">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_2gx6EceFEeqsOevn8Tpg4w" name="Act_C">
+    <annotations xmi:id="_2gx6EseFEeqsOevn8Tpg4w" key="featureModel" value=""/>
+    <annotations xmi:id="_2gx6E8eFEeqsOevn8Tpg4w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_2gx6FMeFEeqsOevn8Tpg4w" key="features" value=""/>
+    <lhs xmi:id="_2gx6FceFEeqsOevn8Tpg4w" name="Lhs">
+      <nodes xmi:id="_2gx6FseFEeqsOevn8Tpg4w" name="" incoming="_2gx6J8eFEeqsOevn8Tpg4w" outgoing="_2gx6KseFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6F8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//A2"/>
+      </nodes>
+      <nodes xmi:id="_2gx6GMeFEeqsOevn8Tpg4w" name="" incoming="_2gx6KMeFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6GceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//C1"/>
+      </nodes>
+      <nodes xmi:id="_2gx6GseFEeqsOevn8Tpg4w" name="">
+        <annotations xmi:id="_2gx6G8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+      </nodes>
+      <nodes xmi:id="_2gx6HMeFEeqsOevn8Tpg4w" name="" incoming="_2gx6KceFEeqsOevn8Tpg4w" outgoing="_2gx6LMeFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6HceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//A1"/>
+      </nodes>
+      <nodes xmi:id="_2gx6HseFEeqsOevn8Tpg4w" name="" outgoing="_2gx6J8eFEeqsOevn8Tpg4w _2gx6KceFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6H8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//A"/>
+      </nodes>
+      <nodes xmi:id="_2gx6IMeFEeqsOevn8Tpg4w" name="" incoming="_2gx6KseFEeqsOevn8Tpg4w" outgoing="_2gx6K8eFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6IceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//E"/>
+      </nodes>
+      <nodes xmi:id="_2gx6IseFEeqsOevn8Tpg4w" name="" incoming="_2gx6K8eFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6I8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//E1"/>
+      </nodes>
+      <nodes xmi:id="_2gx6JMeFEeqsOevn8Tpg4w" name="" incoming="_2gx6LMeFEeqsOevn8Tpg4w" outgoing="_2gx6KMeFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6JceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//C"/>
+        <attributes xmi:id="_2gx6JseFEeqsOevn8Tpg4w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//A1Alternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_2gx6J8eFEeqsOevn8Tpg4w" source="_2gx6HseFEeqsOevn8Tpg4w" target="_2gx6FseFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A/AAlternative"/>
+      </edges>
+      <edges xmi:id="_2gx6KMeFEeqsOevn8Tpg4w" source="_2gx6JMeFEeqsOevn8Tpg4w" target="_2gx6GMeFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//C/c1"/>
+      </edges>
+      <edges xmi:id="_2gx6KceFEeqsOevn8Tpg4w" source="_2gx6HseFEeqsOevn8Tpg4w" target="_2gx6HMeFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A/AAlternative"/>
+      </edges>
+      <edges xmi:id="_2gx6KseFEeqsOevn8Tpg4w" source="_2gx6FseFEeqsOevn8Tpg4w" target="_2gx6IMeFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A2/A2Alternative"/>
+      </edges>
+      <edges xmi:id="_2gx6K8eFEeqsOevn8Tpg4w" source="_2gx6IMeFEeqsOevn8Tpg4w" target="_2gx6IseFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//E/e1"/>
+      </edges>
+      <edges xmi:id="_2gx6LMeFEeqsOevn8Tpg4w" source="_2gx6HMeFEeqsOevn8Tpg4w" target="_2gx6JMeFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A1/A1Alternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_2gx6LceFEeqsOevn8Tpg4w" name="Rhs">
+      <nodes xmi:id="_2gx6LseFEeqsOevn8Tpg4w" name="" incoming="_2gx6RseFEeqsOevn8Tpg4w" outgoing="_2gx6SceFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6L8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//A2"/>
+        <attributes xmi:id="_2gx6MMeFEeqsOevn8Tpg4w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//AAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6MceFEeqsOevn8Tpg4w" name="" incoming="_2gx6R8eFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6MseFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//C1"/>
+        <attributes xmi:id="_2gx6M8eFEeqsOevn8Tpg4w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//C1/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6NMeFEeqsOevn8Tpg4w" name="">
+        <annotations xmi:id="_2gx6NceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ToSelect"/>
+        <attributes xmi:id="_2gx6NseFEeqsOevn8Tpg4w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//ToSelect/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6N8eFEeqsOevn8Tpg4w" name="" incoming="_2gx6SMeFEeqsOevn8Tpg4w" outgoing="_2gx6S8eFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6OMeFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//A1"/>
+        <attributes xmi:id="_2gx6OceFEeqsOevn8Tpg4w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6OseFEeqsOevn8Tpg4w" name="" outgoing="_2gx6RseFEeqsOevn8Tpg4w _2gx6SMeFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6O8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//A"/>
+        <attributes xmi:id="_2gx6PMeFEeqsOevn8Tpg4w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//A/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6PceFEeqsOevn8Tpg4w" name="" incoming="_2gx6SceFEeqsOevn8Tpg4w" outgoing="_2gx6SseFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6PseFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//E"/>
+        <attributes xmi:id="_2gx6P8eFEeqsOevn8Tpg4w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//A2Alternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6QMeFEeqsOevn8Tpg4w" name="" incoming="_2gx6SseFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6QceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//E1"/>
+        <attributes xmi:id="_2gx6QseFEeqsOevn8Tpg4w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//E1/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_2gx6Q8eFEeqsOevn8Tpg4w" name="" incoming="_2gx6S8eFEeqsOevn8Tpg4w" outgoing="_2gx6R8eFEeqsOevn8Tpg4w">
+        <annotations xmi:id="_2gx6RMeFEeqsOevn8Tpg4w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//C"/>
+        <attributes xmi:id="_2gx6RceFEeqsOevn8Tpg4w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//A1Alternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_2gx6RseFEeqsOevn8Tpg4w" source="_2gx6OseFEeqsOevn8Tpg4w" target="_2gx6LseFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A/AAlternative"/>
+      </edges>
+      <edges xmi:id="_2gx6R8eFEeqsOevn8Tpg4w" source="_2gx6Q8eFEeqsOevn8Tpg4w" target="_2gx6MceFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//C/c1"/>
+      </edges>
+      <edges xmi:id="_2gx6SMeFEeqsOevn8Tpg4w" source="_2gx6OseFEeqsOevn8Tpg4w" target="_2gx6N8eFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A/AAlternative"/>
+      </edges>
+      <edges xmi:id="_2gx6SceFEeqsOevn8Tpg4w" source="_2gx6LseFEeqsOevn8Tpg4w" target="_2gx6PceFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A2/A2Alternative"/>
+      </edges>
+      <edges xmi:id="_2gx6SseFEeqsOevn8Tpg4w" source="_2gx6PceFEeqsOevn8Tpg4w" target="_2gx6QMeFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//E/e1"/>
+      </edges>
+      <edges xmi:id="_2gx6S8eFEeqsOevn8Tpg4w" source="_2gx6N8eFEeqsOevn8Tpg4w" target="_2gx6Q8eFEeqsOevn8Tpg4w">
+        <type href="FeatureModelConfiguration.ecore#//A1/A1Alternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_2gx6TMeFEeqsOevn8Tpg4w" origin="_2gx6FseFEeqsOevn8Tpg4w" image="_2gx6LseFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6TceFEeqsOevn8Tpg4w" origin="_2gx6GMeFEeqsOevn8Tpg4w" image="_2gx6MceFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6TseFEeqsOevn8Tpg4w" origin="_2gx6GseFEeqsOevn8Tpg4w" image="_2gx6NMeFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6T8eFEeqsOevn8Tpg4w" origin="_2gx6HMeFEeqsOevn8Tpg4w" image="_2gx6N8eFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6UMeFEeqsOevn8Tpg4w" origin="_2gx6HseFEeqsOevn8Tpg4w" image="_2gx6OseFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6UceFEeqsOevn8Tpg4w" origin="_2gx6IMeFEeqsOevn8Tpg4w" image="_2gx6PceFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6UseFEeqsOevn8Tpg4w" origin="_2gx6IseFEeqsOevn8Tpg4w" image="_2gx6QMeFEeqsOevn8Tpg4w"/>
+    <mappings xmi:id="_2gx6U8eFEeqsOevn8Tpg4w" origin="_2gx6JMeFEeqsOevn8Tpg4w" image="_2gx6Q8eFEeqsOevn8Tpg4w"/>
+    <multiRules xmi:id="_2gx6VMeFEeqsOevn8Tpg4w">
+      <lhs xmi:id="_2gx6VceFEeqsOevn8Tpg4w" name="Lhs">
+        <nodes xmi:id="_2gx6VseFEeqsOevn8Tpg4w" name="" outgoing="_2gx6WseFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gx6V8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A2"/>
+        </nodes>
+        <nodes xmi:id="_2gx6WMeFEeqsOevn8Tpg4w" name="" incoming="_2gx6WseFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gx6WceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A2Alternative"/>
+        </nodes>
+        <edges xmi:id="_2gx6WseFEeqsOevn8Tpg4w" source="_2gx6VseFEeqsOevn8Tpg4w" target="_2gx6WMeFEeqsOevn8Tpg4w">
+          <type href="FeatureModelConfiguration.ecore#//A2/A2Alternative"/>
+        </edges>
+      </lhs>
+      <rhs xmi:id="_2gx6W8eFEeqsOevn8Tpg4w" name="Rhs">
+        <nodes xmi:id="_2gx6XMeFEeqsOevn8Tpg4w" name="" outgoing="_2gx6YceFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gx6XceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A2"/>
+        </nodes>
+        <nodes xmi:id="_2gx6XseFEeqsOevn8Tpg4w" name="" incoming="_2gx6YceFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gx6X8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A2Alternative"/>
+          <attributes xmi:id="_2gx6YMeFEeqsOevn8Tpg4w" value="false">
+            <type href="FeatureModelConfiguration.ecore#//A2Alternative/selected"/>
+          </attributes>
+        </nodes>
+        <edges xmi:id="_2gx6YceFEeqsOevn8Tpg4w" source="_2gx6XMeFEeqsOevn8Tpg4w" target="_2gx6XseFEeqsOevn8Tpg4w">
+          <type href="FeatureModelConfiguration.ecore#//A2/A2Alternative"/>
+        </edges>
+      </rhs>
+      <mappings xmi:id="_2gx6YseFEeqsOevn8Tpg4w" origin="_2gx6VseFEeqsOevn8Tpg4w" image="_2gx6XMeFEeqsOevn8Tpg4w"/>
+      <mappings xmi:id="_2gx6Y8eFEeqsOevn8Tpg4w" origin="_2gx6WMeFEeqsOevn8Tpg4w" image="_2gx6XseFEeqsOevn8Tpg4w"/>
+      <multiMappings xmi:id="_2gx6ZMeFEeqsOevn8Tpg4w" origin="_2gx6FseFEeqsOevn8Tpg4w" image="_2gx6VseFEeqsOevn8Tpg4w"/>
+      <multiMappings xmi:id="_2gx6ZceFEeqsOevn8Tpg4w" origin="_2gx6LseFEeqsOevn8Tpg4w" image="_2gx6XMeFEeqsOevn8Tpg4w"/>
+    </multiRules>
+    <multiRules xmi:id="_2gyhIMeFEeqsOevn8Tpg4w">
+      <lhs xmi:id="_2gyhIceFEeqsOevn8Tpg4w" name="Lhs">
+        <nodes xmi:id="_2gyhIseFEeqsOevn8Tpg4w" name="" outgoing="_2gyhJseFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gyhI8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A1"/>
+        </nodes>
+        <nodes xmi:id="_2gyhJMeFEeqsOevn8Tpg4w" name="" incoming="_2gyhJseFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gyhJceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A1Alternative"/>
+        </nodes>
+        <edges xmi:id="_2gyhJseFEeqsOevn8Tpg4w" source="_2gyhIseFEeqsOevn8Tpg4w" target="_2gyhJMeFEeqsOevn8Tpg4w">
+          <type href="FeatureModelConfiguration.ecore#//A1/A1Alternative"/>
+        </edges>
+      </lhs>
+      <rhs xmi:id="_2gyhJ8eFEeqsOevn8Tpg4w" name="Rhs">
+        <nodes xmi:id="_2gyhKMeFEeqsOevn8Tpg4w" name="" outgoing="_2gyhLceFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gyhKceFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A1"/>
+        </nodes>
+        <nodes xmi:id="_2gyhKseFEeqsOevn8Tpg4w" name="" incoming="_2gyhLceFEeqsOevn8Tpg4w">
+          <annotations xmi:id="_2gyhK8eFEeqsOevn8Tpg4w" key="presenceCondition"/>
+          <type href="FeatureModelConfiguration.ecore#//A1Alternative"/>
+          <attributes xmi:id="_2gyhLMeFEeqsOevn8Tpg4w" value="false">
+            <type href="FeatureModelConfiguration.ecore#//A1Alternative/selected"/>
+          </attributes>
+        </nodes>
+        <edges xmi:id="_2gyhLceFEeqsOevn8Tpg4w" source="_2gyhKMeFEeqsOevn8Tpg4w" target="_2gyhKseFEeqsOevn8Tpg4w">
+          <type href="FeatureModelConfiguration.ecore#//A1/A1Alternative"/>
+        </edges>
+      </rhs>
+      <mappings xmi:id="_2gyhLseFEeqsOevn8Tpg4w" origin="_2gyhIseFEeqsOevn8Tpg4w" image="_2gyhKMeFEeqsOevn8Tpg4w"/>
+      <mappings xmi:id="_2gyhL8eFEeqsOevn8Tpg4w" origin="_2gyhJMeFEeqsOevn8Tpg4w" image="_2gyhKseFEeqsOevn8Tpg4w"/>
+      <multiMappings xmi:id="_2gyhMMeFEeqsOevn8Tpg4w" origin="_2gx6HMeFEeqsOevn8Tpg4w" image="_2gyhIseFEeqsOevn8Tpg4w"/>
+      <multiMappings xmi:id="_2gyhMceFEeqsOevn8Tpg4w" origin="_2gx6N8eFEeqsOevn8Tpg4w" image="_2gyhKMeFEeqsOevn8Tpg4w"/>
+    </multiRules>
+  </units>
+</henshin:Module>

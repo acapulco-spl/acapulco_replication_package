@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_UANG8MdOEeqLB9ngHG17Qw" name="De_FeatureC">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_UANG8cdOEeqLB9ngHG17Qw" name="De_FeatureC">
+    <annotations xmi:id="_UANG8sdOEeqLB9ngHG17Qw" key="featureModel" value=""/>
+    <annotations xmi:id="_UANG88dOEeqLB9ngHG17Qw" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_UANG9MdOEeqLB9ngHG17Qw" key="features" value=""/>
+    <lhs xmi:id="_UANG9cdOEeqLB9ngHG17Qw" name="Lhs">
+      <nodes xmi:id="_UANG9sdOEeqLB9ngHG17Qw" name="">
+        <annotations xmi:id="_UANG98dOEeqLB9ngHG17Qw" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureC"/>
+        <attributes xmi:id="_UANG-MdOEeqLB9ngHG17Qw" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureC/selected"/>
+        </attributes>
+      </nodes>
+    </lhs>
+    <rhs xmi:id="_UANG-cdOEeqLB9ngHG17Qw" name="Rhs">
+      <nodes xmi:id="_UANG-sdOEeqLB9ngHG17Qw" name="">
+        <annotations xmi:id="_UANG-8dOEeqLB9ngHG17Qw" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureC"/>
+        <attributes xmi:id="_UANG_MdOEeqLB9ngHG17Qw" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureC/selected"/>
+        </attributes>
+      </nodes>
+    </rhs>
+    <mappings xmi:id="_UANG_cdOEeqLB9ngHG17Qw" origin="_UANG9sdOEeqLB9ngHG17Qw" image="_UANG-sdOEeqLB9ngHG17Qw"/>
+  </units>
+</henshin:Module>

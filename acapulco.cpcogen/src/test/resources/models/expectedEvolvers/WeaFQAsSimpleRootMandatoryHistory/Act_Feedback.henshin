@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_1ldkQMqZEeq-ZIACRjr_1w" name="Act_Feedback">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_1ldkQcqZEeq-ZIACRjr_1w" name="Act_Feedback">
+    <annotations xmi:id="_1ldkQsqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_1ldkQ8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_1ldkRMqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_1ldkRcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_1ldkRsqZEeq-ZIACRjr_1w" name="" incoming="_1ldkS8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1ldkR8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Feedback"/>
+        <attributes xmi:id="_1ldkSMqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1ldkScqZEeq-ZIACRjr_1w" name="" outgoing="_1ldkS8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1ldkSsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <edges xmi:id="_1ldkS8qZEeq-ZIACRjr_1w" source="_1ldkScqZEeq-ZIACRjr_1w" target="_1ldkRsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_1ldkTMqZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_1ldkTcqZEeq-ZIACRjr_1w" name="" incoming="_1ldkU8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1ldkTsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Feedback"/>
+        <attributes xmi:id="_1ldkT8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1ldkUMqZEeq-ZIACRjr_1w" name="" outgoing="_1ldkU8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1ldkUcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+        <attributes xmi:id="_1ldkUsqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_1ldkU8qZEeq-ZIACRjr_1w" source="_1ldkUMqZEeq-ZIACRjr_1w" target="_1ldkTcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_1ldkVMqZEeq-ZIACRjr_1w" origin="_1ldkRsqZEeq-ZIACRjr_1w" image="_1ldkTcqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1ldkVcqZEeq-ZIACRjr_1w" origin="_1ldkScqZEeq-ZIACRjr_1w" image="_1ldkUMqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="mdeoptimiser4efm" nsURI="http://www.example.org/mdeoptimiser4efm"
+    nsPrefix="mdeoptimiser4efm">
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedRoot" eType="#//Feature"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedQualityAttributeModel"
+        eType="#//QualityAttributesModel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="crossTreeConstraints" upperBound="-1"
+        eType="#//CrossTreeConstraint" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Feature">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedFeatures" upperBound="-1"
+        eType="#//Feature" containment="true" eOpposite="#//Feature/parentFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentFeature" eType="#//Feature"
+        eOpposite="#//Feature/ownedFeatures"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qualityAttributeAnnotations"
+        upperBound="-1" eType="#//QualityAttributeAnnotation" eOpposite="#//QualityAttributeAnnotation/features"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QualityAttribute">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="optimizationType" eType="#//OptimizationType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qualityAttributeAnnotations"
+        upperBound="-1" eType="#//QualityAttributeAnnotation" eOpposite="#//QualityAttributeAnnotation/qualityAttribute"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QualityAttributeAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qualityAttribute" eType="#//QualityAttribute"
+        eOpposite="#//QualityAttribute/qualityAttributeAnnotations"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="features" upperBound="-1"
+        eType="#//Feature" eOpposite="#//Feature/qualityAttributeAnnotations"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CrossTreeConstraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftFeature" eType="#//Feature"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightFeature" eType="#//Feature"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//CrossTreeConstraintType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CrossTreeConstraintType">
+    <eLiterals name="REQUIRES"/>
+    <eLiterals name="EXCLUDES" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OptimizationType">
+    <eLiterals name="MAXIMIZE"/>
+    <eLiterals name="MINIMIZE" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupFeature" eSuperTypes="#//Feature">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="childMinCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="childMaxCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QualityAttributesModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedQualityAttributes"
+        upperBound="-1" eType="#//QualityAttribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedQualityAttributeAnnotations"
+        upperBound="-1" eType="#//QualityAttributeAnnotation" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

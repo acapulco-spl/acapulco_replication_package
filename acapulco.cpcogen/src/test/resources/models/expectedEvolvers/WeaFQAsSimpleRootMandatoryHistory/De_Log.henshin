@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_1lcWIMqZEeq-ZIACRjr_1w" name="De_Log">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_1lcWIcqZEeq-ZIACRjr_1w" name="De_Log">
+    <annotations xmi:id="_1lcWIsqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_1lcWI8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_1lcWJMqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_1lcWJcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_1lcWJsqZEeq-ZIACRjr_1w" name="" incoming="_1lcWL8qZEeq-ZIACRjr_1w" outgoing="_1lcWMMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWJ8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+        <attributes xmi:id="_1lcWKMqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lcWKcqZEeq-ZIACRjr_1w" name="" outgoing="_1lcWL8qZEeq-ZIACRjr_1w _1lcWMcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWKsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <nodes xmi:id="_1lcWK8qZEeq-ZIACRjr_1w" name="" incoming="_1lcWMMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWLMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//History"/>
+      </nodes>
+      <nodes xmi:id="_1lcWLcqZEeq-ZIACRjr_1w" name="" incoming="_1lcWMcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWLsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative"/>
+      </nodes>
+      <edges xmi:id="_1lcWL8qZEeq-ZIACRjr_1w" source="_1lcWKcqZEeq-ZIACRjr_1w" target="_1lcWJsqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lcWMMqZEeq-ZIACRjr_1w" source="_1lcWJsqZEeq-ZIACRjr_1w" target="_1lcWK8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Log/history"/>
+      </edges>
+      <edges xmi:id="_1lcWMcqZEeq-ZIACRjr_1w" source="_1lcWKcqZEeq-ZIACRjr_1w" target="_1lcWLcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_1lcWMsqZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_1lcWM8qZEeq-ZIACRjr_1w" name="" incoming="_1lcWPsqZEeq-ZIACRjr_1w" outgoing="_1lcWP8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWNMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Log"/>
+        <attributes xmi:id="_1lcWNcqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lcWNsqZEeq-ZIACRjr_1w" name="" outgoing="_1lcWPsqZEeq-ZIACRjr_1w _1lcWQMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWN8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Usability"/>
+      </nodes>
+      <nodes xmi:id="_1lcWOMqZEeq-ZIACRjr_1w" name="" incoming="_1lcWP8qZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWOcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//History"/>
+        <attributes xmi:id="_1lcWOsqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//History/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1lcWO8qZEeq-ZIACRjr_1w" name="" incoming="_1lcWQMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1lcWPMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative"/>
+        <attributes xmi:id="_1lcWPcqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//UsabilityAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_1lcWPsqZEeq-ZIACRjr_1w" source="_1lcWNsqZEeq-ZIACRjr_1w" target="_1lcWM8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+      <edges xmi:id="_1lcWP8qZEeq-ZIACRjr_1w" source="_1lcWM8qZEeq-ZIACRjr_1w" target="_1lcWOMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Log/history"/>
+      </edges>
+      <edges xmi:id="_1lcWQMqZEeq-ZIACRjr_1w" source="_1lcWNsqZEeq-ZIACRjr_1w" target="_1lcWO8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//Usability/UsabilityAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_1lcWQcqZEeq-ZIACRjr_1w" origin="_1lcWJsqZEeq-ZIACRjr_1w" image="_1lcWM8qZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lcWQsqZEeq-ZIACRjr_1w" origin="_1lcWKcqZEeq-ZIACRjr_1w" image="_1lcWNsqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lcWQ8qZEeq-ZIACRjr_1w" origin="_1lcWK8qZEeq-ZIACRjr_1w" image="_1lcWOMqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1lcWRMqZEeq-ZIACRjr_1w" origin="_1lcWLcqZEeq-ZIACRjr_1w" image="_1lcWO8qZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

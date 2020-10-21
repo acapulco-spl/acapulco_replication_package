@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_NwE3kMdMEeq0SLL6kfZWzA" name="Act_FeatureA">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_NwE3kcdMEeq0SLL6kfZWzA" name="Act_FeatureA">
+    <annotations xmi:id="_NwFeoMdMEeq0SLL6kfZWzA" key="featureModel" value=""/>
+    <annotations xmi:id="_NwFeocdMEeq0SLL6kfZWzA" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_NwFeosdMEeq0SLL6kfZWzA" key="features" value=""/>
+    <lhs xmi:id="_NwFeo8dMEeq0SLL6kfZWzA" name="Lhs">
+      <nodes xmi:id="_NwFepMdMEeq0SLL6kfZWzA" name="">
+        <annotations xmi:id="_NwFepcdMEeq0SLL6kfZWzA" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureA"/>
+        <attributes xmi:id="_NwFepsdMEeq0SLL6kfZWzA" value="false">
+          <type href="FeatureModelConfiguration.ecore#//FeatureA/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_NwFep8dMEeq0SLL6kfZWzA" name="">
+        <annotations xmi:id="_NwFeqMdMEeq0SLL6kfZWzA" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureB"/>
+      </nodes>
+    </lhs>
+    <rhs xmi:id="_NwFeqcdMEeq0SLL6kfZWzA" name="Rhs">
+      <nodes xmi:id="_NwFeqsdMEeq0SLL6kfZWzA" name="">
+        <annotations xmi:id="_NwFeq8dMEeq0SLL6kfZWzA" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureA"/>
+        <attributes xmi:id="_NwFerMdMEeq0SLL6kfZWzA" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureA/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_NwFercdMEeq0SLL6kfZWzA" name="">
+        <annotations xmi:id="_NwFersdMEeq0SLL6kfZWzA" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//FeatureB"/>
+        <attributes xmi:id="_NwFer8dMEeq0SLL6kfZWzA" value="true">
+          <type href="FeatureModelConfiguration.ecore#//FeatureB/selected"/>
+        </attributes>
+      </nodes>
+    </rhs>
+    <mappings xmi:id="_NwFesMdMEeq0SLL6kfZWzA" origin="_NwFepMdMEeq0SLL6kfZWzA" image="_NwFeqsdMEeq0SLL6kfZWzA"/>
+    <mappings xmi:id="_NwFescdMEeq0SLL6kfZWzA" origin="_NwFep8dMEeq0SLL6kfZWzA" image="_NwFercdMEeq0SLL6kfZWzA"/>
+  </units>
+</henshin:Module>

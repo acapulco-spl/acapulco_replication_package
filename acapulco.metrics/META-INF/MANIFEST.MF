@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: metrics
+Bundle-SymbolicName: acapulco.metrics
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: acapulco.thirdpartyplugins
+Import-Package: picocli,
+ org.moeaframework.core,
+ org.moeaframework.analysis.collector,
+ jmetal.core
+Export-Package: mdeoptimiser4efm.algorithm.instrumentation,
+ mdeoptimiser4efm.algorithm.instrumentation.collector,
+ mdeoptimiser4efm.algorithm.termination,
+ mdeoptimiser4efm.tool.executor

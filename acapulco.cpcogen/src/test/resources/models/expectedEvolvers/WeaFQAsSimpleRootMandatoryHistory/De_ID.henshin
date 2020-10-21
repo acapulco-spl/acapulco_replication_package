@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_1l0woMqZEeq-ZIACRjr_1w" name="De_ID">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_1l0wocqZEeq-ZIACRjr_1w" name="De_ID">
+    <annotations xmi:id="_1l0wosqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_1l0wo8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_1l0wpMqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_1l0wpcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_1l0wpsqZEeq-ZIACRjr_1w" name="" outgoing="_1l0wrcqZEeq-ZIACRjr_1w _1l0wrsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1l0wp8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+      </nodes>
+      <nodes xmi:id="_1l0wqMqZEeq-ZIACRjr_1w" name="" incoming="_1l0wrcqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1l0wqcqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ID"/>
+        <attributes xmi:id="_1l0wqsqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1l0wq8qZEeq-ZIACRjr_1w" name="" incoming="_1l0wrsqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1l0wrMqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative"/>
+      </nodes>
+      <edges xmi:id="_1l0wrcqZEeq-ZIACRjr_1w" source="_1l0wpsqZEeq-ZIACRjr_1w" target="_1l0wqMqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+      <edges xmi:id="_1l0wrsqZEeq-ZIACRjr_1w" source="_1l0wpsqZEeq-ZIACRjr_1w" target="_1l0wq8qZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+    </lhs>
+    <rhs xmi:id="_1l0wr8qZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_1l0wsMqZEeq-ZIACRjr_1w" name="" outgoing="_1l0wuMqZEeq-ZIACRjr_1w _1l0wucqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1l0wscqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod"/>
+      </nodes>
+      <nodes xmi:id="_1l0wssqZEeq-ZIACRjr_1w" name="" incoming="_1l0wuMqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1l0ws8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//ID"/>
+        <attributes xmi:id="_1l0wtMqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <nodes xmi:id="_1l0wtcqZEeq-ZIACRjr_1w" name="" incoming="_1l0wucqZEeq-ZIACRjr_1w">
+        <annotations xmi:id="_1l0wtsqZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative"/>
+        <attributes xmi:id="_1l0wt8qZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//AuthMethodAlternative/selected"/>
+        </attributes>
+      </nodes>
+      <edges xmi:id="_1l0wuMqZEeq-ZIACRjr_1w" source="_1l0wsMqZEeq-ZIACRjr_1w" target="_1l0wssqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+      <edges xmi:id="_1l0wucqZEeq-ZIACRjr_1w" source="_1l0wsMqZEeq-ZIACRjr_1w" target="_1l0wtcqZEeq-ZIACRjr_1w">
+        <type href="FeatureModelConfiguration.ecore#//AuthMethod/AuthMethodAlternative"/>
+      </edges>
+    </rhs>
+    <mappings xmi:id="_1l0wusqZEeq-ZIACRjr_1w" origin="_1l0wpsqZEeq-ZIACRjr_1w" image="_1l0wsMqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1l0wu8qZEeq-ZIACRjr_1w" origin="_1l0wqMqZEeq-ZIACRjr_1w" image="_1l0wssqZEeq-ZIACRjr_1w"/>
+    <mappings xmi:id="_1l0wvMqZEeq-ZIACRjr_1w" origin="_1l0wq8qZEeq-ZIACRjr_1w" image="_1l0wtcqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>

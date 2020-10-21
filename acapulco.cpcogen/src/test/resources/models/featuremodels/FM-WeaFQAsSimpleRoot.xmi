@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdeoptimiser4efm:FeatureModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdeoptimiser4efm="http://www.example.org/mdeoptimiser4efm" name="WeaFQAsSimpleRoot">
+  <ownedRoot name="WeaFQAsSimpleRoot" optional="false">
+    <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="WeaFQAsSimple" optional="false" childMinCardinality="1" childMaxCardinality="3">
+      <ownedFeatures name="Persistence" optional="true"/>
+      <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="Security" optional="true" childMinCardinality="1" childMaxCardinality="2">
+        <ownedFeatures name="Auth" optional="true">
+          <ownedFeatures name="Signin" optional="false"/>
+          <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="AuthMethod" optional="false" childMinCardinality="1" childMaxCardinality="1">
+            <ownedFeatures name="Pass" optional="true"/>
+            <ownedFeatures name="ID" optional="true"/>
+          </ownedFeatures>
+        </ownedFeatures>
+        <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="Encr" optional="true" childMinCardinality="1" childMaxCardinality="1">
+          <ownedFeatures name="RSA" optional="true"/>
+          <ownedFeatures name="AES" optional="true"/>
+        </ownedFeatures>
+      </ownedFeatures>
+      <ownedFeatures xsi:type="mdeoptimiser4efm:GroupFeature" name="Usability" optional="true" childMinCardinality="1" childMaxCardinality="2">
+        <ownedFeatures name="Log" optional="true">
+          <ownedFeatures name="History" optional="true"/>
+        </ownedFeatures>
+        <ownedFeatures name="Feedback" optional="true"/>
+      </ownedFeatures>
+    </ownedFeatures>
+  </ownedRoot>
+  <crossTreeConstraints leftFeature="History" rightFeature="Security"/>
+</mdeoptimiser4efm:FeatureModel>

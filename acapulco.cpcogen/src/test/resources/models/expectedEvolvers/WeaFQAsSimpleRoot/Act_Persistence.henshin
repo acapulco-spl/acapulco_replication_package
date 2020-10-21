@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<henshin:Module xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:henshin="http://www.eclipse.org/emf/2011/Henshin" xmi:id="_2JzAYMqZEeq-ZIACRjr_1w" name="Act_Persistence">
+  <imports href="FeatureModelConfiguration.ecore#/"/>
+  <units xsi:type="henshin:Rule" xmi:id="_2JzAYcqZEeq-ZIACRjr_1w" name="Act_Persistence">
+    <annotations xmi:id="_2JzAYsqZEeq-ZIACRjr_1w" key="featureModel" value=""/>
+    <annotations xmi:id="_2JzAY8qZEeq-ZIACRjr_1w" key="injectiveMatchingPresenceCondition"/>
+    <annotations xmi:id="_2JzAZMqZEeq-ZIACRjr_1w" key="features" value=""/>
+    <lhs xmi:id="_2JzAZcqZEeq-ZIACRjr_1w" name="Lhs">
+      <nodes xmi:id="_2JzAZsqZEeq-ZIACRjr_1w" name="">
+        <annotations xmi:id="_2JzAZ8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Persistence"/>
+        <attributes xmi:id="_2JzAaMqZEeq-ZIACRjr_1w" value="false">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+    </lhs>
+    <rhs xmi:id="_2JzAacqZEeq-ZIACRjr_1w" name="Rhs">
+      <nodes xmi:id="_2JzAasqZEeq-ZIACRjr_1w" name="">
+        <annotations xmi:id="_2JzAa8qZEeq-ZIACRjr_1w" key="presenceCondition"/>
+        <type href="FeatureModelConfiguration.ecore#//Persistence"/>
+        <attributes xmi:id="_2JzAbMqZEeq-ZIACRjr_1w" value="true">
+          <type href="FeatureModelConfiguration.ecore#//WeaFQAsSimpleAlternative/selected"/>
+        </attributes>
+      </nodes>
+    </rhs>
+    <mappings xmi:id="_2JzAbcqZEeq-ZIACRjr_1w" origin="_2JzAZsqZEeq-ZIACRjr_1w" image="_2JzAasqZEeq-ZIACRjr_1w"/>
+  </units>
+</henshin:Module>
