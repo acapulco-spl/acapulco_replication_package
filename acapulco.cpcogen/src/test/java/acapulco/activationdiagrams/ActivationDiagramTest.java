@@ -30,7 +30,7 @@ import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAltern
 public class ActivationDiagramTest {
 	@Test
 	void testCreateActivationDiagram() {
-		String fmPath = "src/test/java/acapulco/activationdiagrams/ad-test-1.sxfm.xml";
+		String fmPath = "testdata/ad-test-1.sxfm.xml";
 		FeatureModel fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString());
 		Feature f1 = fm.getOwnedRoot().getOwnedFeatures().get(0);
 		assertEquals(f1.getName(), "F1");
