@@ -1,12 +1,12 @@
 package acapulco.rulesgeneration.activationdiagrams
 
+import acapulco.featuremodel.FeatureModelHelper
+import acapulco.model.Feature
+import acapulco.model.FeatureModel
 import java.util.HashSet
 import java.util.Set
-import acapulco.model.Feature
-import acapulco.featuremodel.FeatureModelHelper
 
 import static extension acapulco.rulesgeneration.activationdiagrams.principles.PrinciplesUtil.*
-import acapulco.model.FeatureModel
 
 /**
  * Main class for generating rules. This should be reused for all feature decisions for which rules are to be generated within one feature model.
@@ -27,6 +27,13 @@ class FeatureActivationDiagram {
 
 	new(FeatureModel featureModel) {
 		this.fmHelper = new FeatureModelHelper(featureModel)
+	}
+
+	/**
+	 * For testing purposes
+	 */
+	def getDiagramNodes() {
+		diagram.unmodifiableView
 	}
 
 	/**
