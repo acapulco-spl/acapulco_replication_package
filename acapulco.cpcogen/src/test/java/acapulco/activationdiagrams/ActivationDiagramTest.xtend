@@ -24,7 +24,8 @@ import java.util.Collections
 import java.util.List
 import java.util.Map.Entry
 import java.util.Set
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
 
@@ -47,10 +48,11 @@ class ActivationDiagramTest {
 	/**
 	 * Generate all activation sub-diagrams for the feature model, then do some basic checks
 	 */
-	@Test
-	def void testFeatureSubDiagramCreation() {
-		// TODO: This should really be in src/test/resources
-		val fmPath = "testdata/ad-test-1.sxfm.xml"
+	@ParameterizedTest
+	// Add more paths to more feature models to test below...
+	// TODO: This should really be in src/test/resources
+	@ValueSource(strings = #["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml"])
+	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
@@ -69,6 +71,10 @@ class ActivationDiagramTest {
 
 			fasdActivate.checkExclusions
 			fasdDeActivate.checkExclusions
+			
+			// TODO: Test presence conditions -- need to provide data oracle for this, I think
+			
+			// TODO: Test or implications -- need to provide data oracle for this, I think
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",

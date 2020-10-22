@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.emf.common,
  org.eclipse.emf.henshin.model,
  org.junit.jupiter.api,
  acapulco.featureide,
- acapulco.model
+ acapulco.model,
+ org.junit.jupiter.params;bundle-version="5.6.0"
 Import-Package: org.sat4j.specs;version=2.3.1
 
 
