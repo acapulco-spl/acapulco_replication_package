@@ -71,13 +71,13 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		run(fm, sc, sv, debug);
 	}
 
-	private void run(String fm, StoppingCondition sc, Integer sv, boolean debug) {
+	public void run(String fm, StoppingCondition sc, Integer sv, boolean debug) {
 		String augment = fm + ".augment";
 		String dead = fm + ".dead";
 		String mandatory = fm + ".mandatory";
 		String seed = fm + ".richseed";
 		String metamodel = fm + ".ecore";
-		String rules = fm + ".rules";
+		String rules = fm + ".cpcos";
 
 		EPackage metamodel_ = readMetamodel(metamodel);
 		List<Rule> rules_ = readRulesFromDirectory(rules, metamodel_);

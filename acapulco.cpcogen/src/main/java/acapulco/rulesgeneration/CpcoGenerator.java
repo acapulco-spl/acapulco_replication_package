@@ -17,8 +17,10 @@ public class CpcoGenerator {
 		FeatureActivationDiagram ad = new FeatureActivationDiagram(fm); // FM-specific
 		FMConfigurationMetamodelGenerator metamodelGen = new FMConfigurationMetamodelGenerator(fm, fmName, fmName,
 				"http://"+fmName);
+		
 		metamodelGen.generateMetamodel();
-		metamodelGen.saveMetamodel(outpath + "/acapulco/cpcos/" + fmName+".ecore");
+		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".dimacs.ecore");
+		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".ecore");
 
 		for (Feature f : metamodelGen.geteClasses().keySet()) {
 			if(f.getName().startsWith("R"))
