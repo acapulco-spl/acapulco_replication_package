@@ -209,7 +209,7 @@ class FeatureActivationSubDiagram {
 				counter.set(0, ID)
 				new VBRuleOrAlternative(
 					// TODO: This introduces a small lookahead, which might make performance a little less good
-					'''�source.name�_Alternative�ID�_�it.name�''',
+					'''«source.name»_Alternative«ID»_«it.name»''',
 					or,
 					ID
 				)
