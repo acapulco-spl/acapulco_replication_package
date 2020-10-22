@@ -14,8 +14,7 @@ class DeReq extends PrincipleTester {
 		val fd = activationDiagram.findDeactivationOf(f)
 		val consequences = fd.consequences.collectFeatureDecisions
 
-		// TODO: There is a bug here: if I change the below to f.activableCTCFeaturesForActivateF, the test breaks, but the two should logically be the same
-		assertTrue('''All required features of «f.name» must be deactivated.''', f.deactivableCTCFeaturesForDeactivateF.
+		assertTrue('''All features requiring «f.name» must be deactivated.''', f.deactivableCTCFeaturesForDeactivateF.
 			forall [ requiredFeature |
 				consequences.exists[deactivationOf(requiredFeature)]
 			])

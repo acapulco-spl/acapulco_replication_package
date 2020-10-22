@@ -14,12 +14,14 @@ class DeXor extends PrincipleTester {
 		if (f.parentFeature.isXORGroup) {
 			val fd = activationDiagram.findDeactivationOf(f)
 			val consequences = fd.consequences.collectOrNodes
-			val siblings = f.parentFeature.ownedFeatures.reject[it === f].toSet
+			val siblings = f.siblings
 
-			assertTrue('''Must have a disjunction of activations for all siblings of «f.name».''', consequences.exists [ orNode |
+			assertTrue('''Must have a disjunction of activations for all siblings of «f.name» and the deactivation of its parent feature.''', consequences.exists [ orNode |
 				val fds = orNode.collectFeatureDecisions;
 
-				(fds.size === siblings.size) && siblings.forall[sibling|fds.exists[activationOf(sibling)]]
+				(fds.size === siblings.size + 1) && 
+				siblings.forall[sibling|fds.exists[activationOf(sibling)]] &&
+				fds.exists[deactivationOf(f.parentFeature)]
 			])
 		}
 	}

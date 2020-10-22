@@ -51,7 +51,7 @@ class ActivationDiagramTest {
 		// TODO: This should really be in src/test/resources
 		val fmPath = "testdata/ad-test-1.sxfm.xml"
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
-		val fh = new FeatureModelHelper(fm)
+		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
 		val allRealOptionalFeatures = fh.features.reject[alwaysActiveFeatures.contains(it)].toSet
 
@@ -60,7 +60,7 @@ class ActivationDiagramTest {
 		allRealOptionalFeatures.forEach [ f |
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
-
+			
 			principleChecks.forEach[checkPrincipleApplies(f, diagramNodes, fh)]
 		]
 

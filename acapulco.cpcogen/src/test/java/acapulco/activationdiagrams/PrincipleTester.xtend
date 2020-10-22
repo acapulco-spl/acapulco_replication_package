@@ -16,6 +16,10 @@ abstract class PrincipleTester {
 	def void checkPrincipleApplies(Feature f, Set<ActivationDiagramNode> activationDiagram,
 		FeatureModelHelper featureModelHelper)
 
+	protected def getSiblings (Feature f) {
+		f.parentFeature.ownedFeatures.reject[it === f].toSet
+	}
+
 	protected def findActivationOf(Set<ActivationDiagramNode> activationDiagram, Feature f) {
 		activationDiagram.filter(FeatureDecision).filter[activationOf(f)].head
 	}
