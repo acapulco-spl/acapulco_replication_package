@@ -66,10 +66,34 @@ class ActivationDiagramTest {
 
 			fasdActivate.assertRootFeatureProperties(f, true)
 			fasdDeActivate.assertRootFeatureProperties(f, false)
+
+			fasdActivate.checkExclusions
+			fasdDeActivate.checkExclusions
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
 			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
+	}
+
+	private def checkExclusions(FeatureActivationSubDiagram fasd) {
+		val presenceConditions = fasd.presenceConditions
+		val exclusions = fasd.featureExclusions
+		fasd.featureDecisions.filter[activate].forEach [ fdPlus |
+			val fdMinus = fasd.featureDecisions.reject[activate].findFirst[feature === fdPlus.feature]
+
+			if (fdMinus !== null) {
+				// For every pair of conflicting feature decisions, check that they can never occur together
+				val pcPlus = presenceConditions.get(fdPlus)
+				val pcMinus = presenceConditions.get(fdMinus)
+
+				assertTrue(
+					'''Feature Activation Sub-Diagram for «fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'+':'-'» contains conflicting decisions for feature «fdPlus.feature.name» and these are not mutually excluded.''',
+					pcPlus.forall [ ppc |
+						pcMinus.forall[mpc|exclusions.contains(ppc -> mpc) || exclusions.contains(mpc -> ppc)]
+					]
+				)
+			}
+		]
 	}
 
 	private def assertRootFeatureProperties(FeatureActivationSubDiagram fasd, Feature f, boolean activate) {
