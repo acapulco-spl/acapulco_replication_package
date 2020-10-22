@@ -15,24 +15,17 @@ class DeOr extends PrincipleTester {
 			val fd = activationDiagram.findDeactivationOf(f)
 			val siblings = f.siblings
 
-			if (siblings.size > 1) {
-				val consequences = fd.consequences.collectOrNodes
+			val consequences = fd.consequences.collectOrNodes
 
-				assertTrue('''Must have a disjunction of activations for all siblings of «f.name» and the deactivation of its parent feature.''', consequences.
-					exists [ orNode |
-						val fds = orNode.collectFeatureDecisions;
+			assertTrue('''Must have a disjunction of activations for all siblings of «f.name» and the deactivation of its parent feature.''', consequences.
+				exists [ orNode |
+					val fds = orNode.collectFeatureDecisions;
 
-						(fds.size === siblings.size + 1) &&
-							siblings.forall[sibling|fds.exists[activationOf(sibling)]] && fds.exists [
-								deactivationOf(f.parentFeature)
-							]
-					])
-			} else if (siblings.size === 1) {
-				assertTrue(
-					'''Must have an activation of the sibling of «f.name».''',
-					fd.consequences.collectFeatureDecisions.exists[activationOf(siblings.head)]
-				)
-			}
+					(fds.size === siblings.size + 1) && siblings.forall[sibling|fds.exists[activationOf(sibling)]] &&
+						fds.exists [
+							deactivationOf(f.parentFeature)
+						]
+				])
 		}
 	}
 }
