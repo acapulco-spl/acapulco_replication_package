@@ -25,7 +25,7 @@ import java.util.Map.Entry
 import java.util.Set
 import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.assertEquals
+import static org.junit.Assert.*
 
 class ActivationDiagramTest {
 
@@ -62,6 +62,21 @@ class ActivationDiagramTest {
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
 			
 			principleChecks.forEach[checkPrincipleApplies(f, diagramNodes, fh)]
+			
+			assertSame('''Was expecting root feature of sub-diagram to be «f.name»''', f, fasdActivate.rootDecision.feature)
+			assertSame('''Was expecting root feature of sub-diagram to be «f.name»''', f, fasdDeActivate.rootDecision.feature)
+			assertTrue('''Was expecting root feature of sub-diagram to activated.''', fasdActivate.rootDecision.activate)
+			assertFalse('''Was expecting root feature of sub-diagram to deactivated.''', fasdDeActivate.rootDecision.activate)
+			
+			// Require root fd's presence condition to be fully simplified
+			val fasdActivateRootPC = fasdActivate.presenceConditions.get(fasdActivate.rootDecision)
+			assertTrue('''Feature activation sub-diagram for «f.name»+ should define that feature's presence condition to be 'root'.''',
+				(fasdActivateRootPC.size === 1) && (fasdActivateRootPC.head === fasdActivate.vbRuleFeatures)
+			)
+			val fasdDeActivateRootPC = fasdDeActivate.presenceConditions.get(fasdDeActivate.rootDecision)
+			assertTrue('''Feature activation sub-diagram for «f.name»- should define that feature's presence condition to be 'root'.''',
+				(fasdDeActivateRootPC.size === 1) && (fasdDeActivateRootPC.head === fasdDeActivate.vbRuleFeatures)
+			)
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",

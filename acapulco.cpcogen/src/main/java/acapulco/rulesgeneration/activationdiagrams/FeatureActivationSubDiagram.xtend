@@ -98,7 +98,7 @@ class FeatureActivationSubDiagram {
 	}
 
 	def getPresenceConditions() {
-		presenceConditions.mapValues[flatMap[resolvedCondition].toSet]
+		presenceConditions.mapValues[resolveAndSimplify]
 	}
 
 	def getOrImplications() {
@@ -231,5 +231,16 @@ class FeatureActivationSubDiagram {
 
 	private dispatch def String getName(FeatureDecision fd) {
 		fd.feature.name + (fd.activate ? "Act" : "DeAct")
+	}
+
+	private def resolveAndSimplify(Set<PresenceCondition> presenceConditions) {
+		val tentativeResolvedCondition = presenceConditions.flatMap[resolvedCondition].toSet
+
+		if (tentativeResolvedCondition.contains(vbRuleFeatures)) {
+			// If the root feature is one of the conditions, everything else doesn't matter :-)
+			#{vbRuleFeatures}
+		} else {
+			tentativeResolvedCondition
+		}
 	}
 }

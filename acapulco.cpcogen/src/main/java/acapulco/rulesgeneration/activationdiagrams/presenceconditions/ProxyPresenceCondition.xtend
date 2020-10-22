@@ -1,9 +1,10 @@
 package acapulco.rulesgeneration.activationdiagrams.presenceconditions
 
+import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
+import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import java.util.HashSet
 import java.util.Map
 import java.util.Set
-import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 
 class ProxyPresenceCondition extends PresenceCondition {
 	val FeatureDecision fd
@@ -54,7 +55,7 @@ class ProxyPresenceCondition extends PresenceCondition {
 			} else {
 				pc.resolvedCondition
 			}
-		].toSet
+		].toSet		
 	}
 
 }
