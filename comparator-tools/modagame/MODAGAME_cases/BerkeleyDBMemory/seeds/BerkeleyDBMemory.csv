@@ -1,0 +1,9 @@
+have_hash
+berkeleydb
+ps16k
+pagesize
+have_replication
+have_sequence
+cs16mb
+cachesize
+diagnostic

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<struct>
+		<and mandatory="true" name="R">
+			<or name="F1">
+				<feature name="F2"/>
+				<feature name="F3"/>
+			</or>
+			<alt name="F4">
+				<feature name="F5"/>
+				<feature name="F6"/>
+				<feature name="F7"/>
+			</alt>
+		</and>
+	</struct>
+	<constraints>
+		<rule>
+			<disj>
+				<not>
+					<var>F1</var>
+				</not>
+				<var>F4</var>
+			</disj>
+		</rule>
+		<rule>
+			<disj>
+				<not>
+					<var>F3</var>
+				</not>
+				<not>
+					<var>F5</var>
+				</not>
+			</disj>
+		</rule>
+	</constraints>
+</featureModel>

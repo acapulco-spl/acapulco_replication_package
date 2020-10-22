@@ -1,0 +1,32 @@
+<feature_model name="Wget Product Line">
+<meta>
+<data name="description">Wget feature model</data>
+<data name="creator">Roberto Lopez-Herrejon based on N. Siegmund dissertation </data>
+<data name="email">roberto.lopezherrejon@acm.org</data>
+<data name="date">07.02.2013</data>
+<data name="organization">JKU Linz</data>
+</meta>
+<feature_tree>
+:r wget (wget)
+	:m base (base)
+	:o output_file (output_file)
+	:o server_response (server_response)
+	:o no_clobber (no_clobber)
+	:o no_dns_cache (no_dns_cache)
+	:o verbosity (verbosity)
+		:g	[1,1]
+			: no_verbose (no_verbose)
+			: verbose (verbose)
+			: quiet (quiet)
+	:o no_directories (no_directories)
+	:o no_host_directories (no_host_directories)
+	:o no_http_keep_alive (no_http_keep_alive)
+	:o no_cookies (no_cookies)
+	:o save_headers (save_headers)
+	:o convert_links (convert_links)
+	:o strict_comments (strict_comments)
+</feature_tree>
+<constraints>
+</constraints>
+</feature_model>
+      

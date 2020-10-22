@@ -1,0 +1,46 @@
+c 1 CopyMedia
+c 2 SMSTransfer
+c 3 Photo
+c 4 Favourites
+c 5 ViewFavourites
+c 6 Screen2
+c 7 Screen3
+c 8 Screen1
+c 9 MobileMedia
+c 10 Music
+c 11 Video
+c 12 ReceivePhoto
+c 13 SendPhoto
+c 14 MediaManagement
+c 15 ScreenSize
+c 16 SetFavourites
+c 17 MediaSelection
+p cnf 17 28
+9 0
+2 -12 0
+2 -13 0
+4 -16 0
+4 -5 0
+16 -4 0
+5 -4 0
+9 -17 0
+9 -14 0
+9 -15 0
+17 -9 0
+14 -9 0
+15 -9 0
+14 -4 0
+14 -1 0
+14 -2 0
+15 -8 0
+15 -6 0
+15 -7 0
+8 6 7 -15 0
+-8 -6 0
+-8 -7 0
+-6 -7 0
+17 -3 0
+17 -10 0
+17 -11 0
+3 10 11 -17 0
+-2 1 0

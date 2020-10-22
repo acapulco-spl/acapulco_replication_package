@@ -1,0 +1,97 @@
+c 1 DE
+c 2 Easy
+c 3 Platform
+c 4 Beschleunigung
+c 5 Energie
+c 6 USA_M1Abrams
+c 7 Image
+c 8 Sound_fuer_pc
+c 9 Feuerkraft
+c 10 Mars
+c 11 M_780
+c 12 Language
+c 13 Germany_Leopard
+c 14 M_240
+c 15 Sound_fuer_Handy
+c 16 Re_fuer_PC
+c 17 GUI
+c 18 Record
+c 19 fuer_Handy
+c 20 Soundeffekt
+c 21 Tanks
+c 22 China_Type99
+c 23 Re_fuer_Handy
+c 24 Tools
+c 25 AI
+c 26 EN
+c 27 Hard
+c 28 M_600
+c 29 Handy
+c 30 einfrieren
+c 31 TankWar
+c 32 fuer_PC
+c 33 PC
+c 34 Bombe
+c 35 IMG_tool
+c 36 explodieren
+c 37 Map
+p cnf 37 59
+31 0
+3 -33 0
+3 -29 0
+33 29 -3 0
+-33 -29 0
+7 -32 0
+7 -19 0
+7 -35 0
+12 -26 0
+12 -1 0
+26 1 -12 0
+-26 -1 0
+17 -37 0
+17 -7 0
+37 -17 0
+18 -16 0
+18 -23 0
+16 23 -18 0
+-16 -23 0
+20 -8 0
+20 -15 0
+8 15 -20 0
+-8 -15 0
+21 -6 0
+21 -13 0
+21 -22 0
+6 13 22 -21 0
+24 -4 0
+24 -30 0
+24 -34 0
+24 -5 0
+24 -9 0
+24 -10 0
+4 30 34 5 9 10 -24 0
+25 -2 0
+25 -27 0
+2 27 -25 0
+-2 -27 0
+31 -3 0
+31 -24 0
+31 -36 0
+31 -17 0
+31 -18 0
+31 -20 0
+31 -12 0
+31 -21 0
+31 -25 0
+3 -31 0
+17 -31 0
+12 -31 0
+21 -31 0
+25 -31 0
+37 -14 0
+37 -28 0
+37 -11 0
+14 28 11 -37 0
+-14 -28 0
+-14 -11 0
+-28 -11 0

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Pipeline
+Bundle-SymbolicName: acapulco.pipeline
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: acapulco.model,
+ acapulco.featureide,
+ acapulco.cpcogen,
+ acapulco.engine,
+ acapulco.preparation

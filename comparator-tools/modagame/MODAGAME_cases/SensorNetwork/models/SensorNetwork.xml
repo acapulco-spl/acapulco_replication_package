@@ -1,0 +1,52 @@
+<feature_model name="SensorNetwork Product Line">
+<meta>
+<data name="description">SensorNetwork feature model</data>
+<data name="creator">Roberto Lopez-Herrejon based on N. Siegmund dissertation </data>
+<data name="email">roberto.lopezherrejon@acm.org</data>
+<data name="date">07.02.2013</data>
+<data name="organization">JKU Linz</data>
+</meta> 
+<feature_tree>
+:r SensorNetwork (SensorNetwork)
+	:o Access (Access)
+		:o http (http)
+	:o Communication (Communication)
+		:g 	[1,*]
+			: Client (Client)
+			: Server (Server)
+			: MultiCast (MultiCast)
+				:m Receive (Receive)
+				:m Send (Send)
+	:m Base (Base)
+	:o ConnectSensors (ConnectSensors)
+	:o Routing (Routing)
+		:g	[1,*]
+			: RoutingData (RoutingData)
+			: Streaming (Streaming)
+	:o Data (Data)
+		:g	[1,*]
+			: Aggregation (Aggregation)
+			: Query (Query)
+	:m Threading (Threading)
+		:g	[1,1]
+			: ST (ST)
+			: MT (MT)
+	:o Sensor (Sensor)
+		:o Simulation (Simulation)
+	:o Storage (Storage)
+		:o BerkeleyDB (BerkeleyDB)
+			:o gen (gen)
+		:o Sqlite (Sqlite)	
+	:o Statistics (Statistics)
+</feature_tree>
+<constraints>
+c1: ~ConnectSensors or Communication  	<!-- ConnectSensors requires Communication -->
+c2: ~Routing or Communication  			<!-- Routing requires Communication -->
+c3-1: ~ConnectSensors or Client  		<!-- ConnectSensors implies Client and  Server and MultiCast-->
+c3-2: ~ConnectSensors or Server
+c3-3: ~ConnectSensors or MultiCast
+c4: ~Aggregation or Sqlite				<!-- Aggregation requires Sqlite -->
+c5: ~Streaming or BerkeleyDB			<!-- Streaming requires BerkeleyDB -->
+</constraints>
+</feature_model>
+      

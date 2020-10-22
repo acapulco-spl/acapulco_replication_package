@@ -1,0 +1,33 @@
+<feature_model name="x264 Product Line">
+<meta>
+<data name="description">x264 feature model</data>
+<data name="creator">Roberto Lopez-Herrejon based on N. Siegmund dissertation </data>
+<data name="email">roberto.lopezherrejon@acm.org</data>
+<data name="date">07.02.2013</data>
+<data name="organization">JKU Linz</data>
+</meta>
+<feature_tree>
+:r x264 (x264)
+	:m no_asm (no_asm)
+	:o no_8x8dct (no_8x8dct)
+	:o no_cabac (no_cabac)
+	:o no_deblock (no_deblock)
+	:o rc_lookahead (rc_lookahead)
+		:g	[1,1]
+			: rc_lookahead_20 (rc_lookahead_20)
+			: rc_lookahead_40 (rc_lookahead_40)
+			: rc_lookahead_60 (rc_lookahead_60)
+	:o no_fast_pskip (no_fast_pskip)
+	:o ref (ref)
+		:g	[1,1]
+			: ref_one (ref_one)
+			: ref_5 (ref_5)
+			: ref_9 (ref_9)
+	:o no_mixed_refs (no_mixed_refs)
+	:o no_mbtree (no_mbtree)
+	:o no_weightb (no_weightb)
+</feature_tree>
+<constraints>
+</constraints>
+</feature_model>
+      
