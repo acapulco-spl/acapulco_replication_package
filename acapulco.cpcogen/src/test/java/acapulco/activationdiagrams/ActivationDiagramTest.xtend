@@ -13,6 +13,7 @@ import acapulco.activationdiagrams.principleTesters.DeReq
 import acapulco.activationdiagrams.principleTesters.DeXor
 import acapulco.featureide.utils.FeatureIDEUtils
 import acapulco.featuremodel.FeatureModelHelper
+import acapulco.model.Feature
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
@@ -60,27 +61,32 @@ class ActivationDiagramTest {
 		allRealOptionalFeatures.forEach [ f |
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
-			
+
 			principleChecks.forEach[checkPrincipleApplies(f, diagramNodes, fh)]
-			
-			assertSame('''Was expecting root feature of sub-diagram to be «f.name»''', f, fasdActivate.rootDecision.feature)
-			assertSame('''Was expecting root feature of sub-diagram to be «f.name»''', f, fasdDeActivate.rootDecision.feature)
-			assertTrue('''Was expecting root feature of sub-diagram to activated.''', fasdActivate.rootDecision.activate)
-			assertFalse('''Was expecting root feature of sub-diagram to deactivated.''', fasdDeActivate.rootDecision.activate)
-			
-			// Require root fd's presence condition to be fully simplified
-			val fasdActivateRootPC = fasdActivate.presenceConditions.get(fasdActivate.rootDecision)
-			assertTrue('''Feature activation sub-diagram for «f.name»+ should define that feature's presence condition to be 'root'.''',
-				(fasdActivateRootPC.size === 1) && (fasdActivateRootPC.head === fasdActivate.vbRuleFeatures)
-			)
-			val fasdDeActivateRootPC = fasdDeActivate.presenceConditions.get(fasdDeActivate.rootDecision)
-			assertTrue('''Feature activation sub-diagram for «f.name»- should define that feature's presence condition to be 'root'.''',
-				(fasdDeActivateRootPC.size === 1) && (fasdDeActivateRootPC.head === fasdDeActivate.vbRuleFeatures)
-			)
+
+			fasdActivate.assertRootFeatureProperties(f, true)
+			fasdDeActivate.assertRootFeatureProperties(f, false)
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
 			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
+	}
+
+	private def assertRootFeatureProperties(FeatureActivationSubDiagram fasd, Feature f, boolean activate) {
+		assertSame('''Was expecting root feature of sub-diagram for «f.name»«activate?'+':'-'» to be «f.name»''', f,
+			fasd.rootDecision.feature)
+		assertSame(
+			'''Was expecting root feature of sub-diagram for «f.name»«activate?'+':'-'» to be «!activate?'de'»activated.''',
+			activate,
+			fasd.rootDecision.activate
+		)
+
+		// Require root fd's presence condition to be fully simplified
+		val fasdRootPC = fasd.presenceConditions.get(fasd.rootDecision)
+		assertTrue(
+			'''Feature activation sub-diagram for «f.name»«activate?'+':'-'» should define that feature's presence condition to be 'root'.''',
+			(fasdRootPC.size === 1) && (fasdRootPC.head === fasd.vbRuleFeatures)
+		)
 	}
 
 	/*
