@@ -69,7 +69,7 @@ class ActivationDiagramTest {
 				val pcMinus = presenceConditions.get(fdMinus)
 
 				assertTrue(
-					'''Feature Activation Sub-Diagram for «fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'+':'-'» contains conflicting decisions for feature «fdPlus.feature.name» and these are not mutually excluded.''',
+					'''Feature Activation Sub-Diagram for «fasd.rootDecision» contains conflicting decisions for feature «fdPlus.feature.name» and these are not mutually excluded.''',
 					pcPlus.forall [ ppc |
 						pcMinus.forall[mpc|exclusions.contains(ppc -> mpc) || exclusions.contains(mpc -> ppc)]
 					]
@@ -128,7 +128,7 @@ class ActivationDiagramTest {
 	def private void printFeatureActivationSubDiagram(FeatureActivationSubDiagram sd) {
 		var List<String> outputList = new ArrayList<String>()
 		for (Entry<FeatureDecision, Set<VBRuleFeature>> pc : sd.getPresenceConditions().entrySet()) {
-			var String output = '''�pc.getKey()� -> '''
+			var String output = '''«pc.getKey()» -> '''
 			if (pc.getValue().size() === 1) {
 				output += pc.getValue().iterator().next().getName()
 			} else {

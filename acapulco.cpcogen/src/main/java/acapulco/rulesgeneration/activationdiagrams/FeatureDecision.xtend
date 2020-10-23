@@ -17,6 +17,8 @@ class FeatureDecision extends ActivationDiagramNode {
 		this.activate = activate
 	}
 	
+	override toString() '''«feature.name»«activate?'+':'-'»'''
+	
 	override hashCode() {
 		feature.hashCode + (activate?1:0)
 	}
