@@ -225,16 +225,16 @@ public class SatSolver {
 				int[] model = mi.model();
 				List<String> sol = new LinkedList<>();
 				
-				for (int i : model) {
-					if (i > 0) {
-						PropositionSymbol ps = reverseIndex.get(i);
-						if (ps != null) {
-							sol.add(ps.getSymbol());
-						}
-					}
-				}
-				/*
-				 * Steffen: Swapped this around to reduce the number of loops within loops. That gave us a little bit of extra performance, though not a huge amount.
+//				for (int i : model) {
+//					if (i > 0) {
+//						PropositionSymbol ps = reverseIndex.get(i);
+//						if (ps != null) {
+//							sol.add(ps.getSymbol());
+//						}
+//					}
+//				}
+//				/*
+//				 * Steffen: Swapped this around to reduce the number of loops within loops. That gave us a little bit of extra performance, though not a huge amount.
 				for (PropositionSymbol key : indices.keySet()) {
 					int index = indices.get(key);
 					for (int i : model) {
@@ -242,7 +242,8 @@ public class SatSolver {
 							sol.add(key.getSymbol());
 						}
 					}
-				}*/
+				}
+//				*/
 				result.add(sol);
 			}
 			return result;

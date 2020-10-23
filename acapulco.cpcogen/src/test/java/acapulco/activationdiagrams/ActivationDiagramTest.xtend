@@ -3,7 +3,6 @@ package acapulco.activationdiagrams
 import acapulco.activationdiagrams.fasdPrincipleTesters.FADPrincipleTester
 import acapulco.engine.variability.ExtendedSentence
 import acapulco.engine.variability.FeatureExpression
-import acapulco.engine.variability.RuleProvider
 import acapulco.engine.variability.SatSolver
 import acapulco.engine.variability.XorEncoderUtil
 import acapulco.featureide.utils.FeatureIDEUtils
@@ -24,10 +23,14 @@ import java.util.Collections
 import java.util.List
 import java.util.Map.Entry
 import java.util.Set
+import org.eclipse.emf.henshin.model.ModelElement
+import org.eclipse.emf.henshin.model.Node
+import org.eclipse.emf.henshin.model.Rule
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
+import aima.core.logic.propositional.parsing.ast.Connective
 
 class ActivationDiagramTest {
 
@@ -90,17 +93,24 @@ class ActivationDiagramTest {
 		// 2. Extract VB feature model and SAT solve to identify all rule instantiations
 		val featureConstraint = XorEncoderUtil.encodeXor(rule.annotations.head.value)
 		val featuresAsString = rule.annotations.get(2).value.replace(" ", "")
-		val features = featuresAsString.split(",").toList
+		val features = featuresAsString.split(",").map[trim].toList
 
 		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
 		val sentence = FeatureExpression.getExpr(featureConstraint)
 		println('''FASD for «fasd.rootDecision» produced «sentence.topLevelLength» conjunctions of disjunctions over «features.size» VB rule features.''')
 
-		val solutions = SatSolver.getAllSolutions(featureConstraint)
+		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
 
 		println('''(«fasd.rootDecision») From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
 
-		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)		
+		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
+		
+		// Extract unique rule instances
+		val uniqueRuleInstances = solutions.map[solution | rule.activeFeatureDecisionsFor(solution) ].toSet
+		
+		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.size» unique rule instances.''')
+		
+				
 		solutions.forEach [ solution |
 			// TODO: At the current number of solutions produced by the SAT Solver, this takes too long. Need to simplify
 			throw new UnsupportedOperationException("Test incomplete at this point") 
@@ -109,6 +119,24 @@ class ActivationDiagramTest {
 		// TODO: 3.1 no conflicting decisions
 		// TODO: 3.2 all principles satisfied
 		]
+	}
+	
+	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures) {
+		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures)].map[createFeatureDecision].toSet
+	}
+	
+	private def createFeatureDecision(Node n) {
+		n.type.name -> (n.attributes.head.value == "true")
+	}
+	
+	private def pcFulfilled(ModelElement n, List<String> selectedFeatures) {
+		val pc = n.annotations.head.value
+		if (pc === null || pc.isBlank) {
+			return true			
+		}
+		
+		// We know the PC is only a disjunction...
+		pc.split("|").exists[selectedFeatures.contains(it.trim)]
 	}
 
 	private dispatch def Integer getTopLevelLength(ExtendedSentence sentence) {
@@ -125,7 +153,10 @@ class ActivationDiagramTest {
 
 	private dispatch def int getTopLevelLength(ComplexSentence sentence) {
 		if (sentence.binarySentence) {
-			sentence.getSimplerSentence(1).topLevelLength + 1
+			val left = sentence.getSimplerSentence(0)
+			val right = sentence.getSimplerSentence(1)
+			
+			((left.connective === Connective.AND)?left:right).topLevelLength + 1
 		} else {
 			1
 		}

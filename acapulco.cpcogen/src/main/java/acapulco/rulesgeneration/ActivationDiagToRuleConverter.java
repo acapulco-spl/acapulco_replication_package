@@ -56,7 +56,7 @@ public class ActivationDiagToRuleConverter {
 		}
 		
 		for (Pair<VBRuleFeature, VBRuleFeature> exclPair : activationDiagram.getFeatureExclusions()) {
-				constraint += "(" + exclPair.getKey().getName() + " => " + exclPair.getValue().getName() + ") & ";
+				constraint += "(!" + exclPair.getKey().getName() + " | !" + exclPair.getValue().getName() + ") & ";
 		}
 		
 		if (constraint.endsWith(" & ")) {
