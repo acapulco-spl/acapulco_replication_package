@@ -1,22 +1,22 @@
-package acapulco.activationdiagrams.principleTesters
+package acapulco.activationdiagrams.fasdPrincipleTesters
 
-import acapulco.activationdiagrams.PrincipleTester
-import acapulco.model.Feature
-import java.util.Set
-import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
 import acapulco.featuremodel.FeatureModelHelper
+import acapulco.model.Feature
+import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
+import java.util.Set
+
 import static org.junit.Assert.assertTrue
 
-class ActMand extends PrincipleTester {
+class ActXor extends FADPrincipleTester {
 
 	override checkPrincipleApplies(Feature f, Set<ActivationDiagramNode> activationDiagram,
 		extension FeatureModelHelper featureModelHelper) {
-		if (!f.isGroup) {
+		if (f.parentFeature.isXORGroup) {
 			val fd = activationDiagram.findActivationOf(f)
 			val consequences = fd.consequences.collectFeatureDecisions
 
-			assertTrue('''All mandatory children of «f.name» must be activated.''', f.mandatoryChildren.forall [ mc |
-				consequences.exists[activationOf(mc)]
+			assertTrue('''All siblings of «f.name» must be deactivated.''', f.parentFeature.ownedFeatures.reject [it === f].forall [ sibling |
+				consequences.exists[deactivationOf(sibling)]
 			])
 		}
 	}

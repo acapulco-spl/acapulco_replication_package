@@ -1,13 +1,13 @@
-package acapulco.activationdiagrams.principleTesters
+package acapulco.activationdiagrams.fasdPrincipleTesters
 
-import acapulco.activationdiagrams.PrincipleTester
-import acapulco.model.Feature
-import java.util.Set
-import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
 import acapulco.featuremodel.FeatureModelHelper
+import acapulco.model.Feature
+import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
+import java.util.Set
+
 import static org.junit.Assert.assertTrue
 
-class DeChild extends PrincipleTester {
+class DeChild extends FADPrincipleTester {
 
 	override checkPrincipleApplies(Feature f, Set<ActivationDiagramNode> activationDiagram,
 		extension FeatureModelHelper featureModelHelper) {

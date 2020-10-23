@@ -1,16 +1,6 @@
 package acapulco.activationdiagrams
 
-import acapulco.activationdiagrams.principleTesters.ActExc
-import acapulco.activationdiagrams.principleTesters.ActGroup
-import acapulco.activationdiagrams.principleTesters.ActMand
-import acapulco.activationdiagrams.principleTesters.ActPar
-import acapulco.activationdiagrams.principleTesters.ActReq
-import acapulco.activationdiagrams.principleTesters.ActXor
-import acapulco.activationdiagrams.principleTesters.DeChild
-import acapulco.activationdiagrams.principleTesters.DeOr
-import acapulco.activationdiagrams.principleTesters.DeParent
-import acapulco.activationdiagrams.principleTesters.DeReq
-import acapulco.activationdiagrams.principleTesters.DeXor
+import acapulco.activationdiagrams.fasdPrincipleTesters.FADPrincipleTester
 import acapulco.featureide.utils.FeatureIDEUtils
 import acapulco.featuremodel.FeatureModelHelper
 import acapulco.model.Feature
@@ -31,20 +21,6 @@ import static org.junit.Assert.*
 
 class ActivationDiagramTest {
 
-	static val principleChecks = #[
-		new ActMand,
-		new ActPar,
-		new ActReq,
-		new ActGroup,
-		new ActXor,
-		new ActExc,
-		new DeChild,
-		new DeXor,
-		new DeOr,
-		new DeParent,
-		new DeReq
-	]
-
 	/**
 	 * Generate all activation sub-diagrams for the feature model, then do some basic checks
 	 */
@@ -64,7 +40,7 @@ class ActivationDiagramTest {
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
 
-			principleChecks.forEach[checkPrincipleApplies(f, diagramNodes, fh)]
+			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
 
 			fasdActivate.assertRootFeatureProperties(f, true)
 			fasdDeActivate.assertRootFeatureProperties(f, false)
