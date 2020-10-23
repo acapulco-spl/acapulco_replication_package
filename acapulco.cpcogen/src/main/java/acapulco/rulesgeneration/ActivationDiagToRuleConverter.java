@@ -97,7 +97,7 @@ public class ActivationDiagToRuleConverter {
 			System.out.println("type was null");
 		
 		Node lhsNode = HenshinFactory.eINSTANCE.createNode(rule.getLhs(), type, "");
-		Node rhsNode = HenshinFactory.eINSTANCE.createNode(rule.getLhs(), type, "");
+		Node rhsNode = HenshinFactory.eINSTANCE.createNode(rule.getRhs(), type, "");
 		rule.getMappings().add(lhsNode, rhsNode);
 		EAttribute attributeType = type.getEAllAttributes().get(0);
 		if (isRoot)

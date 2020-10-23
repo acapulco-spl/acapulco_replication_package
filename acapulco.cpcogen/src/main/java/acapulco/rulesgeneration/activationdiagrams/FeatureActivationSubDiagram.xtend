@@ -1,9 +1,6 @@
 package acapulco.rulesgeneration.activationdiagrams
 
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.HashSet
-import java.util.Set
+import acapulco.model.Feature
 import acapulco.rulesgeneration.activationdiagrams.orimplications.FinalisedOrImplication
 import acapulco.rulesgeneration.activationdiagrams.orimplications.OrImplication
 import acapulco.rulesgeneration.activationdiagrams.orimplications.ProxyOrImplication
@@ -13,7 +10,11 @@ import acapulco.rulesgeneration.activationdiagrams.presenceconditions.ProxyPrese
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
-import acapulco.model.Feature
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.HashSet
+import java.util.Map
+import java.util.Set
 import org.eclipse.xtend.lib.annotations.Accessors
 
 /**
@@ -97,8 +98,15 @@ class FeatureActivationSubDiagram {
 		].toSet
 	}
 
+	var Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs
+
 	def getPresenceConditions() {
-		presenceConditions.mapValues[resolveAndSimplify]
+		if (resolvedPCs === null) {
+			resolvedPCs = new HashMap
+			resolvedPCs.putAll(presenceConditions.mapValues[resolveAndSimplify])
+		}
+		
+		resolvedPCs
 	}
 
 	def getOrImplications() {

@@ -94,10 +94,11 @@ class ActivationDiagramTest {
 
 		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
 		val sentence = FeatureExpression.getExpr(featureConstraint)
+		println('''FASD for «fasd.rootDecision» produced «sentence.topLevelLength» conjunctions of disjunctions over «features.size» features.''')
 
 		val solutions = SatSolver.getAllSolutions(featureConstraint)
 
-		println('''From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
+		println('''(«fasd.rootDecision») From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)		
 		solutions.forEach [ solution |
