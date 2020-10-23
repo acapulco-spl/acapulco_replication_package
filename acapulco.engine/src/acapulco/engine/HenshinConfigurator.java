@@ -13,7 +13,7 @@ import acapulco.engine.variability.SatSolver;
 import acapulco.engine.variability.XorEncoderUtil;
 
 
-public class HenshinBinaryEngine {
+public class HenshinConfigurator {
 	public static Rule removeVariability(Rule rule) throws Exception {
 		// Assumption: If rules have annotations, they are VB,
 		// and the first annotation is the feature constraint.
