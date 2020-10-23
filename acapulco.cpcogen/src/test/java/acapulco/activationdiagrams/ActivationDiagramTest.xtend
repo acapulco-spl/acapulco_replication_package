@@ -1,13 +1,23 @@
 package acapulco.activationdiagrams
 
 import acapulco.activationdiagrams.fasdPrincipleTesters.FADPrincipleTester
+import acapulco.engine.variability.ExtendedSentence
+import acapulco.engine.variability.FeatureExpression
+import acapulco.engine.variability.RuleProvider
+import acapulco.engine.variability.SatSolver
+import acapulco.engine.variability.XorEncoderUtil
 import acapulco.featureide.utils.FeatureIDEUtils
 import acapulco.featuremodel.FeatureModelHelper
+import acapulco.featuremodel.configuration.FMConfigurationMetamodelGenerator
 import acapulco.model.Feature
+import acapulco.rulesgeneration.ActivationDiagToRuleConverter
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
+import aima.core.logic.fol.parsing.ast.Sentence
+import aima.core.logic.propositional.parsing.ast.ComplexSentence
+import aima.core.logic.propositional.parsing.ast.PropositionSymbol
 import java.nio.file.Paths
 import java.util.ArrayList
 import java.util.Collections
@@ -27,12 +37,16 @@ class ActivationDiagramTest {
 	@ParameterizedTest
 	// Add more paths to more feature models to test below...
 	// TODO: This should really be in src/test/resources
-	@ValueSource(strings = #["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml"])
+	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
 		val allRealOptionalFeatures = fh.features.reject[alwaysActiveFeatures.contains(it)].toSet
+
+		val fmName = "testmm"
+		val metamodelGen = new FMConfigurationMetamodelGenerator(fm, fmName, fmName, "http://" + fmName)
+		metamodelGen.generateMetamodel
 
 		val fad = new FeatureActivationDiagram(fm)
 		val diagramNodes = fad.diagramNodes
@@ -47,14 +61,73 @@ class ActivationDiagramTest {
 
 			fasdActivate.checkExclusions
 			fasdDeActivate.checkExclusions
-			
+
 			// TODO: Test presence conditions -- need to provide data oracle for this, I think
-			
 			// TODO: Test or implications -- need to provide data oracle for this, I think
+			// Test generated rules
+			fasdActivate.generateAndCheckRule(fh, metamodelGen)
+			fasdDeActivate.generateAndCheckRule(fh, metamodelGen)
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
 			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
+	}
+
+	/**
+	 * Generate a rule for the given FASD and check it is sound
+	 */
+	private def generateAndCheckRule(FeatureActivationSubDiagram fasd, FeatureModelHelper helper,
+		FMConfigurationMetamodelGenerator metamodelgen) {
+		// 1. Generate rule
+		val rule = ActivationDiagToRuleConverter.convert(fasd, metamodelgen.geteClasses)
+		assertNotNull("No rule generated", rule)
+
+		// Check that only one LHS node checks the selected state and that that is the one corresponding to the root feature decision
+		val checkingNodes = rule.lhs.nodes.reject[attributes.empty]
+		assertTrue('''Only one feature should be checked for selection status and that should be «fasd.rootDecision.feature.name».''',
+			(checkingNodes.size === 1) && (checkingNodes.head.type.name == fasd.rootDecision.feature.name))
+
+		// 2. Extract VB feature model and SAT solve to identify all rule instantiations
+		val featureConstraint = XorEncoderUtil.encodeXor(rule.annotations.head.value)
+		val featuresAsString = rule.annotations.get(2).value.replace(" ", "")
+		val features = featuresAsString.split(",").toList
+
+		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
+		val sentence = FeatureExpression.getExpr(featureConstraint)
+
+		val solutions = SatSolver.getAllSolutions(featureConstraint)
+
+		println('''From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
+
+		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)		
+		solutions.forEach [ solution |
+			// TODO: At the current number of solutions produced by the SAT Solver, this takes too long. Need to simplify
+			throw new UnsupportedOperationException("Test incomplete at this point") 
+			//val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
+
+		// TODO: 3.1 no conflicting decisions
+		// TODO: 3.2 all principles satisfied
+		]
+	}
+
+	private dispatch def Integer getTopLevelLength(ExtendedSentence sentence) {
+		return sentence.sentence.topLevelLength
+	}
+
+	private dispatch def int getTopLevelLength(Sentence sentence) {
+		1
+	}
+
+	private dispatch def int getTopLevelLength(PropositionSymbol sentence) {
+		1
+	}
+
+	private dispatch def int getTopLevelLength(ComplexSentence sentence) {
+		if (sentence.binarySentence) {
+			sentence.getSimplerSentence(1).topLevelLength + 1
+		} else {
+			1
+		}
 	}
 
 	private def checkExclusions(FeatureActivationSubDiagram fasd) {
