@@ -49,6 +49,8 @@ public class ActivationDiagToRuleConverter {
 		// Constraint
 		String constraint = "";
 		
+		// TODO: Need to add information about the actual feature-model structure
+		
 		for (Entry<VBRuleFeature, Set<VBRuleOrFeature>> orImpl : activationDiagram.getOrImplications().entrySet()) {
 			constraint += "(!" + orImpl.getKey().getName() + " | ";
 			constraint += prettyPrint(orImpl.getValue(), " | ");
