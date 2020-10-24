@@ -104,39 +104,37 @@ class ActivationDiagramTest {
 		println('''(«fasd.rootDecision») From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
-		
 		// Extract unique rule instances
-		val uniqueRuleInstances = solutions.map[solution | rule.activeFeatureDecisionsFor(solution) ].toSet
-		
+		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution)].toSet
+
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.size» unique rule instances.''')
-		
-				
+
 		solutions.forEach [ solution |
 			// TODO: At the current number of solutions produced by the SAT Solver, this takes too long. Need to simplify
-			throw new UnsupportedOperationException("Test incomplete at this point") 
-			//val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
-
+			throw new UnsupportedOperationException("Test incomplete at this point")
+		// val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
 		// TODO: 3.1 no conflicting decisions
 		// TODO: 3.2 all principles satisfied
 		]
 	}
-	
+
 	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures) {
 		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures)].map[createFeatureDecision].toSet
 	}
-	
+
 	private def createFeatureDecision(Node n) {
 		n.type.name -> (n.attributes.head.value == "true")
 	}
-	
+
 	private def pcFulfilled(ModelElement n, List<String> selectedFeatures) {
 		val pc = n.annotations.head.value
 		if (pc === null || pc.isBlank) {
-			return true			
+			return true
 		}
-		
+
 		// We know the PC is only a disjunction...
-		pc.split("|").exists[selectedFeatures.contains(it.trim)]
+		// Param for split must be a regexp...
+		pc.split("\\|").exists[selectedFeatures.contains(it.trim)]
 	}
 
 	private dispatch def Integer getTopLevelLength(ExtendedSentence sentence) {
@@ -155,8 +153,8 @@ class ActivationDiagramTest {
 		if (sentence.binarySentence) {
 			val left = sentence.getSimplerSentence(0)
 			val right = sentence.getSimplerSentence(1)
-			
-			((left.connective === Connective.AND)?left:right).topLevelLength + 1
+
+			((left.connective === Connective.AND) ? left : right).topLevelLength + 1
 		} else {
 			1
 		}
