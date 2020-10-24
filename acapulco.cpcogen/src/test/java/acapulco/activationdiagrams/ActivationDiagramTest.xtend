@@ -1,6 +1,7 @@
 package acapulco.activationdiagrams
 
 import acapulco.activationdiagrams.fasdPrincipleTesters.FADPrincipleTester
+import acapulco.activationdiagrams.fdsetPrincipleTesters.FeatureDecisionSetPrincipleTester
 import acapulco.engine.variability.ExtendedSentence
 import acapulco.engine.variability.FeatureExpression
 import acapulco.engine.variability.SatSolver
@@ -9,6 +10,7 @@ import acapulco.featureide.utils.FeatureIDEUtils
 import acapulco.featuremodel.FeatureModelHelper
 import acapulco.featuremodel.configuration.FMConfigurationMetamodelGenerator
 import acapulco.model.Feature
+import acapulco.model.FeatureModel
 import acapulco.rulesgeneration.ActivationDiagToRuleConverter
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
@@ -16,6 +18,7 @@ import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import aima.core.logic.fol.parsing.ast.Sentence
 import aima.core.logic.propositional.parsing.ast.ComplexSentence
+import aima.core.logic.propositional.parsing.ast.Connective
 import aima.core.logic.propositional.parsing.ast.PropositionSymbol
 import java.nio.file.Paths
 import java.util.ArrayList
@@ -30,7 +33,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
-import aima.core.logic.propositional.parsing.ast.Connective
 
 class ActivationDiagramTest {
 
@@ -79,7 +81,7 @@ class ActivationDiagramTest {
 	/**
 	 * Generate a rule for the given FASD and check it is sound
 	 */
-	private def generateAndCheckRule(FeatureActivationSubDiagram fasd, FeatureModelHelper helper,
+	private def generateAndCheckRule(FeatureActivationSubDiagram fasd, FeatureModelHelper fh,
 		FMConfigurationMetamodelGenerator metamodelgen) {
 		// 1. Generate rule
 		val rule = ActivationDiagToRuleConverter.convert(fasd, metamodelgen.geteClasses)
@@ -97,6 +99,7 @@ class ActivationDiagramTest {
 
 		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
 		val sentence = FeatureExpression.getExpr(featureConstraint)
+		// TODO: I don't believe the topLevelLength numbers: they seem to vary between runs. Probably my heuristics are too simplistic
 		println('''FASD for «fasd.rootDecision» produced «sentence.topLevelLength» conjunctions of disjunctions over «features.size» VB rule features.''')
 
 		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
@@ -105,25 +108,36 @@ class ActivationDiagramTest {
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
-		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution)].toSet
+		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)].toSet
 
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.size» unique rule instances.''')
 
-		solutions.forEach [ solution |
-			// TODO: At the current number of solutions produced by the SAT Solver, this takes too long. Need to simplify
-			throw new UnsupportedOperationException("Test incomplete at this point")
-		// val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
-		// TODO: 3.1 no conflicting decisions
-		// TODO: 3.2 all principles satisfied
+		uniqueRuleInstances.forEach[ruleInstance |
+			// 3.1 no conflicting decisions
+			assertTrue("No rule instance should contain conflicting feature decisions.", 
+				ruleInstance.forall[fd1 | ruleInstance.forall[fd2 | 
+					(fd1 === fd2) ||
+					(fd1.key != fd2.key) ||
+					(fd1.value == fd2.value)
+				]]
+			)
+			
+			// 3.2 all principles satisfied
+			FeatureDecisionSetPrincipleTester.checkPrinciplesApply(ruleInstance, fh)
 		]
+		
+		// TODO: Now run the same tests over the actual rules generated			
+//		solutions.forEach [ solution |			
+//			val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
+//		]
 	}
 
-	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures) {
-		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures)].map[createFeatureDecision].toSet
+	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures, FeatureModel fm) {
+		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures)].map[createFeatureDecision(fm)].toSet
 	}
 
-	private def createFeatureDecision(Node n) {
-		n.type.name -> (n.attributes.head.value == "true")
+	private def createFeatureDecision(Node n, FeatureModel fm) {
+		fm.eAllContents.filter(Feature).findFirst[name == n.type.name] -> (n.attributes.head.value == "true")
 	}
 
 	private def pcFulfilled(ModelElement n, List<String> selectedFeatures) {
