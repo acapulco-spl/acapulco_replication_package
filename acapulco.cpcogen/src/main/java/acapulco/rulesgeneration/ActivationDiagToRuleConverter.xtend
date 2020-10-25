@@ -50,7 +50,7 @@ class ActivationDiagToRuleConverter {
 	}
 	
 	private static def orImplicationExpression(FeatureActivationSubDiagram fasd) {
-		fasd.orImplications.entrySet.map['''(!«key.name» | «value.map[name].join(' | ')»)''']		
+		fasd.orImplications.entrySet.map['''(!«key.name» | («value.map[name].join(' & ')»))''']		
 	}
 	
 	private static def featureModelExpressions(FeatureActivationSubDiagram fasd) {
