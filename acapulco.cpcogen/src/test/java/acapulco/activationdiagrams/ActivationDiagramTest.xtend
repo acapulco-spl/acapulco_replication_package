@@ -108,25 +108,31 @@ class ActivationDiagramTest {
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
-		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)].toSet
+		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)].
+			toSet
 
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.size» unique rule instances.''')
 
-		uniqueRuleInstances.forEach[ruleInstance |
+		uniqueRuleInstances.forEach [ ruleInstance |
 			// 3.1 no conflicting decisions
-			assertTrue("No rule instance should contain conflicting feature decisions.", 
-				ruleInstance.forall[fd1 | ruleInstance.forall[fd2 | 
-					(fd1 === fd2) ||
-					(fd1.key != fd2.key) ||
-					(fd1.value == fd2.value)
-				]]
+			assertTrue(
+				"No rule instance should contain conflicting feature decisions.",
+				ruleInstance.forall [ fd1 |
+					ruleInstance.forall [ fd2 |
+						(fd1 === fd2) || (fd1.key != fd2.key) || (fd1.value == fd2.value)
+					]
+				]
 			)
-			
+
 			// 3.2 all principles satisfied
 			FeatureDecisionSetPrincipleTester.checkPrinciplesApply(ruleInstance, fh)
+
+			// 3.3 root decision is included
+			assertTrue('''FASD for «fasd.rootDecision» produced rule that didn't contain root decision.''', ruleInstance.
+				exists[fd|(fd.key === fasd.rootDecision.feature) && (fd.value === fasd.rootDecision.activate)])
 		]
-		
-		// TODO: Now run the same tests over the actual rules generated			
+
+	// TODO: Now run the same tests over the actual rules generated			
 //		solutions.forEach [ solution |			
 //			val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
 //		]
