@@ -13,8 +13,8 @@ import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.encodings.variable.Binary;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.termination.StoppingCondition;
+import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
+import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 public class Main {
 	public static void main(String[] args) {
