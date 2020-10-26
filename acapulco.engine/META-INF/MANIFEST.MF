@@ -8,7 +8,6 @@ Export-Package: .,
  acapulco.engine,
  acapulco.engine.variability
 Require-Bundle: org.eclipse.emf.henshin.model,
- org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  acapulco.metrics,
  acapulco.thirdpartyplugins

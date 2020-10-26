@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.henshin.model.Node;
 import org.eclipse.emf.henshin.model.Rule;
 
-import acapulco.engine.HenshinBinaryEngine;
+import acapulco.engine.HenshinConfigurator;
 import jmetal.core.Solution;
 import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Binary;
@@ -101,7 +101,7 @@ public class aCaPulCO_Mutation extends Mutation {
 			rule = rules.get(feature2ActivationRule.get(feature));
 		
 		try {
-			rule = HenshinBinaryEngine.removeVariability(rule);
+			rule = HenshinConfigurator.removeVariability(rule);
 		} catch (Exception e) {
 			return;
 		}

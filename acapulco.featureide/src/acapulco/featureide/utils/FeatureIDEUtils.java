@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,13 +25,17 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import de.ovgu.featureide.fm.core.ConstraintAttribute;
 import de.ovgu.featureide.fm.core.FeatureModelAnalyzer;
+import de.ovgu.featureide.fm.core.base.IConstraint;
 import de.ovgu.featureide.fm.core.base.IFeatureModel;
 import de.ovgu.featureide.fm.core.base.impl.Constraint;
 import de.ovgu.featureide.fm.core.base.impl.DefaultFeatureModelFactory;
 import de.ovgu.featureide.fm.core.base.impl.FMFormatManager;
 import de.ovgu.featureide.fm.core.base.impl.FeatureModel;
 import de.ovgu.featureide.fm.core.io.IFeatureModelFormat;
+import de.ovgu.featureide.fm.core.io.IPersistentFormat;
+import de.ovgu.featureide.fm.core.io.manager.FeatureModelManager;
 import de.ovgu.featureide.fm.core.io.manager.FileHandler;
+import de.ovgu.featureide.fm.core.io.sxfm.SXFMFormat;
 import de.ovgu.featureide.fm.core.job.monitor.NullMonitor;
 import acapulco.featureide.FeatureIDE2FM;
 import de.ovgu.featureide.fm.core.configuration.Configuration;
@@ -39,7 +45,9 @@ import de.ovgu.featureide.fm.core.configuration.Configuration;
  * 
  */
 public class FeatureIDEUtils {
-	
+
+private static PrintStream _err;
+
 //	public static List<String> getValidConfiguration(File fmFeatureIDE) throws TimeoutException {
 //		IFeatureModel fm = FeatureIDEUtils.load(fmFeatureIDE);
 //		final Configuration conf = new Configuration(fm);
@@ -50,7 +58,7 @@ public class FeatureIDEUtils {
 //			return new ArrayList<String>();
 //		}
 //	}
-	
+
 	/**
 	 * Load
 	 * 
@@ -59,7 +67,15 @@ public class FeatureIDEUtils {
 	public static IFeatureModel load(File file) {
 		String content = getStringOfFile(file);
 		IFeatureModel featureModel = new FeatureModel(DefaultFeatureModelFactory.ID);
-		IFeatureModelFormat format = FMFormatManager.getInstance().getFormatByContent(content, file.getName());
+
+		IPersistentFormat<IFeatureModel> format = FMFormatManager.getInstance().getFormatByContent(content,
+				file.getName());
+		if (format == null && file.getName().contains(".sxfm")) {
+			format = new SXFMFormat();
+		}
+//		System.out.println(format);
+		
+//		FileHandler.load(file.toPath(), featureModel, FMFormatManager.getInstance() );
 		FileHandler.loadFromString(content, featureModel, format);
 		return featureModel;
 	}
@@ -70,21 +86,25 @@ public class FeatureIDEUtils {
 	 * @param fm
 	 */
 	public static void removeRedundantConstraints(IFeatureModel fm) {
-		FeatureModelAnalyzer analyzer = fm.getAnalyser();
-		analyzer.calculateRedundantConstraints = true;
-		analyzer.calculateTautologyConstraints = false;
-		analyzer.calculateDeadConstraints = false;
-		analyzer.calculateFOConstraints = false;
-		HashMap<Object, Object> o = analyzer.analyzeFeatureModel(new NullMonitor());
-		for (Entry<Object, Object> entry : o.entrySet()) {
-			if (entry.getKey() instanceof Constraint) {
-				if (entry.getValue() instanceof ConstraintAttribute) {
-					if ((ConstraintAttribute) entry.getValue() == ConstraintAttribute.REDUNDANT) {
-						fm.removeConstraint((Constraint) entry.getKey());
-					}
-				}
-			}
-		}
+		FeatureModelAnalyzer analyzer = FeatureModelManager.getAnalyzer(fm);
+//		= fm.getAnalyser();
+		List<IConstraint> redundant = analyzer.getRedundantConstraints(new NullMonitor());
+		redundant.forEach(c -> fm.removeConstraint(c));
+		
+//		analyzer.calculateRedundantConstraints = true;
+//		analyzer.calculateTautologyConstraints = false;
+//		analyzer.calculateDeadConstraints = false;
+//		analyzer.calculateFOConstraints = false;
+//		HashMap<Object, Object> o = analyzer.analyzeFeatureModel(new NullMonitor());
+//		for (Entry<Object, Object> entry : o.entrySet()) {
+//			if (entry.getKey() instanceof Constraint) {
+//				if (entry.getValue() instanceof ConstraintAttribute) {
+//					if ((ConstraintAttribute) entry.getValue() == ConstraintAttribute.REDUNDANT) {
+//						fm.removeConstraint((Constraint) entry.getKey());
+//					}
+//				}
+//			}
+//		}
 	}
 
 	/**
@@ -142,14 +162,32 @@ public class FeatureIDEUtils {
 		return org.eclipse.emf.common.util.URI.createURI(uri.toString());
 	}
 
-	public static acapulco.model.FeatureModel loadFeatureModel(String featureIDE) {
-		return loadFeatureModel(Paths.get(featureIDE).toFile());
+	public static acapulco.model.FeatureModel loadFeatureModel(String featureIDE) {	
+		closeSystemErr();
+		acapulco.model.FeatureModel result = loadFeatureModel(Paths.get(featureIDE).toFile());
+		openSystemErr();
+		return result;
 	}
-	
+
 	public static acapulco.model.FeatureModel loadFeatureModel(File featureIDE) {
-		
+		closeSystemErr();
 		IFeatureModel fm = FeatureIDEUtils.load(featureIDE);
+		openSystemErr();
 		return FeatureIDE2FM.create(fm);
 	}
+	
+
+	private static void closeSystemErr() {
+		_err = System.err;
+		System.setErr(new PrintStream(new OutputStream() {
+		    public void write(int b) {
+		    }
+		}));
+	}
+
+	private static void openSystemErr() {
+		System.setErr(_err);
+	}
+
 
 }

@@ -1,0 +1,35 @@
+<feature_model name="BerkeleyDBMemory version Product Line">
+<meta>
+<data name="description">BerkeleyDBMemory feature model</data>
+<data name="creator">Roberto Lopez-Herrejon based on N. Siegmund dissertation </data>
+<data name="email">roberto.lopezherrejon@acm.org</data>
+<data name="date">07.02.2013</data>
+<data name="organization">JKU Linz</data>
+</meta>
+<feature_tree>
+:r BerkeleyDB (BerkeleyDB)
+	:o HAVE_CRYPTO (HAVE_CRYPTO)
+	:o HAVE_HASH (HAVE_HASH)
+	:o PAGESIZE (PAGESIZE)
+		:g	[1,1]
+			: PS1K (PS1K)
+			: PS4K (PS4K)
+			: PS8K (PS8K)
+			: PS16K (PS16K)
+			: PS32K (PS32K)
+	:o HAVE_REPLICATION (HAVE_REPLICATION)
+	:o HAVE_VERIFY (HAVE_VERIFY)
+	:o HAVE_SEQUENCE (HAVE_SEQUENCE)
+	:o CACHESIZE (CACHESIZE)
+		:g	[1,1]
+			: CS16MB (CS16MB)
+			: CS32MB (CS32MB)
+			: CS64MB (CS64MB)
+			: CS512MB (CS512MB)
+	:o DIAGNOSTIC (DIAGNOSTIC)
+	:o HAVE_STATISTICS (HAVE_STATISTICS)
+</feature_tree>
+<constraints>
+</constraints>
+</feature_model>
+      

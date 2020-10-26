@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MODAGAME_feature_models
+Bundle-SymbolicName: MODAGAME_feature_models
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.uma.mo_dagame.feature_models,
+ org.uma.mo_dagame.feature_models.values_generator

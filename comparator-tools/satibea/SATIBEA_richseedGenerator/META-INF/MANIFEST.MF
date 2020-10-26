@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SATIBEA_richseedGenerator
+Bundle-SymbolicName: SATIBEA_richseedGenerator
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.sat4j.core;bundle-version=2.3.0
+Export-Package: 
+ randomrichsee
