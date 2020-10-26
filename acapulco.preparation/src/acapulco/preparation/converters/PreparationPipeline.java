@@ -29,6 +29,7 @@ public class PreparationPipeline {
 	public static void generateAllFromFm(String directoryInput, String fmNameInput, String caseName,
 			String pathPrefix) throws IOException {
 
+		fmNameInput += ".sxfm";
 		String qaNameInput = "UsabilityBatteryMemory.sample";
 		String pathOutput = pathPrefix + "\\";
 
@@ -91,6 +92,10 @@ public class PreparationPipeline {
 				new File(baseOutputPath + caseName + ".dimacs.augment").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(new File(baseInputPath + ".dimacs.richseed").toPath(),
 				new File(baseOutputPath + caseName + ".dimacs.richseed").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(new File(baseInputPath + ".dimacs.mandatory").toPath(),
+				new File(baseOutputPath + caseName + ".dimacs.mandatory").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(new File(baseInputPath + ".dimacs.dead").toPath(),
+				new File(baseOutputPath + caseName + ".dimacs.dead").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		// Copy Modagame files
 		  baseOutputPath = pathOutput + "\\" + caseName + "\\modagame\\";

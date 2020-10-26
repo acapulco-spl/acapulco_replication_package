@@ -19,19 +19,20 @@ public class CpcoGenerator {
 				"http://"+fmName);
 		
 		metamodelGen.generateMetamodel();
+		System.out.println(outpath);
 		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".dimacs.ecore");
-		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".ecore");
+		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+fmName+".ecore");
 
 		for (Feature f : metamodelGen.geteClasses().keySet()) {
 			if(f.getName().startsWith("R"))
 				continue;
 			FeatureActivationSubDiagram sd = ad.calculateSubdiagramFor(f, true); // CPCO-specific
 			Rule rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
-			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath+"\\acapulco\\cpcos\\"+rule.getName()+".hen");
+			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
 			
 			sd = ad.calculateSubdiagramFor(f, false); // CPCO-specific
 			rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
-			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath+"\\acapulco\\cpcos\\"+rule.getName()+".hen");
+			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
 			
 		}
 		

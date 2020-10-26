@@ -11,8 +11,8 @@ import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 public class PipelineRunner {
 	public static void main(String[] args) throws IOException {
-		boolean prepare = false;
-		boolean run = true;
+//		boolean prepare = true; 		boolean run = false;
+		boolean prepare = false ; 		boolean run = true;
 
 		String inputPath = "testdata";
 		String generatedPath = "generated";
