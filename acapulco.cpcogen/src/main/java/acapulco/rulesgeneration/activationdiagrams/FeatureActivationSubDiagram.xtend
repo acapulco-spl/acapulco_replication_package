@@ -1,9 +1,6 @@
 package acapulco.rulesgeneration.activationdiagrams
 
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.HashSet
-import java.util.Set
+import acapulco.model.Feature
 import acapulco.rulesgeneration.activationdiagrams.orimplications.FinalisedOrImplication
 import acapulco.rulesgeneration.activationdiagrams.orimplications.OrImplication
 import acapulco.rulesgeneration.activationdiagrams.orimplications.ProxyOrImplication
@@ -13,7 +10,11 @@ import acapulco.rulesgeneration.activationdiagrams.presenceconditions.ProxyPrese
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
-import acapulco.model.Feature
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.HashSet
+import java.util.Map
+import java.util.Set
 import org.eclipse.xtend.lib.annotations.Accessors
 
 /**
@@ -97,8 +98,15 @@ class FeatureActivationSubDiagram {
 		].toSet
 	}
 
+	var Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs
+
 	def getPresenceConditions() {
-		presenceConditions.mapValues[flatMap[resolvedCondition].toSet]
+		if (resolvedPCs === null) {
+			resolvedPCs = new HashMap
+			resolvedPCs.putAll(presenceConditions.mapValues[resolveAndSimplify])
+		}
+		
+		resolvedPCs
 	}
 
 	def getOrImplications() {
@@ -209,7 +217,7 @@ class FeatureActivationSubDiagram {
 				counter.set(0, ID)
 				new VBRuleOrAlternative(
 					// TODO: This introduces a small lookahead, which might make performance a little less good
-					'''�source.name�_Alternative�ID�_�it.name�''',
+					'''«source.name»_Alternative«ID»_«it.name»''',
 					or,
 					ID
 				)
@@ -231,5 +239,16 @@ class FeatureActivationSubDiagram {
 
 	private dispatch def String getName(FeatureDecision fd) {
 		fd.feature.name + (fd.activate ? "Act" : "DeAct")
+	}
+
+	private def resolveAndSimplify(Set<PresenceCondition> presenceConditions) {
+		val tentativeResolvedCondition = presenceConditions.flatMap[resolvedCondition].toSet
+
+		if (tentativeResolvedCondition.contains(vbRuleFeatures)) {
+			// If the root feature is one of the conditions, everything else doesn't matter :-)
+			#{vbRuleFeatures}
+		} else {
+			tentativeResolvedCondition
+		}
 	}
 }

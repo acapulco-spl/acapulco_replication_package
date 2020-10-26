@@ -9,7 +9,7 @@ import aima.core.logic.propositional.parsing.ast.PropositionSymbol;
 import aima.core.logic.propositional.parsing.ast.Sentence;
 
 public class ExtendedSentence extends Sentence {
-	Sentence sentence;
+	public Sentence sentence;
 	private Map<String, PropositionSymbol> symbols;
 	
 	public Map<String, PropositionSymbol> getSymbols() {

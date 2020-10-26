@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.sat4j.core.VecInt;
@@ -214,10 +215,26 @@ public class SatSolver {
 			}
 		}
 
+		Map<Integer, PropositionSymbol> reverseIndex = new HashMap<>();
+		for (Entry<PropositionSymbol, Integer> ind : indices.entrySet()) {
+			reverseIndex.put(ind.getValue(), ind.getKey());
+		}
+
 		try {
 			while (mi.isSatisfiable()) {
 				int[] model = mi.model();
 				List<String> sol = new LinkedList<>();
+				
+//				for (int i : model) {
+//					if (i > 0) {
+//						PropositionSymbol ps = reverseIndex.get(i);
+//						if (ps != null) {
+//							sol.add(ps.getSymbol());
+//						}
+//					}
+//				}
+//				/*
+//				 * Steffen: Swapped this around to reduce the number of loops within loops. That gave us a little bit of extra performance, though not a huge amount.
 				for (PropositionSymbol key : indices.keySet()) {
 					int index = indices.get(key);
 					for (int i : model) {
@@ -226,6 +243,7 @@ public class SatSolver {
 						}
 					}
 				}
+//				*/
 				result.add(sol);
 			}
 			return result;

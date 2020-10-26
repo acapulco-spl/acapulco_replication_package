@@ -1,9 +1,9 @@
 package acapulco.rulesgeneration.activationdiagrams.presenceconditions
 
-import java.util.Map
-import java.util.Set
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
+import java.util.Map
+import java.util.Set
 import org.eclipse.xtend.lib.annotations.Data
 
 @Data
