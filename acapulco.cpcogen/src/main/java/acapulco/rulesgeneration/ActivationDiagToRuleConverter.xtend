@@ -73,10 +73,22 @@ class ActivationDiagToRuleConverter {
 	}
 
 	private static def featureModelExpressions(FeatureActivationSubDiagram fasd) {
-		#{fasd.vbRuleFeatures.name} + fasd.vbRuleFeatures.children.map [
+		#{fasd.vbRuleFeatures.name} +
+		// Selecting an or-feature means selecting one of its alternative features 
+		fasd.vbRuleFeatures.children.map [
 			val alternatives = '''(«children.map[name].join(' | ')»)'''
 
 			'''(!«name» | «alternatives») & (!«alternatives» | «name»)'''
+		] +
+		/*
+		 * Selecting one alternative feature means none of its sibling features can be selected -- VB-rule or features are actually XOR features.		 *
+		 * 
+		 * This should ensure minimality of the rule instances we're generating. 
+		 */
+		fasd.vbRuleFeatures.children.flatMap [orFeature |
+			orFeature.children.map[alternative |
+				'''(!«alternative.name» | !(«orFeature.children.reject[it === alternative].map[name].join(' | ')»))'''
+			]
 		]
 	}
 
