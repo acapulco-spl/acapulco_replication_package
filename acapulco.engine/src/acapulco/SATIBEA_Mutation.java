@@ -52,7 +52,7 @@ import jmetal.util.JMException;
  *
  * @author chris
  */
-public class SATIBEA_NewMutation {
+public class SATIBEA_Mutation {
 
 	private static Random r = new Random();
 	private String fm;
@@ -73,7 +73,7 @@ public class SATIBEA_NewMutation {
 	/**
 	 * Constructor Creates a new instance of the Bit Flip mutation operator
 	 */
-	public SATIBEA_NewMutation(HashMap<String, Object> parameters, String fm, int nFeat,
+	public SATIBEA_Mutation(HashMap<String, Object> parameters, String fm, int nFeat,
 			List<List<Integer>> constraints) {
 		this.fm = fm;
 		this.nFeat = nFeat;

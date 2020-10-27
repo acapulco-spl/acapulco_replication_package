@@ -5,16 +5,16 @@ import java.nio.file.Paths;
 import acapulco.aCaPulCO_Main;
 import acapulco.featureide.utils.FeatureIDEUtils;
 import acapulco.model.FeatureModel;
-import acapulco.preparation.converters.PreparationPipeline;
+import acapulco.preparation.PreparationPipeline;
 import acapulco.rulesgeneration.CpcoGenerator;
 import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 public class PipelineRunner {
 	public static void main(String[] args) throws IOException {
-//		boolean prepare = true; 		boolean run = false;
-		boolean prepare = false ; 		boolean run = true;
+		boolean prepare = true; 		boolean run = false;
+//		boolean prepare = false ; 		boolean run = true;
 
-		String inputPath = "testdata";
+		String inputPath = "input";
 		String generatedPath = "generated";
 		String fmName = "test1";
 		String fmPath = "ad-test-1";

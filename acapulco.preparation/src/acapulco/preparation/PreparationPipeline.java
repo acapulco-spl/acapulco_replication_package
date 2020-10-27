@@ -1,6 +1,7 @@
-package acapulco.preparation.converters;
+package acapulco.preparation;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -11,6 +12,9 @@ import org.uma.mo_dagame.feature_models.values_generator.ValuesGenerator;
 
 import acapulco.preparation.cleaning.Cleaner;
 import acapulco.preparation.cleaning.ComplexConstraintRemover;
+import acapulco.preparation.converters.MainModagameToSatibea;
+import acapulco.preparation.converters.MainSatibeaSeedToModagameSeed;
+import acapulco.preparation.converters.RandomRichSee;
 
 public class PreparationPipeline {
 	private static PrintStream _err;
@@ -26,8 +30,8 @@ public class PreparationPipeline {
 
 	}
 
-	public static void generateAllFromFm(String directoryInput, String fmNameInput, String caseName,
-			String pathPrefix) throws IOException {
+	public static void generateAllFromFm(String directoryInput, String fmNameInput, String caseName, String pathPrefix)
+			throws IOException {
 
 		fmNameInput += ".sxfm";
 		String qaNameInput = "UsabilityBatteryMemory.sample";
@@ -46,7 +50,7 @@ public class PreparationPipeline {
 		System.out.println("[Done cleaning.] ");
 		System.out.println("[Start attribute value generation.] ");
 		// Call Values Generator -> obj
-		
+
 		// Generate obj without header (MODAGAME) and with header (MDEO)
 		String pathCleaned = input[0] + ".clean.sxfm.xml";
 		input = new String[3];
@@ -56,7 +60,6 @@ public class PreparationPipeline {
 		ValuesGenerator.main(input);
 
 		System.out.println("[End attribute value generation.] ");
-
 
 		System.out.println("[Begin SATIBEA input generation.] ");
 		// Call EMFConverter -> dimacs + augment + dead + mandatory
@@ -72,8 +75,7 @@ public class PreparationPipeline {
 		// Call EMFConverter -> csv for Modagame
 		MainSatibeaSeedToModagameSeed.main(input);
 		System.out.println("[End SATIBEA input generation.] ");
-		
-		
+
 		// Copy files
 		new File(pathOutput + "\\" + caseName).mkdirs();
 		new File(pathOutput + "\\" + caseName + "\\acapulco").mkdirs();
@@ -82,7 +84,6 @@ public class PreparationPipeline {
 		String baseInputPath = directoryInput + "\\" + fmNameInput + ".xml-nocomplex.sxfm.xml.clean.sxfm";
 
 		System.out.println("** Done with file generation. **");
-
 
 		// Copy Acapulco files
 		String baseOutputPath = pathOutput + "\\" + caseName + "\\acapulco\\";
@@ -93,15 +94,16 @@ public class PreparationPipeline {
 		Files.copy(new File(baseInputPath + ".dimacs.richseed").toPath(),
 				new File(baseOutputPath + caseName + ".dimacs.richseed").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(new File(baseInputPath + ".dimacs.mandatory").toPath(),
-				new File(baseOutputPath + caseName + ".dimacs.mandatory").toPath(), StandardCopyOption.REPLACE_EXISTING);
+				new File(baseOutputPath + caseName + ".dimacs.mandatory").toPath(),
+				StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(new File(baseInputPath + ".dimacs.dead").toPath(),
 				new File(baseOutputPath + caseName + ".dimacs.dead").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		// Copy Modagame files
-		  baseOutputPath = pathOutput + "\\" + caseName + "\\modagame\\";
-		 System.out.println(baseOutputPath);
-		 System.out.println(baseInputPath + ".xml");
-		 Files.copy(new File(baseInputPath + ".xml").toPath(), new File(baseOutputPath + caseName + ".xml").toPath(),
+		baseOutputPath = pathOutput + "\\" + caseName + "\\modagame\\";
+		System.out.println(baseOutputPath);
+		System.out.println(baseInputPath + ".xml");
+		Files.copy(new File(baseInputPath + ".xml").toPath(), new File(baseOutputPath + caseName + ".xml").toPath(),
 				StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(new File(baseInputPath + ".obj").toPath(), new File(baseOutputPath + caseName + ".obj").toPath(),
 				StandardCopyOption.REPLACE_EXISTING);
@@ -124,14 +126,25 @@ public class PreparationPipeline {
 		Files.copy(new File(baseInputPath + ".dimacs.richseed").toPath(),
 				new File(baseOutputPath + caseName + ".dimacs.richseed").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
+		// Cleanup: delete generated files from temporary directory
+		final String fmNameInputFinal = fmNameInput;
+		String[] generatedFiles = new File(directoryInput).list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.startsWith(fmNameInputFinal) && !name.equals(fmNameInputFinal + ".xml");
+			}
+		});
+		for (String file : generatedFiles)
+			new File(directoryInput + "/" + file).delete();
+
 		System.out.println("** Done with copying. **");
 	}
 
 	private static void closeSystemErr() {
 		_err = System.err;
 		System.setErr(new PrintStream(new OutputStream() {
-		    public void write(int b) {
-		    }
+			public void write(int b) {
+			}
 		}));
 	}
 

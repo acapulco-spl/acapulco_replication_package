@@ -19,16 +19,12 @@
  */
 package acapulco;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
+
+import org.eclipse.emf.henshin.model.Rule;
+
 import jmetal.core.Problem;
 import jmetal.core.Variable;
 import jmetal.encodings.solutionType.BinarySolutionType;
@@ -36,22 +32,9 @@ import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Binary;
 import jmetal.util.JMException;
 
-import org.eclipse.emf.henshin.model.Rule;
-import org.sat4j.minisat.SolverFactory;
-import org.sat4j.minisat.core.IOrder;
-import org.sat4j.minisat.core.Solver;
-import org.sat4j.minisat.orders.NegativeLiteralSelectionStrategy;
-import org.sat4j.minisat.orders.PositiveLiteralSelectionStrategy;
-import org.sat4j.minisat.orders.RandomLiteralSelectionStrategy;
-import org.sat4j.minisat.orders.RandomWalkDecorator;
-import org.sat4j.minisat.orders.VarOrderHeap;
-import org.sat4j.reader.DimacsReader;
-import org.sat4j.specs.ISolver;
-import org.sat4j.tools.ModelIterator;
-
 public class aCaPulCO_BinarySolution extends BinarySolutionType {
 
-	private static SATIBEA_NewMutation mutationOfInitialSolution;
+	private static SATIBEA_Mutation mutationOfInitialSolution;
 
 	private String fm;
 	private int nFeat;
@@ -82,7 +65,7 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 		this.seed = seed;
 
 		if (mutationOfInitialSolution == null) {
-			mutationOfInitialSolution = new SATIBEA_NewMutation(new HashMap<String, Object>(), fm, nFeat, constraints);
+			mutationOfInitialSolution = new SATIBEA_Mutation(new HashMap<String, Object>(), fm, nFeat, constraints);
 		}
 	}
 
