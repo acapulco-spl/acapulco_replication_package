@@ -48,9 +48,9 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.termination.StoppingCondition;
-import uk.ac.kcl.inf.mdeoptimiser4efm.tool.executor.AbstractExecutor;
+import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
+import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
+import mdeoptimiser4efm.tool.executor.AbstractExecutor;
 
 /**
  *

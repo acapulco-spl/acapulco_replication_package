@@ -19,9 +19,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/MODAGAME_hppc_0.6.1"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MODAGAME_feature_models"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/metrics"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/MODAGAME_jmetal-source"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MODAGAME_feature_models"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MODAGAME_hppc_0.6.1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/acapulco.metrics"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

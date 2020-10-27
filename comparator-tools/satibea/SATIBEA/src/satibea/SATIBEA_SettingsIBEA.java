@@ -32,8 +32,8 @@ import jmetal.operators.selection.Selection;
 import jmetal.problems.ProblemFactory;
 import jmetal.util.JMException;
 import jmetal.util.comparators.FitnessComparator;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.termination.StoppingCondition;
+import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
+import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 import java.util.HashMap;
 import java.util.List;

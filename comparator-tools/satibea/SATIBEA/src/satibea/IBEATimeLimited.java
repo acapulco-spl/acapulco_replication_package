@@ -23,7 +23,7 @@ import jmetal.core.*;
 import jmetal.util.JMException;
 import jmetal.util.Ranking;
 import jmetal.util.comparators.DominanceComparator;
-import uk.ac.kcl.inf.mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
+import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
 
 import java.util.ArrayList;
 import java.util.Iterator;

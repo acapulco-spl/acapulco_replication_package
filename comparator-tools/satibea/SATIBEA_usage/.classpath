@@ -9,7 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SATIBEA"/>
 	<classpathentry kind="lib" path="/SATIBEA/lib/org.sat4j.core_2_0_5_2.jar"/>
 	<classpathentry kind="lib" path="/SATIBEA/lib/org.sat4j.core_trunk2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/metrics"/>
 	<classpathentry kind="lib" path="/SATIBEA/lib/jmetal4.5.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/acapulco.metrics"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
