@@ -1,5 +1,0 @@
-/home/josemi/Workspaces/mdeoptimiser-ws/mdeoptimiser4fm/toolsForComparison/metrics/src/main/java/uk/ac/kcl/inf/mdeoptimiser4efm/algorithm/instrumentation/MoeaOptimisationSolution.java
-/home/josemi/Workspaces/mdeoptimiser-ws/mdeoptimiser4fm/toolsForComparison/metrics/src/main/java/uk/ac/kcl/inf/mdeoptimiser4efm/algorithm/instrumentation/ToolInstrumenter.java
-/home/josemi/Workspaces/mdeoptimiser-ws/mdeoptimiser4fm/toolsForComparison/metrics/src/main/java/uk/ac/kcl/inf/mdeoptimiser4efm/tool/executor/AbstractExecutor.java
-/home/josemi/Workspaces/mdeoptimiser-ws/mdeoptimiser4fm/toolsForComparison/metrics/src/main/java/uk/ac/kcl/inf/mdeoptimiser4efm/algorithm/instrumentation/collector/PopulationCollector.java
-/home/josemi/Workspaces/mdeoptimiser-ws/mdeoptimiser4fm/toolsForComparison/metrics/src/main/java/uk/ac/kcl/inf/mdeoptimiser4efm/algorithm/termination/StoppingCondition.java
