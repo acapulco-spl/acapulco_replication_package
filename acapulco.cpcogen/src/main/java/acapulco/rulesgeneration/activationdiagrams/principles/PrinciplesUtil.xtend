@@ -21,15 +21,18 @@ class PrinciplesUtil {
 		new DeReq
 	}
 
-	static def Set<Set<Set<FeatureDecision>>> applyPrinciples(FeatureDecision fd, FeatureModelHelper fmHelper) {
+	static def Set<Set<Set<FeatureDecision>>> applyPrinciples(FeatureDecision fd,
+		extension FeatureModelHelper fmHelper) {
 		(if (fd.activate) {
 			activationPrinciples.map[applyTo(fd, fmHelper)]
 		} else {
 			deactivationPrinciples.map[applyTo(fd, fmHelper)]
-		})
-		.reject[s | // Remove all application results that were empty 
-			s.empty || s.forall[empty]
-		]
-		.toSet
+		}).map [ // Ensure we never include any decisions about always active features
+			map[
+				reject[
+					alwaysActiveFeatures.contains(feature) || alwaysActiveGroupFeatures.contains(feature)
+				].toSet
+			].reject[empty].toSet
+		].reject[empty].toSet
 	}
 }

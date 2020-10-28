@@ -47,7 +47,9 @@ class ActivationDiagramTest {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
+		println('''Always active features are: «alwaysActiveFeatures.map[name]».''')
 		val allRealOptionalFeatures = fh.features.reject[alwaysActiveFeatures.contains(it)].toSet
+		println('''Real optional features are: «allRealOptionalFeatures.map[name]».''')
 
 		val fmName = "testmm"
 		val metamodelGen = new FMConfigurationMetamodelGenerator(fm, fmName, fmName, "http://" + fmName)
@@ -56,7 +58,10 @@ class ActivationDiagramTest {
 		val fad = new FeatureActivationDiagram(fm)
 		val diagramNodes = fad.diagramNodes
 		allRealOptionalFeatures.forEach [ f |
+			println('''Checking activation of feature «f.name».''')			
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
+			
+			println('''Checking deactivation of feature «f.name».''')
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
 
 			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
