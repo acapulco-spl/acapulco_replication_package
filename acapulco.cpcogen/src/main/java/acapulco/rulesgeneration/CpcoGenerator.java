@@ -1,9 +1,12 @@
 package acapulco.rulesgeneration;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import org.eclipse.emf.henshin.model.Rule;
 
+import acapulco.featuremodel.FeatureModelHelper;
 import acapulco.featuremodel.configuration.FMConfigurationMetamodelGenerator;
 import acapulco.model.Feature;
 import acapulco.model.FeatureModel;
@@ -22,10 +25,12 @@ public class CpcoGenerator {
 		System.out.println(outpath);
 		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".dimacs.ecore");
 		metamodelGen.saveMetamodel(outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+fmName+".ecore");
-
-		for (Feature f : metamodelGen.geteClasses().keySet()) {
-			if(f.getName().startsWith("R"))
-				continue;
+		
+		FeatureModelHelper helper = new FeatureModelHelper(fm);
+		List<Feature> trueOptional = new ArrayList<>(helper.getFeatures());
+		trueOptional.removeAll(helper.getAlwaysActiveFeatures());
+		
+		for (Feature f : trueOptional) {
 			FeatureActivationSubDiagram sd = ad.calculateSubdiagramFor(f, true); // CPCO-specific
 			Rule rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
 			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");

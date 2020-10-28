@@ -16,13 +16,16 @@ public class PipelineRunner {
 
 		String inputPath = "input";
 		String generatedPath = "generated";
-		String fmName = "test1";
-		String fmPath = "ad-test-1";
 
+		String fmNameInput = "ad-test-1";		String fmNameCanonical = "test1";
+//		String fmNameInput = "TankWar";			String fmNameCanonical = "tankwar";
+//		String fmNameInput = "WeaFQAs";			String fmNameCanonical = "weafqas";
+//		String fmNameInput = "mobile_media2";	String fmNameCanonical = "mobilemedia";
+		
 		if (prepare) {
-			FeatureModel fm = FeatureIDEUtils.loadFeatureModel(Paths.get(inputPath+"/"+fmPath+".sxfm.xml").toString());
-			PreparationPipeline.generateAllFromFm(inputPath, fmPath, fmName, "generated");
-			CpcoGenerator.generatorCPCOs(fm, fmName, generatedPath);
+			FeatureModel fm = FeatureIDEUtils.loadFeatureModel(Paths.get(inputPath+"/"+fmNameInput+".sxfm.xml").toString());
+			PreparationPipeline.generateAllFromFm(inputPath, fmNameInput, fmNameCanonical, "generated");
+			CpcoGenerator.generatorCPCOs(fm, fmNameCanonical, generatedPath);
 		}
 
 		if (run) {
@@ -30,7 +33,7 @@ public class PipelineRunner {
 			StoppingCondition sc = StoppingCondition.EVOLUTIONS;
 			Integer sv = 50;
 			boolean debug = true;
-			String fullFmPath = generatedPath + "/" + fmName + "/acapulco/" + fmName + ".dimacs";
+			String fullFmPath = generatedPath + "/" + fmNameCanonical + "/acapulco/" + fmNameCanonical + ".dimacs";
 			acapulcoSearch.run(fullFmPath, sc, sv, debug);
 		}
 	}
