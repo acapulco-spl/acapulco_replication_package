@@ -238,7 +238,14 @@ class FeatureActivationSubDiagram {
 	}
 
 	private dispatch def String getName(FeatureDecision fd) {
-		fd.feature.name + (fd.activate ? "Act" : "DeAct")
+		fd.feature.name.sanitise + (fd.activate ? "Act" : "DeAct")
+	}
+	
+	/**
+	 * Sanitise feature names so they can serve as variable identifiers in the formula given to the SAT solver 
+	 */
+	private def sanitise(String featureName) {
+		featureName.replaceAll("\\W", "")
 	}
 
 	private def resolveAndSimplify(Set<PresenceCondition> presenceConditions) {
