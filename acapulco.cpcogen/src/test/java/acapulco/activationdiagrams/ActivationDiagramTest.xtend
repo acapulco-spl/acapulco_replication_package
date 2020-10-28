@@ -42,7 +42,7 @@ class ActivationDiagramTest {
 	@ParameterizedTest
 	// Add more paths to more feature models to test below...
 	// TODO: This should really be in src/test/resources
-	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml"])
+	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml", "testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 		extension val fh = new FeatureModelHelper(fm)
