@@ -51,11 +51,21 @@ class FeatureActivationSubDiagram {
 	val presenceConditions = new HashMap<FeatureDecision, Set<PresenceCondition>>
 
 	/**
+	 * The final resolved PCs
+	 */
+	val Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs = new HashMap
+
+	/**
 	 * Or-implications: Which ORs do we need to make a decision on when we have decided on a given root feature or OrAlternative feature.
 	 * 
 	 * This will be filled directly in the forward sweep, but may still contain unresolved proxies at that point. Proxies are then resolved using information from the followOr map.
 	 */
 	val orImplications = new HashMap<VBRuleFeature, Set<OrImplication>>
+	
+	/**
+	 * The final resolved or implications
+	 */
+	val resolvedOrImplications = new HashMap<VBRuleFeature, Set<VBRuleOrFeature>>
 
 	/**
 	 * Internal storage for keeping track of information collected at each node during the forward sweep: 
@@ -98,19 +108,12 @@ class FeatureActivationSubDiagram {
 		].toSet
 	}
 
-	var Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs
-
 	def getPresenceConditions() {
-		if (resolvedPCs === null) {
-			resolvedPCs = new HashMap
-			resolvedPCs.putAll(presenceConditions.mapValues[resolveAndSimplify])
-		}
-		
 		resolvedPCs
 	}
 
 	def getOrImplications() {
-		orImplications.mapValues[flatMap[resolvedImplication].toSet]
+		resolvedOrImplications
 	}
 
 	private def initialise() {
@@ -119,20 +122,27 @@ class FeatureActivationSubDiagram {
 		orImplications.put(vbRuleFeatures, rootImplications)
 
 		// 2. Resolve presence conditions -- We know this terminates because cycles are broken
-		var proxyPresenceConditions = presenceConditions.filter[k, v|v.exists[needsResolving]]
-		while (!proxyPresenceConditions.empty) {
-			proxyPresenceConditions.forEach[k, v|v.forEach[resolve(presenceConditions)]]
+		presenceConditions.entrySet.map [ e |
+			e.key -> e.value.flatMap [
+				val fds = new HashSet<FeatureDecision>(#{e.key})
+				val resolvedPC = resolve(presenceConditions, fds)
 
-			proxyPresenceConditions = presenceConditions.filter[k, v|v.exists[needsResolving]]
-		}
+				// Simplify, where 'root' is part of the PC
+				if (resolvedPC.contains(vbRuleFeatures)) {
+					#{vbRuleFeatures}
+				} else {
+					resolvedPC
+				}
+			].toSet
+		].forEach[resolvedPCs.put(key, value)]
 
 		// 3. Resolve or-links -- We know this terminates because cycles are broken
-		var proxyOrImplications = orImplications.filter[k, v|v.exists[needsResolving]]
-		while (!proxyOrImplications.empty) {
-			proxyOrImplications.forEach[k, v|v.forEach[resolve(followOrs)]]
-
-			proxyOrImplications = orImplications.filter[k, v|v.exists[needsResolving]]
-		}
+		orImplications.entrySet.map[ e |
+			e.key -> e.value.flatMap[
+				val nodes = new HashSet<ActivationDiagramNode>()
+				resolve(followOrs, nodes)
+			].toSet
+		].forEach[resolvedOrImplications.put(key, value)]
 	}
 
 	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom) {
@@ -240,22 +250,11 @@ class FeatureActivationSubDiagram {
 	private dispatch def String getName(FeatureDecision fd) {
 		fd.feature.name.sanitise + (fd.activate ? "Act" : "DeAct")
 	}
-	
+
 	/**
 	 * Sanitise feature names so they can serve as variable identifiers in the formula given to the SAT solver 
 	 */
 	private def sanitise(String featureName) {
 		featureName.replaceAll("\\W", "")
-	}
-
-	private def resolveAndSimplify(Set<PresenceCondition> presenceConditions) {
-		val tentativeResolvedCondition = presenceConditions.flatMap[resolvedCondition].toSet
-
-		if (tentativeResolvedCondition.contains(vbRuleFeatures)) {
-			// If the root feature is one of the conditions, everything else doesn't matter :-)
-			#{vbRuleFeatures}
-		} else {
-			tentativeResolvedCondition
-		}
 	}
 }

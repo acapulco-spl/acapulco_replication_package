@@ -1,61 +1,21 @@
 package acapulco.rulesgeneration.activationdiagrams.presenceconditions
 
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
-import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
-import java.util.HashSet
 import java.util.Map
 import java.util.Set
+import org.eclipse.xtend.lib.annotations.Data
 
+@Data
 class ProxyPresenceCondition extends PresenceCondition {
 	val FeatureDecision fd
-	var Set<PresenceCondition> resolvedConditions = null
 
-	new(FeatureDecision fd) {
-		this.fd = fd
-	}
-
-	override resolve(Map<FeatureDecision, Set<PresenceCondition>> presenceConditions) {
-		if (resolvedConditions === null) {
-			resolvedConditions = new HashSet<PresenceCondition>(presenceConditions.get(fd))
+	override resolve(Map<FeatureDecision, Set<PresenceCondition>> presenceConditions, Set<FeatureDecision> visited) {
+		if (visited.contains(fd)) {
+			emptySet
 		} else {
-			val condsToResolve = resolvedConditions.filter[needsResolving]
-			if (!condsToResolve.empty) {
-				condsToResolve.forEach[resolve(presenceConditions)]
-				resolvedConditions = new HashSet<PresenceCondition>(resolvedConditions.flatMap [ pc |
-					if (pc instanceof ProxyPresenceCondition) {
-						if (pc.resolvedConditions !== null) {
-							pc.resolvedConditions
-						} else {
-							#{pc as PresenceCondition}
-						}
-					} else {
-						#{pc}
-					}
-				].reject [ pc | // Remove cycles
-					if (pc instanceof ProxyPresenceCondition) {
-						pc.fd === fd
-					} else {
-						false
-					}
-				].toSet)
-			}
+			visited += fd
+			presenceConditions.get(fd).flatMap[resolve(presenceConditions, visited)].toSet
+		// We don't need to remove fd from visited: once we have resolved the PC for a particular FD anywhere in the overall PC, we don't need to resolve it anywhere else again as everything gets flattened to a disjunction
 		}
 	}
-
-	override needsResolving() { (resolvedConditions === null) || resolvedConditions.exists[needsResolving] }
-
-	override resolvedCondition() {
-		if (needsResolving) {
-			throw new IllegalStateException("Proxy PCs must be resolved before they can be read off")
-		}
-
-		resolvedConditions.flatMap [ pc |
-			if (pc instanceof ProxyPresenceCondition) {
-				pc.resolvedConditions.flatMap[resolvedCondition]
-			} else {
-				pc.resolvedCondition
-			}
-		].toSet		
-	}
-
 }
