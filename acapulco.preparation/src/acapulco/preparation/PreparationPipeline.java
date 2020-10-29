@@ -100,17 +100,18 @@ public class PreparationPipeline {
 				new File(baseOutputPath + caseName + ".dimacs.dead").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		// Copy Modagame files
-		baseOutputPath = pathOutput + "\\" + caseName + "\\modagame\\";
+		baseOutputPath = pathOutput + "\\" + caseName + "\\modagame\\" + caseName;
 		System.out.println(baseOutputPath);
+		new File(baseOutputPath).mkdirs();
+		new File(baseOutputPath + "\\models\\").mkdirs();
+		new File(baseOutputPath + "\\seeds\\").mkdirs();
 		System.out.println(baseInputPath + ".xml");
-		Files.copy(new File(baseInputPath + ".xml").toPath(), new File(baseOutputPath + caseName + ".xml").toPath(),
+		Files.copy(new File(baseInputPath + ".xml").toPath(), new File(baseOutputPath + "\\models\\" + caseName + ".xml").toPath(),
 				StandardCopyOption.REPLACE_EXISTING);
-		Files.copy(new File(baseInputPath + ".obj").toPath(), new File(baseOutputPath + caseName + ".obj").toPath(),
+		Files.copy(new File(baseInputPath + ".obj").toPath(), new File(baseOutputPath + "\\models\\" + caseName + ".obj").toPath(),
 				StandardCopyOption.REPLACE_EXISTING);
-		Files.copy(new File(baseInputPath + ".csv").toPath(), new File(baseOutputPath + caseName + ".csv").toPath(),
+		Files.copy(new File(baseInputPath + ".csv").toPath(), new File(baseOutputPath + "\\seeds\\" + caseName + ".csv").toPath(),
 				StandardCopyOption.REPLACE_EXISTING);
-		Files.copy(new File(baseInputPath + ".dimacs.richseed").toPath(),
-				new File(baseOutputPath + caseName + ".dimacs.richseed").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		// Copy Satibea files
 		baseOutputPath = pathOutput + "\\" + caseName + "\\satibea\\";
