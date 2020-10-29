@@ -66,9 +66,9 @@ class ActivationDiagToRuleConverter {
 
 		(
 			// Ensure or nodes are activated when they are needed...
-			fasd.orImplications.entrySet.map['''(!«key.name» | («value.map[name].join(' & ')»))'''] + 
+			fasd.orImplications.entrySet.reject[value.empty].map['''(!«key.name» | («value.map[name].join(' & ')»))'''] + 
 			// ... and only when they are needed
-			separatedOrImplications.entrySet.map['''(!«key.name» | («value.map[name].join(' | ')»))''']
+			separatedOrImplications.entrySet.reject[value.empty].map['''(!«key.name» | («value.map[name].join(' | ')»))''']
 		)
 	}
 
