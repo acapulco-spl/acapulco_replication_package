@@ -42,7 +42,8 @@ class ActivationDiagramTest {
 	@ParameterizedTest
 	// Add more paths to more feature models to test below...
 	// TODO: This should really be in src/test/resources
-	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml", "testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
+	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml",
+		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 		extension val fh = new FeatureModelHelper(fm)
@@ -58,25 +59,22 @@ class ActivationDiagramTest {
 		val fad = new FeatureActivationDiagram(fm)
 		val diagramNodes = fad.diagramNodes
 		allRealOptionalFeatures.forEach [ f |
-			println('''Checking activation of feature «f.name».''')			
+			println('''Checking activation of feature «f.name».''')
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
-			
+			fasdActivate.assertRootFeatureProperties(f, true)
+			fasdActivate.checkExclusions
+			fasdActivate.generateAndCheckRule(fh, metamodelGen)
+
 			println('''Checking deactivation of feature «f.name».''')
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
+			fasdDeActivate.assertRootFeatureProperties(f, false)
+			fasdDeActivate.checkExclusions
+			fasdDeActivate.generateAndCheckRule(fh, metamodelGen)
 
 			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
 
-			fasdActivate.assertRootFeatureProperties(f, true)
-			fasdDeActivate.assertRootFeatureProperties(f, false)
-
-			fasdActivate.checkExclusions
-			fasdDeActivate.checkExclusions
-
-			// TODO: Test presence conditions -- need to provide data oracle for this, I think
-			// TODO: Test or implications -- need to provide data oracle for this, I think
-			// Test generated rules
-			fasdActivate.generateAndCheckRule(fh, metamodelGen)
-			fasdDeActivate.generateAndCheckRule(fh, metamodelGen)
+		// TODO: Test presence conditions -- need to provide data oracle for this, I think
+		// TODO: Test or implications -- need to provide data oracle for this, I think
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
@@ -104,12 +102,11 @@ class ActivationDiagramTest {
 
 		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
 		val sentence = FeatureExpression.getExpr(featureConstraint)
-		// TODO: I don't believe the topLevelLength numbers: they seem to vary between runs. Probably my heuristics are too simplistic
-		println('''FASD for «fasd.rootDecision» produced «sentence.topLevelLength» conjunctions of disjunctions over «features.size» VB rule features.''')
+		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features.''')
 
 		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
 
-		println('''(«fasd.rootDecision») From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
+		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
@@ -162,29 +159,6 @@ class ActivationDiagramTest {
 		pc.split("\\|").exists[selectedFeatures.contains(it.trim)]
 	}
 
-	private dispatch def Integer getTopLevelLength(ExtendedSentence sentence) {
-		return sentence.sentence.topLevelLength
-	}
-
-	private dispatch def int getTopLevelLength(Sentence sentence) {
-		1
-	}
-
-	private dispatch def int getTopLevelLength(PropositionSymbol sentence) {
-		1
-	}
-
-	private dispatch def int getTopLevelLength(ComplexSentence sentence) {
-		if (sentence.binarySentence) {
-			val left = sentence.getSimplerSentence(0)
-			val right = sentence.getSimplerSentence(1)
-
-			((left.connective === Connective.AND) ? left : right).topLevelLength + 1
-		} else {
-			1
-		}
-	}
-
 	private def checkExclusions(FeatureActivationSubDiagram fasd) {
 		val presenceConditions = fasd.presenceConditions
 		val exclusions = fasd.featureExclusions
@@ -218,7 +192,7 @@ class ActivationDiagramTest {
 		// Require root fd's presence condition to be fully simplified
 		val fasdRootPC = fasd.presenceConditions.get(fasd.rootDecision)
 		assertTrue(
-			'''Feature activation sub-diagram for «f.name»«activate?'+':'-'» should define that feature's presence condition to be 'root'.''',
+			'''Feature activation sub-diagram for «fasd.rootDecision» should define that feature's presence condition to be 'root'.''',
 			(fasdRootPC.size === 1) && (fasdRootPC.head === fasd.vbRuleFeatures)
 		)
 	}
