@@ -8,11 +8,12 @@ import acapulco.model.FeatureModel;
 import acapulco.preparation.PreparationPipeline;
 import acapulco.rulesgeneration.CpcoGenerator;
 import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
+import satibea.SATIBEA_Main;
 
 public class PipelineRunner {
 	public static void main(String[] args) throws IOException {
-		boolean prepare = true; 		boolean run = false;
-//		boolean prepare = false ; 		boolean run = true;
+//		boolean prepare = true; 		boolean run = false;
+		boolean prepare = false ; 		boolean run = true;
 
 		String inputPath = "input";
 		String generatedPath = "generated";
@@ -34,7 +35,15 @@ public class PipelineRunner {
 			Integer sv = 50;
 			boolean debug = true;
 			String fullFmPath = generatedPath + "/" + fmNameCanonical + "/acapulco/" + fmNameCanonical + ".dimacs";
-			acapulcoSearch.run(fullFmPath, sc, sv, debug);
+			// acapulcoSearch.run(fullFmPath, sc, sv, debug);
+			
+			String[] satibeaArgs = new String[]{"-fm", generatedPath + "/" + fmNameCanonical + "/satibea/" + fmNameCanonical + ".dimacs"
+					, "-sc", sc.toString() , "-sv", sv.toString()};
+			try {
+				SATIBEA_Main.main(satibeaArgs);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
