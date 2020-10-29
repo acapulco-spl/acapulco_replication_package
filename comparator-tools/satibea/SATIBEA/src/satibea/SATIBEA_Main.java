@@ -80,7 +80,9 @@ public class SATIBEA_Main extends AbstractExecutor {
 			
         	Algorithm a = new SATIBEA_SettingsIBEA(p).configureSATIBEA(toolInstrumenter, stoppingCondition, stoppingValue, fm, ((SATIBEA_Problem) p).getNumFeatures(), ((SATIBEA_Problem) p).getConstraints());
         	SolutionSet pop = a.execute();
-
+        	
+        	toolInstrumenter.serialiseAccumulator();
+        	
             for (int i = 0; i < pop.size(); i++) {
                 Variable v = pop.get(i).getDecisionVariables()[0];
                 System.out.println("Conf" + (i + 1) + ": " + (Binary) v + " ");

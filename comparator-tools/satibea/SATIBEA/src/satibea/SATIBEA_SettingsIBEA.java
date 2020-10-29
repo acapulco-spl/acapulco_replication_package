@@ -69,8 +69,8 @@ public class SATIBEA_SettingsIBEA extends Settings {
 
     public Algorithm configureASE2013(ToolInstrumenter toolInstrumenter, long maxRunTimeMS) throws JMException {
 
-        populationSize_ = 300;
-        archiveSize_ = 300;
+        populationSize_ = 100;
+        archiveSize_ = 100;
 
         mutationProbability_ = 0.001;
         crossoverProbability_ = 0.05;
@@ -116,8 +116,8 @@ public class SATIBEA_SettingsIBEA extends Settings {
     
     public Algorithm configureSATIBEA(ToolInstrumenter toolInstrumenter, StoppingCondition stoppingCondition, Integer stoppingValue, String fm, int numFeat,List<List<Integer>> constr) throws JMException {
 
-        populationSize_ = 300;
-        archiveSize_ = 300;
+        populationSize_ = 100;
+        archiveSize_ = 100;
 
         mutationProbability_ = 0.001;
         crossoverProbability_ = 0.05;
