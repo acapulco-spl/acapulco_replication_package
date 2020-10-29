@@ -59,22 +59,24 @@ class ActivationDiagramTest {
 		val fad = new FeatureActivationDiagram(fm)
 		val diagramNodes = fad.diagramNodes
 		allRealOptionalFeatures.forEach [ f |
-			println('''Checking activation of feature «f.name».''')
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
+			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
+
+			println('''Checking feature-activation diagram for feature «f.name».''')
+			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
+
+		// TODO: Test presence conditions -- need to provide data oracle for this, I think
+		// TODO: Test or implications -- need to provide data oracle for this, I think
+
+			println('''Checking activation of feature «f.name».''')
 			fasdActivate.assertRootFeatureProperties(f, true)
 			fasdActivate.checkExclusions
 			fasdActivate.generateAndCheckRule(fh, metamodelGen)
 
 			println('''Checking deactivation of feature «f.name».''')
-			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
 			fasdDeActivate.assertRootFeatureProperties(f, false)
 			fasdDeActivate.checkExclusions
 			fasdDeActivate.generateAndCheckRule(fh, metamodelGen)
-
-			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
-
-		// TODO: Test presence conditions -- need to provide data oracle for this, I think
-		// TODO: Test or implications -- need to provide data oracle for this, I think
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
