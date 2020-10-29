@@ -61,7 +61,7 @@ class FeatureActivationSubDiagram {
 	 * This will be filled directly in the forward sweep, but may still contain unresolved proxies at that point. Proxies are then resolved using information from the followOr map.
 	 */
 	val orImplications = new HashMap<VBRuleFeature, Set<OrImplication>>
-	
+
 	/**
 	 * The final resolved or implications
 	 */
@@ -123,22 +123,22 @@ class FeatureActivationSubDiagram {
 
 		// 2. Resolve presence conditions -- We know this terminates because cycles are broken
 		presenceConditions.entrySet.map [ e |
-			e.key -> e.value.flatMap [
+			val resolvedPC = e.value.flatMap [
 				val fds = new HashSet<FeatureDecision>(#{e.key})
-				val resolvedPC = resolve(presenceConditions, fds)
-
-				// Simplify, where 'root' is part of the PC
-				if (resolvedPC.contains(vbRuleFeatures)) {
-					#{vbRuleFeatures}
-				} else {
-					resolvedPC
-				}
+				resolve(presenceConditions, fds)
 			].toSet
+
+			// Simplify, where 'root' is part of the PC
+			e.key -> if (resolvedPC.contains(vbRuleFeatures)) {
+				#{vbRuleFeatures}
+			} else {
+				resolvedPC
+			}
 		].forEach[resolvedPCs.put(key, value)]
 
 		// 3. Resolve or-links -- We know this terminates because cycles are broken
-		orImplications.entrySet.map[ e |
-			e.key -> e.value.flatMap[
+		orImplications.entrySet.map [ e |
+			e.key -> e.value.flatMap [
 				val nodes = new HashSet<ActivationDiagramNode>()
 				resolve(followOrs, nodes)
 			].toSet
