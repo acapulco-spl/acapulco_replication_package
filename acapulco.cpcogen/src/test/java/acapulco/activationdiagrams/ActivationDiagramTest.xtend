@@ -100,8 +100,6 @@ class ActivationDiagramTest {
 		val featuresAsString = rule.annotations.get(2).value.replace(" ", "")
 		val features = featuresAsString.split(",").map[trim].toList
 
-		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
-		val sentence = FeatureExpression.getExpr(featureConstraint)
 		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features.''')
 
 		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
