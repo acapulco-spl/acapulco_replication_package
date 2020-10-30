@@ -37,6 +37,7 @@ import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
 import java.io.FileWriter
+import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
 
 class ActivationDiagramTest {
 
@@ -170,7 +171,13 @@ class ActivationDiagramTest {
 		try (val writer = new FileWriter(fOutput, true)) {
 			writer.write(ruleInstances.generateRedundancyReport(fasd))
 			writer.flush
-		}		
+		}
+		
+		val fDotFile = new File(path + '''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
+		try (val writer = new FileWriter(fDotFile)) {
+			writer.write(new FASDDotGenerator(fasd).render)
+			writer.flush
+		}
 	}
 	
 	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd) '''

@@ -27,6 +27,7 @@ class FeatureActivationSubDiagram {
 	@Accessors(PUBLIC_GETTER)
 	val FeatureDecision rootDecision
 
+	@Accessors(PACKAGE_GETTER)
 	val Set<ActivationDiagramNode> subdiagramContents = new HashSet<ActivationDiagramNode>
 
 	/**
