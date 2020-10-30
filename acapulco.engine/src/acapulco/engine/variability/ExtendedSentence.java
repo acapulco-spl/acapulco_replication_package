@@ -1,6 +1,8 @@
 package acapulco.engine.variability;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import aima.core.logic.propositional.parsing.PLVisitor;
@@ -69,14 +71,30 @@ public class ExtendedSentence extends Sentence {
 	}
 
 	private static HashMap<String, PropositionSymbol> retrieveSymbols(Sentence sentence, HashMap<String, PropositionSymbol> result) {
-		for (int i=0; i < sentence.getNumberSimplerSentences(); i++) {
-			Sentence s = sentence.getSimplerSentence(i);
+		// Rewritten to remove recursion
+		List<Sentence> toProcess = new LinkedList<>();
+		toProcess.add(sentence);
+		
+		while (!toProcess.isEmpty()) {
+			Sentence s = toProcess.remove(0);
 			if (s instanceof PropositionSymbol) {
 				result.put(s.toString(), (PropositionSymbol) s);
 			} else {
-				retrieveSymbols(s, result);
+				for (int i=0; i < s.getNumberSimplerSentences(); i++) {
+					toProcess.add(s.getSimplerSentence(i));
+				}
 			}
 		}
+				
+//		for (int i=0; i < sentence.getNumberSimplerSentences(); i++) {
+//			Sentence s = sentence.getSimplerSentence(i);
+//			if (s instanceof PropositionSymbol) {
+//				result.put(s.toString(), (PropositionSymbol) s);
+//			} else {
+//				retrieveSymbols(s, result);
+//			}
+//		}
+		
 		return result;
 	}
 
