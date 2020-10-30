@@ -102,7 +102,9 @@ class ActivationDiagramTest {
 		val featuresAsString = rule.annotations.get(2).value.replace(" ", "")
 		val features = featuresAsString.split(",").map[trim].toList
 
-		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features.''')
+		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features («fasd.vbRuleFeatures.children.size» or-features).''')
+		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
+		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 
 		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
 
