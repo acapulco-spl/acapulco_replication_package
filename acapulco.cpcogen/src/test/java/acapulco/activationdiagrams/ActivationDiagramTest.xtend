@@ -2,7 +2,6 @@ package acapulco.activationdiagrams
 
 import acapulco.activationdiagrams.fasdPrincipleTesters.FADPrincipleTester
 import acapulco.activationdiagrams.fdsetPrincipleTesters.FeatureDecisionSetPrincipleTester
-import acapulco.engine.variability.ExtendedSentence
 import acapulco.engine.variability.FeatureExpression
 import acapulco.engine.variability.SatSolver
 import acapulco.engine.variability.XorEncoderUtil
@@ -16,13 +15,11 @@ import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
-import aima.core.logic.fol.parsing.ast.Sentence
-import aima.core.logic.propositional.parsing.ast.ComplexSentence
-import aima.core.logic.propositional.parsing.ast.Connective
-import aima.core.logic.propositional.parsing.ast.PropositionSymbol
+import aima.core.logic.propositional.parsing.ast.Sentence
 import java.nio.file.Paths
 import java.util.ArrayList
 import java.util.Collections
+import java.util.LinkedList
 import java.util.List
 import java.util.Map.Entry
 import java.util.Set
@@ -33,6 +30,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
+import aima.core.logic.propositional.parsing.ast.ComplexSentence
+import aima.core.logic.propositional.parsing.ast.Connective
 
 class ActivationDiagramTest {
 
@@ -65,9 +64,8 @@ class ActivationDiagramTest {
 			println('''Checking feature-activation diagram for feature «f.name».''')
 			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
 
-		// TODO: Test presence conditions -- need to provide data oracle for this, I think
-		// TODO: Test or implications -- need to provide data oracle for this, I think
-
+			// TODO: Test presence conditions -- need to provide data oracle for this, I think
+			// TODO: Test or implications -- need to provide data oracle for this, I think
 			println('''Checking activation of feature «f.name».''')
 			fasdActivate.assertRootFeatureProperties(f, true)
 			fasdActivate.checkExclusions
@@ -106,6 +104,9 @@ class ActivationDiagramTest {
 		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 
+		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
+		sentence.assertIsCNF
+
 		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
 
 		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
@@ -140,6 +141,40 @@ class ActivationDiagramTest {
 //		solutions.forEach [ solution |			
 //			val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
 //		]
+	}
+
+	// Check that the given sentence is in CNF form
+	private def void assertIsCNF(Sentence sentence) {
+		val toProcess = new LinkedList<Sentence>
+		toProcess += sentence
+
+		while (!toProcess.empty) {
+			val currentSentence = toProcess.remove(0)
+
+			if (currentSentence instanceof ComplexSentence) {
+				// Otherwise it's CNF by default
+				if (currentSentence.isAndSentence) {
+					for (var i = 0; i < currentSentence.numberSimplerSentences; i++) {
+						toProcess += currentSentence.getSimplerSentence(i)
+					}
+				} else {
+					if (currentSentence.isUnarySentence) {
+						assertTrue("Condition not in CNF",
+							currentSentence.isNotSentence && currentSentence.getSimplerSentence(0).isPropositionSymbol)
+					} else {
+						assertTrue(
+							"Sentence not in CNF.",
+							currentSentence.isOrSentence &&
+								((currentSentence.getSimplerSentence(0).isNotSentence &&
+									currentSentence.getSimplerSentence(0).getSimplerSentence(0).isPropositionSymbol) ||
+									(currentSentence.getSimplerSentence(1).isNotSentence &&
+										currentSentence.getSimplerSentence(1).getSimplerSentence(0).
+											isPropositionSymbol))
+						)
+					}
+				}
+			}
+		}
 	}
 
 	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures, FeatureModel fm) {
