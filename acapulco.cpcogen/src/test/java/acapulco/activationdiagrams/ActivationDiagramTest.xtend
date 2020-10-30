@@ -175,7 +175,7 @@ class ActivationDiagramTest {
 		
 		val fDotFile = new File(path + '''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
 		try (val writer = new FileWriter(fDotFile)) {
-			writer.write(new FASDDotGenerator(fasd).render)
+			writer.write(new FASDDotGenerator(fasd, true).render)
 			writer.flush
 		}
 	}
