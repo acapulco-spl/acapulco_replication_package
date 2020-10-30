@@ -185,7 +185,8 @@ public class SatSolver {
 	}
 
 	private static List<List<String>> calculateAllSolutions(Sentence expr) {
-		Sentence cnf = ConvertToCNF.convert(expr);
+//		Sentence cnf = ConvertToCNF.convert(expr);
+		Sentence cnf = expr; // Assume sentence is already in CNF to avoid complexity of generating CNF.
 		
 		Set<PropositionSymbol> symbols = SymbolCollector.getSymbolsFrom(cnf);
 		Set<Clause> clauses = ClauseCollector.getClausesFrom(cnf);
