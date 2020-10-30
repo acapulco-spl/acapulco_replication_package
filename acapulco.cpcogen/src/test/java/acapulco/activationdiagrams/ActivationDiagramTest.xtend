@@ -15,12 +15,18 @@ import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
+import aima.core.logic.propositional.parsing.ast.ComplexSentence
 import aima.core.logic.propositional.parsing.ast.Sentence
+import java.io.File
 import java.nio.file.Paths
+import java.text.DateFormat
+import java.time.Instant
 import java.util.ArrayList
 import java.util.Collections
+import java.util.Date
 import java.util.LinkedList
 import java.util.List
+import java.util.Map
 import java.util.Map.Entry
 import java.util.Set
 import org.eclipse.emf.henshin.model.ModelElement
@@ -30,8 +36,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
-import aima.core.logic.propositional.parsing.ast.ComplexSentence
-import aima.core.logic.propositional.parsing.ast.Connective
+import java.io.FileWriter
 
 class ActivationDiagramTest {
 
@@ -45,6 +50,8 @@ class ActivationDiagramTest {
 		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
+		val redundancyOutputFilePath = '''«Paths.get(fmPath).toString».redundancies.«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".").replaceAll(" ", "")».log'''
+		 
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
 		println('''Always active features are: «alwaysActiveFeatures.map[name]».''')
@@ -70,13 +77,13 @@ class ActivationDiagramTest {
 			fasdActivate.assertRootFeatureProperties(f, true)
 			fasdActivate.checkExclusions
 			fasdActivate.countRedundantFeatures
-			fasdActivate.generateAndCheckRule(fh, metamodelGen)
+			fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
 
 			println('''Checking deactivation of feature «f.name».''')
 			fasdDeActivate.assertRootFeatureProperties(f, false)
 			fasdDeActivate.checkExclusions
 			fasdDeActivate.countRedundantFeatures
-			fasdDeActivate.generateAndCheckRule(fh, metamodelGen)
+			fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
@@ -99,7 +106,7 @@ class ActivationDiagramTest {
 	 * Generate a rule for the given FASD and check it is sound
 	 */
 	private def generateAndCheckRule(FeatureActivationSubDiagram fasd, FeatureModelHelper fh,
-		FMConfigurationMetamodelGenerator metamodelgen) {
+		FMConfigurationMetamodelGenerator metamodelgen, String redundancyOutputFilePath) {
 		// 1. Generate rule
 		val rule = ActivationDiagToRuleConverter.convert(fasd, metamodelgen.geteClasses)
 		assertNotNull("No rule generated", rule)
@@ -127,12 +134,13 @@ class ActivationDiagramTest {
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
-		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)].
-			toSet
+		val uniqueRuleInstances = solutions.groupBy[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)]
+		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.keySet.size» unique rule instances.''')
+		if (uniqueRuleInstances.keySet.size < solutions.size) {
+			uniqueRuleInstances.recordRedundantRuleInstances(fasd, redundancyOutputFilePath)
+		}
 
-		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.size» unique rule instances.''')
-
-		uniqueRuleInstances.forEach [ ruleInstance |
+		uniqueRuleInstances.keySet.forEach [ ruleInstance |
 			// 3.1 no conflicting decisions
 			assertTrue(
 				"No rule instance should contain conflicting feature decisions.",
@@ -155,6 +163,35 @@ class ActivationDiagramTest {
 //		solutions.forEach [ solution |			
 //			val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
 //		]
+	}
+	
+	private def void recordRedundantRuleInstances(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd, String path) {
+		val fOutput = new File(path)
+		try (val writer = new FileWriter(fOutput, true)) {
+			writer.write(ruleInstances.generateRedundancyReport(fasd))
+			writer.flush
+		}		
+	}
+	
+	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd) '''
+		From feature activation sub-diagram for «fasd.rootDecision», the following redundant rule instances were generated:
+		
+		«ruleInstances.values.filter[size > 1].map[generateRedundancyDescription].join('\n\n')»
+		-------------
+		
+	'''
+	
+	def generateRedundancyDescription(List<List<String>> configurationVariants) {
+		val sharedFeatures = configurationVariants.head.filter[feature | configurationVariants.tail.forall[contains(feature)]]
+		val distinctFeatures = configurationVariants.map[reject[sharedFeatures.contains(it)].sort]
+		
+		'''
+			- Shared features: («sharedFeatures.sort.join(', ')»)
+			
+			  Distinct feature sets:
+			  
+			    «distinctFeatures.map['''- («join(', ')»)'''].join('\n')»
+		'''		
 	}
 
 	// Check that the given sentence is in CNF form
