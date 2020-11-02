@@ -131,6 +131,7 @@ class ActivationDiagramTest {
 		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
 		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
+//		fasd.writeDotFile(redundancyOutputFilePath)
 
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
 		sentence.assertIsCNF
@@ -145,6 +146,7 @@ class ActivationDiagramTest {
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.keySet.size» unique rule instances.''')
 		if (uniqueRuleInstances.keySet.size < solutions.size) {
 			uniqueRuleInstances.recordRedundantRuleInstances(fasd, redundancyOutputFilePath)
+			fasd.writeDotFile(redundancyOutputFilePath)
 		}
 
 		uniqueRuleInstances.keySet.forEach [ ruleInstance |
@@ -177,13 +179,15 @@ class ActivationDiagramTest {
 		try (val writer = new FileWriter(fOutput, true)) {
 			writer.write(ruleInstances.generateRedundancyReport(fasd))
 			writer.flush
-		}
-		
+		}		
+	}
+	
+	private def void writeDotFile(FeatureActivationSubDiagram fasd, String path) {
 		val fDotFile = new File(path + '''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
 		try (val writer = new FileWriter(fDotFile)) {
 			writer.write(new FASDDotGenerator(fasd, true).render)
 			writer.flush
-		}
+		}		
 	}
 	
 	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd) '''
