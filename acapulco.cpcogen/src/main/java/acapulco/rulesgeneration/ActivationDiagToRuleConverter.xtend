@@ -49,7 +49,15 @@ class ActivationDiagToRuleConverter {
 	}
 
 	private static def orOverlapExpressions(FeatureActivationSubDiagram fasd) {
-		fasd.orOverlaps.entrySet.flatMap[generateOrOverlapExpression(key, value)]
+		#[
+			fasd.orOverlaps.entrySet.flatMap[generateOrOverlapExpression(key, value)],
+			fasd.generateOrToRootExclusions
+		].flatten
+	}
+
+	private def static generateOrToRootExclusions(FeatureActivationSubDiagram fasd) {
+		// If a given Or-feature is selected that has a direct root-follower, always select that
+		fasd.orsToRoot.entrySet.map['''(!«key.name» | «value.name»)''']
 	}
 
 	private def static generateOrOverlapExpression(Pair<VBRuleOrFeature, VBRuleOrFeature> orPair,

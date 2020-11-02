@@ -85,6 +85,12 @@ class FeatureActivationSubDiagram {
 	 */
 	@Accessors(PUBLIC_GETTER)
 	val orOverlaps = new HashMap<Pair<VBRuleOrFeature, VBRuleOrFeature>, List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>>
+	
+	/**
+	 * Or-nodes where one alternative directly leads to root. In this case, we want to pick this alternative always.
+	 */
+	@Accessors(PUBLIC_GETTER)
+	var orsToRoot = new HashMap<VBRuleOrFeature, VBRuleOrAlternative>
 
 	new(FeatureDecision decision) {
 		this.rootDecision = decision
@@ -185,6 +191,9 @@ class FeatureActivationSubDiagram {
 				]
 			]
 		]
+		// Also compute ors where one alternative leads to root -- in this case, that's the alternative we always want to choose
+		// TODO: Need to remove duplicate or-features (where multiple alternatives all lead to root)
+		immediateOrPredecessors.filter[fd, ors| resolvedPCs.get(fd).contains(vbRuleFeatures)].values.flatten.forEach[orsToRoot.put(key, value)]
 	}
 
 	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
