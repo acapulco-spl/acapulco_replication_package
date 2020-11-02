@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.henshin.model.HenshinFactory
 import org.eclipse.emf.henshin.model.ModelElement
 import org.eclipse.emf.henshin.model.Rule
+import java.util.List
+import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
 
 class ActivationDiagToRuleConverter {
 	public static val KEY_PRESENCE_CONDITION = "presenceCondition"
@@ -42,8 +44,25 @@ class ActivationDiagToRuleConverter {
 
 	private static def computeConstraintExpression(FeatureActivationSubDiagram fasd) {
 		(
-			fasd.featureModelExpressions + fasd.orImplicationExpressions + fasd.featureExclusionExpressions
+			fasd.featureModelExpressions + fasd.orImplicationExpressions + fasd.featureExclusionExpressions + fasd.orOverlapExpressions
 		).join(' & ')
+	}
+
+	private static def orOverlapExpressions(FeatureActivationSubDiagram fasd) {
+		fasd.orOverlaps.entrySet.flatMap[generateOrOverlapExpression(key, value)]
+	}
+
+	private def static generateOrOverlapExpression(Pair<VBRuleOrFeature, VBRuleOrFeature> orPair,
+		List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>> alternatives) {
+		alternatives.flatMap[generateOrOverlapExpression(orPair)]
+	}
+
+	private static def generateOrOverlapExpression(Pair<VBRuleOrAlternative, VBRuleOrAlternative> alternative,
+		Pair<VBRuleOrFeature, VBRuleOrFeature> orPair) {
+		#[
+			'''(!«alternative.key.name» | !«orPair.value.name» | «alternative.value.name»)''',
+			'''(!«alternative.value.name» | !«orPair.key.name» | «alternative.key.name»)'''
+		]
 	}
 
 	private static def featureExclusionExpressions(FeatureActivationSubDiagram fasd) {
@@ -66,19 +85,16 @@ class ActivationDiagToRuleConverter {
 
 		(
 			// Ensure or nodes are activated when they are needed...
-			fasd.orImplications.entrySet.reject[value.empty].flatMap[key.impliesAllOf(value)] + 
-			// ... and only when they are needed
-			separatedOrImplications.entrySet.reject[value.empty].map[key.impliesOneOf(value)]
+			fasd.orImplications.entrySet.reject[value.empty].flatMap[key.impliesAllOf(value)] + // ... and only when they are needed
+		separatedOrImplications.entrySet.reject[value.empty].map[key.impliesOneOf(value)]
 		)
 	}
-	
+
 	private static def featureModelExpressions(FeatureActivationSubDiagram fasd) {
-		#{fasd.vbRuleFeatures.name} +
-		// Selecting an or-feature means selecting one of its alternative features
-		fasd.vbRuleFeatures.children.flatMap [feature |
-			#{feature.impliesOneOf(feature.children)} +
-			feature.children.eachImplies(feature)
-			
+		#{fasd.vbRuleFeatures.name} + // Selecting an or-feature means selecting one of its alternative features
+		fasd.vbRuleFeatures.children.flatMap [ feature |
+			#{feature.impliesOneOf(feature.children)} + feature.children.eachImplies(feature)
+
 //			val alternatives = '''(«children.map[name].join(' | ')»)'''
 //
 //			'''(!«name» | «alternatives») & (!«alternatives» | «name»)'''
@@ -88,8 +104,8 @@ class ActivationDiagToRuleConverter {
 		 * 
 		 * This should ensure minimality of the rule instances we're generating. 
 		 */
-		fasd.vbRuleFeatures.children.flatMap [orFeature |
-			orFeature.children.flatMap[alternative |
+		fasd.vbRuleFeatures.children.flatMap [ orFeature |
+			orFeature.children.flatMap [ alternative |
 //				'''(!«alternative.name» | !(«orFeature.children.reject[it === alternative].map[name].join(' | ')»))'''
 				alternative.impliesNoneOf(orFeature.children.reject[it === alternative])
 			]
@@ -97,16 +113,17 @@ class ActivationDiagToRuleConverter {
 	}
 
 	private static def impliesAllOf(VBRuleFeature antecedent, Iterable<? extends VBRuleFeature> consequent) {
-		//'''(!«antecedent.name» | («consequent.map[name].join(' & ')»))''', but turned into a CNF formula
+		// '''(!«antecedent.name» | («consequent.map[name].join(' & ')»))''', but turned into a CNF formula
 		consequent.map['''(!«antecedent.name» | «name»)''']
 	}
 
 	private static def impliesNoneOf(VBRuleFeature antecedent, Iterable<? extends VBRuleFeature> consequent) {
-		//'''(!«antecedent.name» | !(«consequent.map[name].join(' | ')»))''', but turned into a CNF formula
+		// '''(!«antecedent.name» | !(«consequent.map[name].join(' | ')»))''', but turned into a CNF formula
 		consequent.map['''(!«antecedent.name» | !«name»)''']
 	}
 
-	private static def String impliesOneOf(VBRuleFeature antecedent, Iterable<? extends VBRuleFeature> consequent) '''(!«antecedent.name» | («consequent.map[name].join(' | ')»))'''
+	private static def String impliesOneOf(VBRuleFeature antecedent,
+		Iterable<? extends VBRuleFeature> consequent) '''(!«antecedent.name» | («consequent.map[name].join(' | ')»))'''
 
 	private static def eachImplies(Iterable<? extends VBRuleFeature> antecedent, VBRuleFeature consequent) {
 		antecedent.map['''(!«name» | «consequent.name»)''']
