@@ -128,6 +128,8 @@ class ActivationDiagramTest {
 
 		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features («fasd.vbRuleFeatures.children.size» or-features).''')
 		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
+		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
+		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
