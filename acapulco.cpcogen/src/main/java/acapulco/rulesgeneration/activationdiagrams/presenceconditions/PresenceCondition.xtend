@@ -1,16 +1,11 @@
 package acapulco.rulesgeneration.activationdiagrams.presenceconditions
 
-import java.util.Map
-import java.util.Set
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
+import java.util.Map
+import java.util.Set
 
 abstract class PresenceCondition {
-	abstract def boolean needsResolving()
-	abstract def void resolve(Map<FeatureDecision, Set<PresenceCondition>> presenceConditions)
-	
-	/**
-	 * Use this to read off the final presence condition
-	 */
-	abstract def Set<VBRuleFeature> resolvedCondition()
+	abstract def Set<VBRuleFeature> resolve(Map<FeatureDecision, Set<PresenceCondition>> presenceConditions,
+		Set<FeatureDecision> visited)
 }

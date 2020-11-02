@@ -2,7 +2,6 @@ package acapulco.activationdiagrams
 
 import acapulco.activationdiagrams.fasdPrincipleTesters.FADPrincipleTester
 import acapulco.activationdiagrams.fdsetPrincipleTesters.FeatureDecisionSetPrincipleTester
-import acapulco.engine.variability.ExtendedSentence
 import acapulco.engine.variability.FeatureExpression
 import acapulco.engine.variability.SatSolver
 import acapulco.engine.variability.XorEncoderUtil
@@ -16,14 +15,18 @@ import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
-import aima.core.logic.fol.parsing.ast.Sentence
 import aima.core.logic.propositional.parsing.ast.ComplexSentence
-import aima.core.logic.propositional.parsing.ast.Connective
-import aima.core.logic.propositional.parsing.ast.PropositionSymbol
+import aima.core.logic.propositional.parsing.ast.Sentence
+import java.io.File
 import java.nio.file.Paths
+import java.text.DateFormat
+import java.time.Instant
 import java.util.ArrayList
 import java.util.Collections
+import java.util.Date
+import java.util.LinkedList
 import java.util.List
+import java.util.Map
 import java.util.Map.Entry
 import java.util.Set
 import org.eclipse.emf.henshin.model.ModelElement
@@ -33,6 +36,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
+import java.io.FileWriter
+import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
 
 class ActivationDiagramTest {
 
@@ -42,12 +47,21 @@ class ActivationDiagramTest {
 	@ParameterizedTest
 	// Add more paths to more feature models to test below...
 	// TODO: This should really be in src/test/resources
-	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml", "testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
+	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml",
+		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
+				
+		val redundancyOutputFolderPath = Paths.get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').toString
+		val redundancyOutputFolder = new File(redundancyOutputFolderPath)
+		redundancyOutputFolder.mkdirs		
+		val redundancyOutputFilePath = Paths.get('''«redundancyOutputFolderPath»/«Paths.get(fmPath).fileName».log''').toString		
+		 
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
+		println('''Always active features are: «alwaysActiveFeatures.map[name]».''')
 		val allRealOptionalFeatures = fh.features.reject[alwaysActiveFeatures.contains(it)].toSet
+		println('''Real optional features are: «allRealOptionalFeatures.map[name]».''')
 
 		val fmName = "testmm"
 		val metamodelGen = new FMConfigurationMetamodelGenerator(fm, fmName, fmName, "http://" + fmName)
@@ -59,30 +73,45 @@ class ActivationDiagramTest {
 			val fasdActivate = fad.calculateSubdiagramFor(f, true)
 			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
 
+			println('''Checking feature-activation diagram for feature «f.name».''')
 			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
-
-			fasdActivate.assertRootFeatureProperties(f, true)
-			fasdDeActivate.assertRootFeatureProperties(f, false)
-
-			fasdActivate.checkExclusions
-			fasdDeActivate.checkExclusions
 
 			// TODO: Test presence conditions -- need to provide data oracle for this, I think
 			// TODO: Test or implications -- need to provide data oracle for this, I think
-			// Test generated rules
-			fasdActivate.generateAndCheckRule(fh, metamodelGen)
-			fasdDeActivate.generateAndCheckRule(fh, metamodelGen)
+			println('''Checking activation of feature «f.name».''')
+			fasdActivate.assertRootFeatureProperties(f, true)
+			fasdActivate.checkExclusions
+			fasdActivate.countRedundantFeatures
+			fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+
+			println('''Checking deactivation of feature «f.name».''')
+			fasdDeActivate.assertRootFeatureProperties(f, false)
+			fasdDeActivate.checkExclusions
+			fasdDeActivate.countRedundantFeatures
+			fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
 			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
 	}
 
+	private def countRedundantFeatures(extension FeatureActivationSubDiagram fasd) {
+		val vbFeatures = (#{vbRuleFeatures} + vbRuleFeatures.children.flatMap[children]).toSet
+
+		val numRedundantFeatures = vbFeatures.flatMap[vbf1|
+			vbFeatures.filter[vbf2|
+				(vbf1 !== vbf2) && (presenceConditions.values.filter[contains(vbf1)] == presenceConditions.values.filter[contains(vbf2)]) 
+			].map[vbf1 -> it]
+		].size / 2
+		
+		println('''FASD for «fasd.rootDecision» has «numRedundantFeatures» redundant features.''')
+	}
+
 	/**
 	 * Generate a rule for the given FASD and check it is sound
 	 */
 	private def generateAndCheckRule(FeatureActivationSubDiagram fasd, FeatureModelHelper fh,
-		FMConfigurationMetamodelGenerator metamodelgen) {
+		FMConfigurationMetamodelGenerator metamodelgen, String redundancyOutputFilePath) {
 		// 1. Generate rule
 		val rule = ActivationDiagToRuleConverter.convert(fasd, metamodelgen.geteClasses)
 		assertNotNull("No rule generated", rule)
@@ -97,23 +126,28 @@ class ActivationDiagramTest {
 		val featuresAsString = rule.annotations.get(2).value.replace(" ", "")
 		val features = featuresAsString.split(",").map[trim].toList
 
-		// Just temporarily, let's parse this to get a sense of the complexity of the conditions
-		val sentence = FeatureExpression.getExpr(featureConstraint)
-		// TODO: I don't believe the topLevelLength numbers: they seem to vary between runs. Probably my heuristics are too simplistic
-		println('''FASD for «fasd.rootDecision» produced «sentence.topLevelLength» conjunctions of disjunctions over «features.size» VB rule features.''')
+		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features («fasd.vbRuleFeatures.children.size» or-features).''')
+		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
+		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
+		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
+		println('''The constraint expression string is «featureConstraint.length» characters long.''')
+
+		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
+		sentence.assertIsCNF
 
 		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
 
-		println('''(«fasd.rootDecision») From «sentence.topLevelLength» conjunctions of disjunctions we generated «solutions.size» solutions.''')
+		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
-		val uniqueRuleInstances = solutions.map[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)].
-			toSet
+		val uniqueRuleInstances = solutions.groupBy[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)]
+		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.keySet.size» unique rule instances.''')
+		if (uniqueRuleInstances.keySet.size < solutions.size) {
+			uniqueRuleInstances.recordRedundantRuleInstances(fasd, redundancyOutputFilePath)
+		}
 
-		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.size» unique rule instances.''')
-
-		uniqueRuleInstances.forEach [ ruleInstance |
+		uniqueRuleInstances.keySet.forEach [ ruleInstance |
 			// 3.1 no conflicting decisions
 			assertTrue(
 				"No rule instance should contain conflicting feature decisions.",
@@ -137,6 +171,75 @@ class ActivationDiagramTest {
 //			val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
 //		]
 	}
+	
+	private def void recordRedundantRuleInstances(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd, String path) {
+		val fOutput = new File(path)
+		try (val writer = new FileWriter(fOutput, true)) {
+			writer.write(ruleInstances.generateRedundancyReport(fasd))
+			writer.flush
+		}
+		
+		val fDotFile = new File(path + '''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
+		try (val writer = new FileWriter(fDotFile)) {
+			writer.write(new FASDDotGenerator(fasd, true).render)
+			writer.flush
+		}
+	}
+	
+	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd) '''
+		From feature activation sub-diagram for «fasd.rootDecision», the following redundant rule instances were generated:
+		
+		«ruleInstances.values.filter[size > 1].map[generateRedundancyDescription].join('\n\n')»
+		-------------
+		
+	'''
+	
+	def generateRedundancyDescription(List<List<String>> configurationVariants) {
+		val sharedFeatures = configurationVariants.head.filter[feature | configurationVariants.tail.forall[contains(feature)]]
+		val distinctFeatures = configurationVariants.map[reject[sharedFeatures.contains(it)].sort]
+		
+		'''
+			- Shared features: («sharedFeatures.sort.join(', ')»)
+			
+			  Distinct feature sets:
+			  
+			    «distinctFeatures.map['''- («join(', ')»)'''].join('\n')»
+		'''		
+	}
+
+	// Check that the given sentence is in CNF form
+	private def void assertIsCNF(Sentence sentence) {
+		val toProcess = new LinkedList<Sentence>
+		toProcess += sentence
+
+		while (!toProcess.empty) {
+			val currentSentence = toProcess.remove(0)
+
+			if (currentSentence instanceof ComplexSentence) {
+				// Otherwise it's CNF by default
+				if (currentSentence.isAndSentence) {
+					for (var i = 0; i < currentSentence.numberSimplerSentences; i++) {
+						toProcess += currentSentence.getSimplerSentence(i)
+					}
+				} else {
+					if (currentSentence.isUnarySentence) {
+						assertTrue("Condition not in CNF",
+							currentSentence.isNotSentence && currentSentence.getSimplerSentence(0).isPropositionSymbol)
+					} else {
+						assertTrue(
+							"Sentence not in CNF.",
+							currentSentence.isOrSentence &&
+								((currentSentence.getSimplerSentence(0).isNotSentence &&
+									currentSentence.getSimplerSentence(0).getSimplerSentence(0).isPropositionSymbol) ||
+									(currentSentence.getSimplerSentence(1).isNotSentence &&
+										currentSentence.getSimplerSentence(1).getSimplerSentence(0).
+											isPropositionSymbol))
+						)
+					}
+				}
+			}
+		}
+	}
 
 	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures, FeatureModel fm) {
 		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures)].map[createFeatureDecision(fm)].toSet
@@ -155,29 +258,6 @@ class ActivationDiagramTest {
 		// We know the PC is only a disjunction...
 		// Param for split must be a regexp...
 		pc.split("\\|").exists[selectedFeatures.contains(it.trim)]
-	}
-
-	private dispatch def Integer getTopLevelLength(ExtendedSentence sentence) {
-		return sentence.sentence.topLevelLength
-	}
-
-	private dispatch def int getTopLevelLength(Sentence sentence) {
-		1
-	}
-
-	private dispatch def int getTopLevelLength(PropositionSymbol sentence) {
-		1
-	}
-
-	private dispatch def int getTopLevelLength(ComplexSentence sentence) {
-		if (sentence.binarySentence) {
-			val left = sentence.getSimplerSentence(0)
-			val right = sentence.getSimplerSentence(1)
-
-			((left.connective === Connective.AND) ? left : right).topLevelLength + 1
-		} else {
-			1
-		}
 	}
 
 	private def checkExclusions(FeatureActivationSubDiagram fasd) {
@@ -213,7 +293,7 @@ class ActivationDiagramTest {
 		// Require root fd's presence condition to be fully simplified
 		val fasdRootPC = fasd.presenceConditions.get(fasd.rootDecision)
 		assertTrue(
-			'''Feature activation sub-diagram for «f.name»«activate?'+':'-'» should define that feature's presence condition to be 'root'.''',
+			'''Feature activation sub-diagram for «fasd.rootDecision» should define that feature's presence condition to be 'root'.''',
 			(fasdRootPC.size === 1) && (fasdRootPC.head === fasd.vbRuleFeatures)
 		)
 	}

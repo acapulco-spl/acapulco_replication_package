@@ -1,63 +1,22 @@
 package acapulco.rulesgeneration.activationdiagrams.orimplications
 
-import java.util.HashSet
+import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
 import java.util.Map
 import java.util.Set
-import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
-import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
+import org.eclipse.xtend.lib.annotations.Data
 
+@Data
 class ProxyOrImplication extends OrImplication {
 	
 	val ActivationDiagramNode node
-	var Set<OrImplication> resolvedOrImplications = null
 
-	new(ActivationDiagramNode node) {
-		this.node = node
-	}
-	
-	override resolve(Map<ActivationDiagramNode, Set<OrImplication>> orImplications) {
-		if (resolvedOrImplications === null) {
-			resolvedOrImplications = new HashSet<OrImplication>(orImplications.get(node))
+	override resolve(Map<ActivationDiagramNode, Set<OrImplication>> orImplications, Set<ActivationDiagramNode> visited) {
+		if (visited.contains(node)) {
+			emptySet
 		} else {
-			val implicationsToResolve = resolvedOrImplications.filter[needsResolving]
-			if (!implicationsToResolve.empty) {
-				implicationsToResolve.forEach[resolve(orImplications)]
-				resolvedOrImplications = new HashSet<OrImplication>(resolvedOrImplications.flatMap [ oi |
-					if (oi instanceof ProxyOrImplication) {
-						if (oi.resolvedOrImplications !== null) {
-							oi.resolvedOrImplications
-						} else {
-							#{oi as OrImplication}
-						}
-					} else {
-						#{oi}
-					}
-				].reject[oi | // Break cycles
-					if (oi instanceof ProxyOrImplication) {
-						oi.node === node
-					} else {
-						false
-					}
-				].toSet)
-			}
+			visited += node
+			orImplications.get(node).flatMap[resolve(orImplications, visited)].toSet
+			// We don't have to remove node from the visited list as everything get conjoined together
 		}
-	}
-	
-	override needsResolving() {
-		(resolvedOrImplications === null) || resolvedOrImplications.exists[needsResolving]
-	}
-
-	override Set<VBRuleOrFeature> resolvedImplication() { 
-		if (needsResolving) {
-			throw new IllegalStateException("Proxy Or implications must be resolved before they can be read off")
-		}
-		
-		resolvedOrImplications.flatMap[oi |
-			if (oi instanceof ProxyOrImplication) {
-				oi.resolvedOrImplications.flatMap[resolvedImplication]
-			} else {
-				oi.resolvedImplication
-			}
-		].toSet
 	}
 }

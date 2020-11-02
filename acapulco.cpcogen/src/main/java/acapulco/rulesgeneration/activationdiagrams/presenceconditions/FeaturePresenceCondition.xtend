@@ -10,12 +10,5 @@ import org.eclipse.xtend.lib.annotations.Data
 class FeaturePresenceCondition extends PresenceCondition {
 	val VBRuleFeature feature
 
-	override resolve(Map<FeatureDecision, Set<PresenceCondition>> presenceConditions) { }
-	
-	override needsResolving() { false }
-	
-	override resolvedCondition() {
-		#{feature}
-	}
-	
+	override resolve(Map<FeatureDecision, Set<PresenceCondition>> presenceConditions, Set<FeatureDecision> visited) { #{feature} }	
 }

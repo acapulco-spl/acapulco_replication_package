@@ -13,6 +13,7 @@ import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeatur
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
+import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -27,6 +28,7 @@ class FeatureActivationSubDiagram {
 	@Accessors(PUBLIC_GETTER)
 	val FeatureDecision rootDecision
 
+	@Accessors(PACKAGE_GETTER)
 	val Set<ActivationDiagramNode> subdiagramContents = new HashSet<ActivationDiagramNode>
 
 	/**
@@ -51,6 +53,11 @@ class FeatureActivationSubDiagram {
 	val presenceConditions = new HashMap<FeatureDecision, Set<PresenceCondition>>
 
 	/**
+	 * The final resolved PCs
+	 */
+	val Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs = new HashMap
+
+	/**
 	 * Or-implications: Which ORs do we need to make a decision on when we have decided on a given root feature or OrAlternative feature.
 	 * 
 	 * This will be filled directly in the forward sweep, but may still contain unresolved proxies at that point. Proxies are then resolved using information from the followOr map.
@@ -58,10 +65,32 @@ class FeatureActivationSubDiagram {
 	val orImplications = new HashMap<VBRuleFeature, Set<OrImplication>>
 
 	/**
+	 * The final resolved or implications
+	 */
+	val resolvedOrImplications = new HashMap<VBRuleFeature, Set<VBRuleOrFeature>>
+
+	/**
 	 * Internal storage for keeping track of information collected at each node during the forward sweep: 
 	 * this is the set of Or nodes directly reachable from the given node.
 	 */
-	val followOrs = new HashMap<ActivationDiagramNode, Set<OrImplication>>()
+	val followOrs = new HashMap<ActivationDiagramNode, Set<OrImplication>>
+	
+	/**
+	 * Internal map for collecting direct or-predecessors of any feature decisions so we can compute or-overlap
+	 */
+	val immediateOrPredecessors = new HashMap<FeatureDecision, List<Pair<VBRuleOrFeature, VBRuleOrAlternative>>>
+	
+	/**
+	 * Information about overlaps between or-features. These are redundant paths through the rule
+	 */
+	@Accessors(PUBLIC_GETTER)
+	val orOverlaps = new HashMap<Pair<VBRuleOrFeature, VBRuleOrFeature>, List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>>
+	
+	/**
+	 * Or-nodes where one alternative directly leads to root. In this case, we want to pick this alternative always.
+	 */
+	@Accessors(PUBLIC_GETTER)
+	var orsToRoot = new HashMap<VBRuleOrFeature, VBRuleOrAlternative>
 
 	new(FeatureDecision decision) {
 		this.rootDecision = decision
@@ -98,44 +127,76 @@ class FeatureActivationSubDiagram {
 		].toSet
 	}
 
-	var Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs
-
 	def getPresenceConditions() {
-		if (resolvedPCs === null) {
-			resolvedPCs = new HashMap
-			resolvedPCs.putAll(presenceConditions.mapValues[resolveAndSimplify])
-		}
-		
 		resolvedPCs
 	}
 
 	def getOrImplications() {
-		orImplications.mapValues[flatMap[resolvedImplication].toSet]
+		resolvedOrImplications
 	}
 
 	private def initialise() {
 		// 1. Forward sweep the sub-diagram
-		val rootImplications = rootDecision.visit(new FeaturePresenceCondition(vbRuleFeatures), rootDecision)
+		val rootImplications = rootDecision.visit(new FeaturePresenceCondition(vbRuleFeatures), rootDecision, null)
 		orImplications.put(vbRuleFeatures, rootImplications)
 
 		// 2. Resolve presence conditions -- We know this terminates because cycles are broken
-		var proxyPresenceConditions = presenceConditions.filter[k, v|v.exists[needsResolving]]
-		while (!proxyPresenceConditions.empty) {
-			proxyPresenceConditions.forEach[k, v|v.forEach[resolve(presenceConditions)]]
+		presenceConditions.entrySet.map [ e |
+			val resolvedPC = e.value.flatMap [
+				val fds = new HashSet<FeatureDecision>(#{e.key})
+				resolve(presenceConditions, fds)
+			].toSet
 
-			proxyPresenceConditions = presenceConditions.filter[k, v|v.exists[needsResolving]]
-		}
+			// Simplify, where 'root' is part of the PC
+			e.key -> if (resolvedPC.contains(vbRuleFeatures)) {
+				#{vbRuleFeatures}
+			} else {
+				resolvedPC
+			}
+		].forEach[resolvedPCs.put(key, value)]
 
 		// 3. Resolve or-links -- We know this terminates because cycles are broken
-		var proxyOrImplications = orImplications.filter[k, v|v.exists[needsResolving]]
-		while (!proxyOrImplications.empty) {
-			proxyOrImplications.forEach[k, v|v.forEach[resolve(followOrs)]]
-
-			proxyOrImplications = orImplications.filter[k, v|v.exists[needsResolving]]
-		}
+		orImplications.entrySet.map [ e |
+			e.key -> e.value.flatMap [
+				val nodes = new HashSet<ActivationDiagramNode>()
+				resolve(followOrs, nodes)
+			].toSet
+		].forEach[resolvedOrImplications.put(key, value)]
+		
+		// 4. Resolve or overlaps
+		immediateOrPredecessors.values.reject[size < 2].forEach[list |
+			list.forEach[or1, idx1|
+				// Drop the first items so we only explore the diagonal
+				list.drop(idx1 + 1).forEach[or2 |
+					val id1 = or1.key.ID
+					val id2 = or2.key.ID
+					
+					var Pair<VBRuleOrFeature, VBRuleOrFeature> key = null
+					var Pair<VBRuleOrAlternative, VBRuleOrAlternative> value = null
+					
+					if (id1 < id2) {
+						key = or1.key -> or2.key
+						value = or1.value -> or2.value
+					} else {
+						key = or2.key -> or1.key
+						value = or2.value -> or1.value
+					}
+					
+					var registry = orOverlaps.get(key)
+					if (registry === null) {
+						registry = new ArrayList<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>
+						orOverlaps.put(key, registry)
+					}
+					registry += value
+				]
+			]
+		]
+		// Also compute ors where one alternative leads to root -- in this case, that's the alternative we always want to choose
+		// TODO: Need to remove duplicate or-features (where multiple alternatives all lead to root)
+		immediateOrPredecessors.filter[fd, ors| resolvedPCs.get(fd).contains(vbRuleFeatures)].values.flatten.forEach[orsToRoot.put(key, value)]
 	}
 
-	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom) {
+	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
 		if (subdiagramContents.contains(or)) {
 			// Nothing to be done: dependencies between presence conditions will be sorted out by adding appropriate cross-dependencies
 			// But we must return this node so dependencies can be built
@@ -150,7 +211,7 @@ class FeatureActivationSubDiagram {
 		// 2. Step down
 		or.consequences.forEach [ c, idx |
 			val orAlternativeFeature = orFeature.children.get(idx)
-			val followOnOrs = c.visit(new FeaturePresenceCondition(orAlternativeFeature), comingFrom)
+			val followOnOrs = c.visit(new FeaturePresenceCondition(orAlternativeFeature), comingFrom, orFeature)
 
 			// We put these directly into the Or implications as there is no node to proxy from for an Or alternative
 			orImplications.put(orAlternativeFeature, followOnOrs)
@@ -159,7 +220,7 @@ class FeatureActivationSubDiagram {
 		return #{new FinalisedOrImplication(orFeature)}
 	}
 
-	private dispatch def Set<OrImplication> visit(AndNode and, PresenceCondition pc, FeatureDecision comingFrom) {
+	private dispatch def Set<OrImplication> visit(AndNode and, PresenceCondition pc, FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
 		if (subdiagramContents.contains(and)) {
 			// Nothing to be done
 			// But we must return the appropriate or-node information
@@ -168,13 +229,27 @@ class FeatureActivationSubDiagram {
 
 		subdiagramContents.add(and)
 
-		val followOrInformation = and.consequences.flatMap[visit(pc, comingFrom)].toSet
+		val followOrInformation = and.consequences.flatMap[visit(pc, comingFrom, null)].toSet
 		followOrs.put(and, followOrInformation) // Store so we can use it in proxy resolution
 		return followOrInformation
 	}
 
 	private dispatch def Set<OrImplication> visit(FeatureDecision fd, PresenceCondition pc,
-		FeatureDecision comingFrom) {
+		FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
+		// Record or-predecessor, if any
+		if (predecessorOrNode !== null) {
+			// This will work because that's the only situation where we would have a non-null predecessorNode
+			val alternative = (pc as FeaturePresenceCondition).feature as VBRuleOrAlternative
+			
+			var registry = immediateOrPredecessors.get(fd)
+			if (registry === null) {
+				registry = new ArrayList<Pair<VBRuleOrFeature, VBRuleOrAlternative>>
+				immediateOrPredecessors.put(fd, registry)
+			}
+			
+			registry += predecessorOrNode -> alternative
+		}
+
 		var pcs = presenceConditions.get(fd)
 		if (pcs === null) {
 			pcs = new HashSet<PresenceCondition>
@@ -198,7 +273,7 @@ class FeatureActivationSubDiagram {
 
 		// 2. step down
 		val presenceCondition = new ProxyPresenceCondition(fd)
-		val followOrInformation = fd.consequences.flatMap[visit(presenceCondition, fd)].toSet
+		val followOrInformation = fd.consequences.flatMap[visit(presenceCondition, fd, null)].toSet
 
 		// 3. Return information about following Ors
 		followOrs.put(fd, followOrInformation) // Store so we can use it in proxy resolution
@@ -240,22 +315,11 @@ class FeatureActivationSubDiagram {
 	private dispatch def String getName(FeatureDecision fd) {
 		fd.feature.name.sanitise + (fd.activate ? "Act" : "DeAct")
 	}
-	
+
 	/**
 	 * Sanitise feature names so they can serve as variable identifiers in the formula given to the SAT solver 
 	 */
 	private def sanitise(String featureName) {
 		featureName.replaceAll("\\W", "")
-	}
-
-	private def resolveAndSimplify(Set<PresenceCondition> presenceConditions) {
-		val tentativeResolvedCondition = presenceConditions.flatMap[resolvedCondition].toSet
-
-		if (tentativeResolvedCondition.contains(vbRuleFeatures)) {
-			// If the root feature is one of the conditions, everything else doesn't matter :-)
-			#{vbRuleFeatures}
-		} else {
-			tentativeResolvedCondition
-		}
 	}
 }

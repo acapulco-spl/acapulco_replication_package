@@ -1,14 +1,16 @@
 package acapulco.rulesgeneration.activationdiagrams.principles
 
-import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 import acapulco.featuremodel.FeatureModelHelper
+import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
 
 class DeParent implements ApplicationPrinciple {
 	
 	override applyTo(FeatureDecision fd, FeatureModelHelper fmHelper) {
-		if (!fd.activate) {
-			if (!fmHelper.alwaysActiveFeatures.contains(fd.feature.parentFeature) && !fd.feature.isOptional) {
-				deactivate(fd.feature.parentFeature).only
+		if (!fd.activate) {			
+			val parentFeature = fd.feature.parentFeature
+			
+			if ((parentFeature !== null) && !fmHelper.alwaysActiveFeatures.contains(parentFeature) && !fd.feature.isOptional) {
+				deactivate(parentFeature).only
 			} else {
 				emptySet
 			}

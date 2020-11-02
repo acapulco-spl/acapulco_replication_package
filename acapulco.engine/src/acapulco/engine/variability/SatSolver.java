@@ -2,6 +2,7 @@ package acapulco.engine.variability;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -177,18 +178,80 @@ public class SatSolver {
 	public static List<List<String>> getAllSolutions(String expr) {
 		List<List<String>> result = cachedSolutions.get(expr);
 		if (result == null) {
-			Sentence sentence = FeatureExpression.getExpr(expr);
+			ExtendedSentence sentence = FeatureExpression.getExpr(expr);
 			result = calculateAllSolutions(sentence);
 			cachedSolutions.put(expr, result);
 		}
 		return result;
 	}
-
-	private static List<List<String>> calculateAllSolutions(Sentence expr) {
-		Sentence cnf = ConvertToCNF.convert(expr);
+	
+	private static Set<Clause> collectClausesFrom(Sentence cnf) {
+		Set<Clause> result = new HashSet<>();
 		
-		Set<PropositionSymbol> symbols = SymbolCollector.getSymbolsFrom(cnf);
-		Set<Clause> clauses = ClauseCollector.getClausesFrom(cnf);
+		List<Sentence> toProcess = new LinkedList<>();
+		toProcess.add(cnf);
+		
+		while (!toProcess.isEmpty()) {
+			Sentence currentSentence = toProcess.remove(0);
+			
+			if (currentSentence.isAndSentence()) {
+				toProcess.add(currentSentence.getSimplerSentence(0));
+				toProcess.add(currentSentence.getSimplerSentence(1));
+			} else if (currentSentence.isOrSentence()) {
+				// Collect literals and wrap in clause
+				result.add(new Clause(collectOrLiterals(currentSentence)));				
+			} else if (currentSentence.isUnarySentence()) {
+				if (!currentSentence.getSimplerSentence(0).isPropositionSymbol()) {
+					throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
+				}
+				
+				Literal negativeLiteral = new Literal((PropositionSymbol)currentSentence.getSimplerSentence(0), false);
+				result.add(new Clause(negativeLiteral));
+			} else if (currentSentence.isPropositionSymbol()) {
+				Literal positiveLiteral = new Literal((PropositionSymbol) currentSentence);
+				result.add(new Clause(positiveLiteral));
+			} else {
+				throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
+			}
+		}
+		
+		return result;
+	}
+	
+	private static List<Literal> collectOrLiterals(Sentence orSentence) {
+		List<Literal> result = new ArrayList<>();
+		List<Sentence> toProcess = new LinkedList<>();
+		toProcess.add(orSentence);
+		
+		while (!toProcess.isEmpty()) {
+			Sentence currentSentence = toProcess.remove(0);
+			if (currentSentence.isOrSentence()) {
+				toProcess.add(currentSentence.getSimplerSentence(0));
+				toProcess.add(currentSentence.getSimplerSentence(1));
+			} else if (currentSentence.isUnarySentence()) {
+				if (!currentSentence.getSimplerSentence(0).isPropositionSymbol()) {
+					throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
+				}
+				
+				Literal negativeLiteral = new Literal((PropositionSymbol)currentSentence.getSimplerSentence(0), false);
+				result.add(negativeLiteral);
+			} else if (currentSentence.isPropositionSymbol()) {
+				Literal positiveLiteral = new Literal((PropositionSymbol) currentSentence);
+				result.add(positiveLiteral);
+			} else {
+				throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
+			}
+		}
+		
+		return result;
+	}
+
+	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr) {
+//		Sentence cnf = ConvertToCNF.convert(expr);
+		Sentence cnf = expr.sentence; // Assume sentence is already in CNF to avoid complexity of generating CNF.
+		
+		Set<PropositionSymbol> symbols = new HashSet<>(expr.getSymbols().values()); //SymbolCollector.getSymbolsFrom(cnf);
+		Set<Clause> clauses = collectClausesFrom(cnf); //ClauseCollector.getClausesFrom(cnf);
 		Map<PropositionSymbol, Integer> indices = getSymbol2IndexMap(symbols);
 
 		int numberOfVariables = symbols.size();
@@ -225,16 +288,16 @@ public class SatSolver {
 				int[] model = mi.model();
 				List<String> sol = new LinkedList<>();
 				
-//				for (int i : model) {
-//					if (i > 0) {
-//						PropositionSymbol ps = reverseIndex.get(i);
-//						if (ps != null) {
-//							sol.add(ps.getSymbol());
-//						}
-//					}
-//				}
-//				/*
-//				 * Steffen: Swapped this around to reduce the number of loops within loops. That gave us a little bit of extra performance, though not a huge amount.
+				for (int i : model) {
+					if (i > 0) {
+						PropositionSymbol ps = reverseIndex.get(i);
+						if (ps != null) {
+							sol.add(ps.getSymbol());
+						}
+					}
+				}
+				/*
+				 * Steffen: Swapped this around to reduce the number of loops within loops. That gave us a little bit of extra performance, though not a huge amount.
 				for (PropositionSymbol key : indices.keySet()) {
 					int index = indices.get(key);
 					for (int i : model) {
@@ -243,7 +306,7 @@ public class SatSolver {
 						}
 					}
 				}
-//				*/
+				*/
 				result.add(sol);
 			}
 			return result;

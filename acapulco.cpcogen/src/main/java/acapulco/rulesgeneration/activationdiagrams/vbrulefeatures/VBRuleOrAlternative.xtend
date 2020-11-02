@@ -6,5 +6,5 @@ import org.eclipse.xtend.lib.annotations.Data
 @Data
 class VBRuleOrAlternative extends VBRuleFeature {
 	val OrNode orNode
-	val int ID
+	val int alternativeID
 }

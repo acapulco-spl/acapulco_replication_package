@@ -1,0 +1,1 @@
+for %%f in (*.dot) do dot -Tsvg:cairo -o %%f.svg %%f
