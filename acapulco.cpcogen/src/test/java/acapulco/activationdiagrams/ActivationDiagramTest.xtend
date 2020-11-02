@@ -51,7 +51,11 @@ class ActivationDiagramTest {
 		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
-		val redundancyOutputFilePath = Paths.get('''testoutputs/«Paths.get(fmPath).fileName».redundancies.«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".").replaceAll(" ", "")».log''').toString
+				
+		val redundancyOutputFolderPath = Paths.get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').toString
+		val redundancyOutputFolder = new File(redundancyOutputFolderPath)
+		redundancyOutputFolder.mkdirs		
+		val redundancyOutputFilePath = Paths.get('''«redundancyOutputFolderPath»/«Paths.get(fmPath).fileName».log''').toString		
 		 
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
