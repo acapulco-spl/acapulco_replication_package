@@ -74,18 +74,18 @@ class FeatureActivationSubDiagram {
 	 * this is the set of Or nodes directly reachable from the given node.
 	 */
 	val followOrs = new HashMap<ActivationDiagramNode, Set<OrImplication>>
-	
+
 	/**
 	 * Internal map for collecting direct or-predecessors of any feature decisions so we can compute or-overlap
 	 */
 	val immediateOrPredecessors = new HashMap<FeatureDecision, List<Pair<VBRuleOrFeature, VBRuleOrAlternative>>>
-	
+
 	/**
 	 * Information about overlaps between or-features. These are redundant paths through the rule
 	 */
 	@Accessors(PUBLIC_GETTER)
 	val orOverlaps = new HashMap<Pair<VBRuleOrFeature, VBRuleOrFeature>, List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>>
-	
+
 	/**
 	 * Or-nodes where one alternative directly leads to root. In this case, we want to pick this alternative always.
 	 */
@@ -103,29 +103,10 @@ class FeatureActivationSubDiagram {
 	}
 
 	/**
-	 * Produce and return the minimal set of pairwise exclusions between VB-rule features.
+	 * Minimal set of pairwise exclusions between VB-rule features.
 	 */
-	def getFeatureExclusions() {
-		featureDecisions.values.filter[size === 2].flatMap [
-			// Produce pairwise exclusions so we can reduce them to the minimal set necessary
-			val leftDecisions = getPresenceConditions().get(get(0))
-			val rightDecisions = getPresenceConditions().get(get(1))
-
-			leftDecisions.flatMap [ ld |
-				rightDecisions.map [ rd |
-					/*
-					 * Use the feature ID to order the pairs. Order doesn't matter logically (as these represent mutual exclusions,
-					 * but ordering means that the toSet call later can more effectively filter out duplicate entries.
-					 */
-					if (ld.ID > rd.ID) {
-						rd -> ld
-					} else {
-						ld -> rd
-					}
-				]
-			]
-		].toSet
-	}
+	@Accessors(PUBLIC_GETTER)
+	var Set<Pair<VBRuleFeature, VBRuleFeature>> featureExclusions = null
 
 	def getPresenceConditions() {
 		resolvedPCs
@@ -162,18 +143,18 @@ class FeatureActivationSubDiagram {
 				resolve(followOrs, nodes)
 			].toSet
 		].forEach[resolvedOrImplications.put(key, value)]
-		
+
 		// 4. Resolve or overlaps
-		immediateOrPredecessors.values.reject[size < 2].forEach[list |
-			list.forEach[or1, idx1|
+		immediateOrPredecessors.values.reject[size < 2].forEach [ list |
+			list.forEach [ or1, idx1 |
 				// Drop the first items so we only explore the diagonal
-				list.drop(idx1 + 1).forEach[or2 |
+				list.drop(idx1 + 1).forEach [ or2 |
 					val id1 = or1.key.ID
 					val id2 = or2.key.ID
-					
+
 					var Pair<VBRuleOrFeature, VBRuleOrFeature> key = null
 					var Pair<VBRuleOrAlternative, VBRuleOrAlternative> value = null
-					
+
 					if (id1 < id2) {
 						key = or1.key -> or2.key
 						value = or1.value -> or2.value
@@ -181,7 +162,7 @@ class FeatureActivationSubDiagram {
 						key = or2.key -> or1.key
 						value = or2.value -> or1.value
 					}
-					
+
 					var registry = orOverlaps.get(key)
 					if (registry === null) {
 						registry = new ArrayList<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>
@@ -192,11 +173,35 @@ class FeatureActivationSubDiagram {
 			]
 		]
 		// Also compute ors where one alternative leads to root -- in this case, that's the alternative we always want to choose
-		// TODO: Need to remove duplicate or-features (where multiple alternatives all lead to root)
-		immediateOrPredecessors.filter[fd, ors| resolvedPCs.get(fd).contains(vbRuleFeatures)].values.flatten.forEach[orsToRoot.put(key, value)]
+		immediateOrPredecessors.filter[fd, ors|resolvedPCs.get(fd).contains(vbRuleFeatures)].values.flatten.forEach [
+			orsToRoot.put(key, value)
+		]
+
+		// 5. Minimise feature exclusions
+		featureExclusions = new HashSet<Pair<VBRuleFeature, VBRuleFeature>>(
+			featureDecisions.values.filter[size === 2].flatMap [
+				// Produce pairwise exclusions so we can reduce them to the minimal set necessary
+				val leftDecisions = getPresenceConditions().get(get(0))
+				val rightDecisions = getPresenceConditions().get(get(1))
+
+				leftDecisions.flatMap [ ld |
+					rightDecisions.map [ rd |
+						/*
+						 * Use the feature ID to order the pairs. Order doesn't matter logically (as these represent mutual exclusions,
+						 * but ordering means that the toSet call later can more effectively filter out duplicate entries.
+						 */
+						if (ld.ID > rd.ID) {
+							rd -> ld
+						} else {
+							ld -> rd
+						}
+					]
+				]
+			].toSet)
 	}
 
-	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
+	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom,
+		VBRuleOrFeature predecessorOrNode) {
 		if (subdiagramContents.contains(or)) {
 			// Nothing to be done: dependencies between presence conditions will be sorted out by adding appropriate cross-dependencies
 			// But we must return this node so dependencies can be built
@@ -220,7 +225,8 @@ class FeatureActivationSubDiagram {
 		return #{new FinalisedOrImplication(orFeature)}
 	}
 
-	private dispatch def Set<OrImplication> visit(AndNode and, PresenceCondition pc, FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
+	private dispatch def Set<OrImplication> visit(AndNode and, PresenceCondition pc, FeatureDecision comingFrom,
+		VBRuleOrFeature predecessorOrNode) {
 		if (subdiagramContents.contains(and)) {
 			// Nothing to be done
 			// But we must return the appropriate or-node information
@@ -234,19 +240,19 @@ class FeatureActivationSubDiagram {
 		return followOrInformation
 	}
 
-	private dispatch def Set<OrImplication> visit(FeatureDecision fd, PresenceCondition pc,
-		FeatureDecision comingFrom, VBRuleOrFeature predecessorOrNode) {
+	private dispatch def Set<OrImplication> visit(FeatureDecision fd, PresenceCondition pc, FeatureDecision comingFrom,
+		VBRuleOrFeature predecessorOrNode) {
 		// Record or-predecessor, if any
 		if (predecessorOrNode !== null) {
 			// This will work because that's the only situation where we would have a non-null predecessorNode
 			val alternative = (pc as FeaturePresenceCondition).feature as VBRuleOrAlternative
-			
+
 			var registry = immediateOrPredecessors.get(fd)
 			if (registry === null) {
 				registry = new ArrayList<Pair<VBRuleOrFeature, VBRuleOrAlternative>>
 				immediateOrPredecessors.put(fd, registry)
 			}
-			
+
 			registry += predecessorOrNode -> alternative
 		}
 
