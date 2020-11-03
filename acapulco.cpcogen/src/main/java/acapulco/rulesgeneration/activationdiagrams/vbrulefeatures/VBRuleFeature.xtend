@@ -11,6 +11,8 @@ class VBRuleFeature {
 	
 	val List<VBRuleFeature> children = new ArrayList<VBRuleFeature>
 	
+	override toString() { name }
+	
 	static var int lastID = 0
 	private static def getFreshID() {
 		lastID++
