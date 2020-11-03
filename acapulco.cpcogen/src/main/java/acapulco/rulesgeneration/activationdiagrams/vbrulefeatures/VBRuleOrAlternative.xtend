@@ -7,4 +7,6 @@ import org.eclipse.xtend.lib.annotations.Data
 class VBRuleOrAlternative extends VBRuleFeature {
 	val OrNode orNode
 	val int alternativeID
+	
+	override toString() '''OrAlternative«alternativeID» «name»'''
 }
