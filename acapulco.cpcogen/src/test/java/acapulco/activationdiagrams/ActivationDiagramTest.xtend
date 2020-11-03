@@ -130,6 +130,7 @@ class ActivationDiagramTest {
 		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
 		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
 		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
+		println('''FASD contains «fasd.transitiveOrLoops.size» transitive or loops.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 //		fasd.writeDotFile(redundancyOutputFilePath)
 

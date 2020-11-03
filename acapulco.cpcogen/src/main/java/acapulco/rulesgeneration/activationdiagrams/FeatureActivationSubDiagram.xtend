@@ -59,6 +59,13 @@ class FeatureActivationSubDiagram {
 	val orsToRoot = new HashMap<VBRuleOrFeature, VBRuleOrAlternative>
 
 	/**
+	 * Transitive or-loops can be used to pin or choices to decisions that have been made further up in the same path.
+	 * For each element in this path, we need to generate a constraint <code>((key /\ value.key) => value.value)</code> (the value.key bit is actually redundant, but better safe than sorry :-))
+	 */
+	@Accessors(PUBLIC_GETTER)
+	var Set<Pair<VBRuleFeature, Pair<VBRuleOrFeature, VBRuleOrAlternative>>> transitiveOrLoops
+
+	/**
 	 * The list of features that were removed from the VB rule features because they could never be activated
 	 */
 	@Accessors(PUBLIC_GETTER)
@@ -190,6 +197,10 @@ class FeatureActivationSubDiagram {
 			orsToRoot.put(key, value)
 		]
 
+		transitiveOrLoops = identifyTransitiveOrLoops
+		println('''FASD for «rootDecision» contains «transitiveOrLoops.size» transitive or loops before dead-feature removal.''')
+		
+
 		// 5. Minimise feature exclusions
 		featureExclusions = new HashSet<Pair<VBRuleFeature, VBRuleFeature>>(
 			featureDecisions.values.filter[size === 2].flatMap [
@@ -215,40 +226,69 @@ class FeatureActivationSubDiagram {
 		// 6. Calculate dead features and clean up sub-diagram
 		removeDeadFeatures
 	}
-	
+
+	private def identifyTransitiveOrLoops() {
+		immediateOrPredecessors.entrySet.flatMap [
+			val fd = key
+			val predecessorOrs = value
+			val pcs = resolvedPCs.get(fd)
+
+			resolvedOrImplications.filter[orAlternative, orNodes|pcs.contains(orAlternative)].entrySet.flatMap [ e |
+				e.value.map [ orFeature |
+					val preOr = predecessorOrs.findFirst[key == orFeature]
+
+					if (preOr !== null) {
+						e.key -> preOr
+					} else {
+						null
+					}
+				].filterNull
+			]
+		].toSet
+	}
+
 	private def removeDeadFeatures() {
 		// 1. Compute dead features
 		val allFeaturesIndex = new HashMap<String, VBRuleFeature>
 		collectAllFeatures.forEach[allFeaturesIndex.put(name, it)]
-		deadFeatures = new ArrayList(SatSolver.calculateDeadFeatures(computeConstraintExpression).map[fn|allFeaturesIndex.get(fn)])
+		deadFeatures = new ArrayList(SatSolver.calculateDeadFeatures(computeConstraintExpression).map [ fn |
+			allFeaturesIndex.get(fn)
+		])
+//		println('''Dead features for «rootDecision»: «deadFeatures.size».''')
 //		println('''Dead features («deadFeatures.size») for «rootDecision»: «deadFeatures».''')
 
 		// 2. Clean up the FASD
 		vbRuleFeatures.removeDeadFeatures(deadFeatures)
-		
+
 		featureExclusions.removeIf[deadFeatures.contains(key) || deadFeatures.contains(value)]
-		
+
 		val newOrOverlaps = new HashMap
 		newOrOverlaps.putAll(orOverlaps.filter [ orPair, orAlternativeList |
 			!(deadFeatures.contains(orPair.key) || deadFeatures.contains(orPair.value))
 		].mapValues[reject[deadFeatures.contains(key) || deadFeatures.contains(value)].toList])
 		orOverlaps.clear
 		orOverlaps.putAll(newOrOverlaps)
-		
+
 		val newOrsToRoot = new HashMap
-		newOrsToRoot.putAll(orsToRoot.filter[key, value| !(deadFeatures.contains(key) || deadFeatures.contains(value))])
+		newOrsToRoot.putAll(orsToRoot.filter[key, value|!(deadFeatures.contains(key) || deadFeatures.contains(value))])
 		orsToRoot.clear
 		orsToRoot.putAll(newOrsToRoot)
 
 		val newResolvedOrImplications = new HashMap
-		newResolvedOrImplications.putAll(resolvedOrImplications.filter[key, value| !deadFeatures.contains(key)].mapValues[reject[deadFeatures.contains(it)].toSet])
+		newResolvedOrImplications.putAll(resolvedOrImplications.filter[key, value|!deadFeatures.contains(key)].mapValues [
+			reject[deadFeatures.contains(it)].toSet
+		])
 		resolvedOrImplications.clear
 		resolvedOrImplications.putAll(newResolvedOrImplications)
-		
+
+		transitiveOrLoops = new HashSet(transitiveOrLoops.reject [
+			deadFeatures.contains(key) || deadFeatures.contains(value.key) || deadFeatures.contains(value.value)
+		].toSet)
+
 		// Finally clean up resolvedPCs and, thus, feature decisions
 		val newResolvedPCs = new HashMap
 		newResolvedPCs.putAll(resolvedPCs.mapValues[reject[deadFeatures.contains(it)].toSet])
-		subdiagramContents.removeAll(newResolvedPCs.filter[fd, pcs | pcs.empty].keySet)
+		subdiagramContents.removeAll(newResolvedPCs.filter[fd, pcs|pcs.empty].keySet)
 		resolvedPCs.clear
 		resolvedPCs.putAll(newResolvedPCs.filter[fd, pcs|!pcs.empty])
 	}
