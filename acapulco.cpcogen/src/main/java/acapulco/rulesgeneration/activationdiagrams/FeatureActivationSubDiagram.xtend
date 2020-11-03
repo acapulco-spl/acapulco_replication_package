@@ -17,6 +17,9 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.xtend.lib.annotations.Accessors
+import acapulco.engine.variability.SatSolver
+
+import static extension acapulco.rulesgeneration.activationdiagrams.VBRuleFeatureConstraintGenerator.computeConstraintExpression
 
 /**
  * A feature-activation sub-diagram is the subset of the nodes in a feature-activation diagrams required for a particular activation decision.
@@ -35,7 +38,41 @@ class FeatureActivationSubDiagram {
 	 * The VB-rule feature model's root feature, from which all other features can be found
 	 */
 	@Accessors(PUBLIC_GETTER)
-	val VBRuleFeature vbRuleFeatures = new VBRuleFeature("root")
+	var VBRuleFeature vbRuleFeatures = new VBRuleFeature("root")
+
+	/**
+	 * Minimal set of pairwise exclusions between VB-rule features.
+	 */
+	@Accessors(PUBLIC_GETTER)
+	var Set<Pair<VBRuleFeature, VBRuleFeature>> featureExclusions = null
+
+	/**
+	 * Information about overlaps between or-features. These are redundant paths through the rule
+	 */
+	@Accessors(PUBLIC_GETTER)
+	val orOverlaps = new HashMap<Pair<VBRuleOrFeature, VBRuleOrFeature>, List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>>
+
+	/**
+	 * Or-nodes where one alternative directly leads to root. In this case, we want to pick this alternative always.
+	 */
+	@Accessors(PUBLIC_GETTER)
+	val orsToRoot = new HashMap<VBRuleOrFeature, VBRuleOrAlternative>
+
+	/**
+	 * The list of features that were removed from the VB rule features because they could never be activated
+	 */
+	@Accessors(PUBLIC_GETTER)
+	var List<VBRuleFeature> deadFeatures
+
+	/**
+	 * The final resolved PCs
+	 */
+	val Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs = new HashMap
+
+	/**
+	 * The final resolved or implications
+	 */
+	val resolvedOrImplications = new HashMap<VBRuleFeature, Set<VBRuleOrFeature>>
 
 	/**
 	 * Helper for quick lookups
@@ -53,21 +90,11 @@ class FeatureActivationSubDiagram {
 	val presenceConditions = new HashMap<FeatureDecision, Set<PresenceCondition>>
 
 	/**
-	 * The final resolved PCs
-	 */
-	val Map<FeatureDecision, Set<VBRuleFeature>> resolvedPCs = new HashMap
-
-	/**
 	 * Or-implications: Which ORs do we need to make a decision on when we have decided on a given root feature or OrAlternative feature.
 	 * 
 	 * This will be filled directly in the forward sweep, but may still contain unresolved proxies at that point. Proxies are then resolved using information from the followOr map.
 	 */
 	val orImplications = new HashMap<VBRuleFeature, Set<OrImplication>>
-
-	/**
-	 * The final resolved or implications
-	 */
-	val resolvedOrImplications = new HashMap<VBRuleFeature, Set<VBRuleOrFeature>>
 
 	/**
 	 * Internal storage for keeping track of information collected at each node during the forward sweep: 
@@ -80,18 +107,6 @@ class FeatureActivationSubDiagram {
 	 */
 	val immediateOrPredecessors = new HashMap<FeatureDecision, List<Pair<VBRuleOrFeature, VBRuleOrAlternative>>>
 
-	/**
-	 * Information about overlaps between or-features. These are redundant paths through the rule
-	 */
-	@Accessors(PUBLIC_GETTER)
-	val orOverlaps = new HashMap<Pair<VBRuleOrFeature, VBRuleOrFeature>, List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>>
-
-	/**
-	 * Or-nodes where one alternative directly leads to root. In this case, we want to pick this alternative always.
-	 */
-	@Accessors(PUBLIC_GETTER)
-	var orsToRoot = new HashMap<VBRuleOrFeature, VBRuleOrAlternative>
-
 	new(FeatureDecision decision) {
 		this.rootDecision = decision
 
@@ -102,18 +117,16 @@ class FeatureActivationSubDiagram {
 		subdiagramContents.filter(FeatureDecision)
 	}
 
-	/**
-	 * Minimal set of pairwise exclusions between VB-rule features.
-	 */
-	@Accessors(PUBLIC_GETTER)
-	var Set<Pair<VBRuleFeature, VBRuleFeature>> featureExclusions = null
-
 	def getPresenceConditions() {
 		resolvedPCs
 	}
 
 	def getOrImplications() {
 		resolvedOrImplications
+	}
+
+	def collectAllFeatures() {
+		vbRuleFeatures.collectFeatures
 	}
 
 	private def initialise() {
@@ -198,6 +211,55 @@ class FeatureActivationSubDiagram {
 					]
 				]
 			].toSet)
+
+		// 6. Calculate dead features and clean up sub-diagram
+		removeDeadFeatures
+	}
+	
+	private def removeDeadFeatures() {
+		// 1. Compute dead features
+		val allFeaturesIndex = new HashMap<String, VBRuleFeature>
+		collectAllFeatures.forEach[allFeaturesIndex.put(name, it)]
+		deadFeatures = new ArrayList(SatSolver.calculateDeadFeatures(computeConstraintExpression).map[fn|allFeaturesIndex.get(fn)])
+//		println('''Dead features («deadFeatures.size») for «rootDecision»: «deadFeatures».''')
+
+		// 2. Clean up the FASD
+		vbRuleFeatures.removeDeadFeatures(deadFeatures)
+		
+		featureExclusions.removeIf[deadFeatures.contains(key) || deadFeatures.contains(value)]
+		
+		val newOrOverlaps = new HashMap
+		newOrOverlaps.putAll(orOverlaps.filter [ orPair, orAlternativeList |
+			!(deadFeatures.contains(orPair.key) || deadFeatures.contains(orPair.value))
+		].mapValues[reject[deadFeatures.contains(key) || deadFeatures.contains(value)].toList])
+		orOverlaps.clear
+		orOverlaps.putAll(newOrOverlaps)
+		
+		val newOrsToRoot = new HashMap
+		newOrsToRoot.putAll(orsToRoot.filter[key, value| !(deadFeatures.contains(key) || deadFeatures.contains(value))])
+		orsToRoot.clear
+		orsToRoot.putAll(newOrsToRoot)
+
+		val newResolvedOrImplications = new HashMap
+		newResolvedOrImplications.putAll(resolvedOrImplications.filter[key, value| !deadFeatures.contains(key)].mapValues[reject[deadFeatures.contains(it)].toSet])
+		resolvedOrImplications.clear
+		resolvedOrImplications.putAll(newResolvedOrImplications)
+		
+		// Finally clean up resolvedPCs and, thus, feature decisions
+		val newResolvedPCs = new HashMap
+		newResolvedPCs.putAll(resolvedPCs.mapValues[reject[deadFeatures.contains(it)].toSet])
+		subdiagramContents.removeAll(newResolvedPCs.filter[fd, pcs | pcs.empty].keySet)
+		resolvedPCs.clear
+		resolvedPCs.putAll(newResolvedPCs.filter[fd, pcs|!pcs.empty])
+	}
+
+	private def void removeDeadFeatures(VBRuleFeature feature, List<VBRuleFeature> deadFeatures) {
+		feature.children.removeIf[deadFeatures.contains(it)]
+		feature.children.forEach[removeDeadFeatures(deadFeatures)]
+	}
+
+	private static def Iterable<VBRuleFeature> collectFeatures(VBRuleFeature feature) {
+		feature.children.flatMap[collectFeatures] + #{feature}
 	}
 
 	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom,

@@ -35,12 +35,8 @@ class ActivationDiagToRuleConverter {
 			// Annotations
 			r.addAnnotation(KEY_FEATURE_CONSTRAINT, activationDiagram.computeConstraintExpression)
 			r.addAnnotation(KEY_INJ_MATCHING, "false")
-			r.addAnnotation(KEY_FEATURES, activationDiagram.vbRuleFeatures.collectFeatures.map[name].join(','))
+			r.addAnnotation(KEY_FEATURES, activationDiagram.collectAllFeatures.map[name].join(','))
 		]
-	}
-
-	private static def Iterable<VBRuleFeature> collectFeatures(VBRuleFeature feature) {
-		feature.children.flatMap[collectFeatures] + #{feature}
 	}
 
 	private static def void addPreserveNode(Rule rule, EClass type, boolean activate, Set<VBRuleFeature> pcComponents,

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
@@ -31,10 +32,10 @@ import aima.core.logic.propositional.visitors.SymbolCollector;
  *
  */
 public class SatSolver {
-	static Map<String,List<List<String>>> cachedSolutions = new HashMap<>();
-	
-	static Map<String,Boolean> cachedSatisfiable = new HashMap<>();
-	
+	static Map<String, List<List<String>>> cachedSolutions = new HashMap<>();
+
+	static Map<String, Boolean> cachedSatisfiable = new HashMap<>();
+
 	private static List<String> solution;
 
 	public static ISolver createModelIterator(String expr, Map<Integer, String> symbolsToIndices) {
@@ -72,7 +73,6 @@ public class SatSolver {
 		return solver;
 	}
 
-
 	private static boolean checkSatisfiable(String expr) {
 		Boolean result = cachedSatisfiable.get(expr);
 		if (result == null) {
@@ -82,14 +82,13 @@ public class SatSolver {
 		}
 		return result;
 	}
-	
+
 	public static Boolean isSatisfiable(String expr) {
 		Sentence cnf = FeatureExpression.getExpr(expr);
 		return isSatisfiable(cnf);
 	}
 
-	
-	public static  Boolean isSatisfiable(Sentence expr) {
+	public static Boolean isSatisfiable(Sentence expr) {
 		Sentence cnf = ConvertToCNF.convert(expr);
 		Set<PropositionSymbol> symbols = SymbolCollector.getSymbolsFrom(cnf);
 		Set<Clause> clauses = ClauseCollector.getClausesFrom(cnf);
@@ -184,28 +183,28 @@ public class SatSolver {
 		}
 		return result;
 	}
-	
+
 	private static Set<Clause> collectClausesFrom(Sentence cnf) {
 		Set<Clause> result = new HashSet<>();
-		
+
 		List<Sentence> toProcess = new LinkedList<>();
 		toProcess.add(cnf);
-		
+
 		while (!toProcess.isEmpty()) {
 			Sentence currentSentence = toProcess.remove(0);
-			
+
 			if (currentSentence.isAndSentence()) {
 				toProcess.add(currentSentence.getSimplerSentence(0));
 				toProcess.add(currentSentence.getSimplerSentence(1));
 			} else if (currentSentence.isOrSentence()) {
 				// Collect literals and wrap in clause
-				result.add(new Clause(collectOrLiterals(currentSentence)));				
+				result.add(new Clause(collectOrLiterals(currentSentence)));
 			} else if (currentSentence.isUnarySentence()) {
 				if (!currentSentence.getSimplerSentence(0).isPropositionSymbol()) {
 					throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
 				}
-				
-				Literal negativeLiteral = new Literal((PropositionSymbol)currentSentence.getSimplerSentence(0), false);
+
+				Literal negativeLiteral = new Literal((PropositionSymbol) currentSentence.getSimplerSentence(0), false);
 				result.add(new Clause(negativeLiteral));
 			} else if (currentSentence.isPropositionSymbol()) {
 				Literal positiveLiteral = new Literal((PropositionSymbol) currentSentence);
@@ -214,15 +213,15 @@ public class SatSolver {
 				throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	private static List<Literal> collectOrLiterals(Sentence orSentence) {
 		List<Literal> result = new ArrayList<>();
 		List<Sentence> toProcess = new LinkedList<>();
 		toProcess.add(orSentence);
-		
+
 		while (!toProcess.isEmpty()) {
 			Sentence currentSentence = toProcess.remove(0);
 			if (currentSentence.isOrSentence()) {
@@ -232,8 +231,8 @@ public class SatSolver {
 				if (!currentSentence.getSimplerSentence(0).isPropositionSymbol()) {
 					throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
 				}
-				
-				Literal negativeLiteral = new Literal((PropositionSymbol)currentSentence.getSimplerSentence(0), false);
+
+				Literal negativeLiteral = new Literal((PropositionSymbol) currentSentence.getSimplerSentence(0), false);
 				result.add(negativeLiteral);
 			} else if (currentSentence.isPropositionSymbol()) {
 				Literal positiveLiteral = new Literal((PropositionSymbol) currentSentence);
@@ -242,71 +241,113 @@ public class SatSolver {
 				throw new IllegalStateException("Sentence is not in CNF: " + currentSentence);
 			}
 		}
+
+		return result;
+	}
+
+	private static class ModelIteratorInfo {
+		public ModelIterator mi;
+		public Map<Integer, PropositionSymbol> reverseIndex;
+		public Set<PropositionSymbol> symbols;
+		public Map<PropositionSymbol, Integer> indices;
+	}
+
+	private static ModelIteratorInfo createIteratorFor(ExtendedSentence expr) {
+		ModelIteratorInfo mii = new ModelIteratorInfo();
+
+//		Sentence cnf = ConvertToCNF.convert(expr);
+		Sentence cnf = expr.sentence; // Assume sentence is already in CNF to avoid complexity of generating CNF.
+
+		mii.symbols = new HashSet<>(expr.getSymbols().values()); // SymbolCollector.getSymbolsFrom(cnf);
+		Set<Clause> clauses = collectClausesFrom(cnf); // ClauseCollector.getClausesFrom(cnf);
+		mii.indices = getSymbol2IndexMap(mii.symbols);
+
+		int numberOfVariables = mii.symbols.size();
+		int numberOfClauses = clauses.size();
+
+		ISolver solver = SolverFactory.newDefault();
+		mii.mi = new ModelIterator(solver);
+		mii.mi.newVar(numberOfVariables);
+		mii.mi.setExpectedNumberOfClauses(numberOfClauses);
+
+		for (Clause clause : clauses) {
+			if (clause.isFalse()) {
+				return null;
+			}
+			if (!clause.isTautology()) {
+				int[] clauseArray = convertToArray(clause, mii.indices);
+				try {
+					mii.mi.addClause(new VecInt(clauseArray));
+				} catch (ContradictionException e) {
+//					e.printStackTrace();
+					return null;
+				}
+			}
+		}
+
+		mii.reverseIndex = new HashMap<>();
+		for (Entry<PropositionSymbol, Integer> ind : mii.indices.entrySet()) {
+			mii.reverseIndex.put(ind.getValue(), ind.getKey());
+		}
+
+		return mii;
+	}
+
+	public static List<String> calculateDeadFeatures(String expr) {
+		ExtendedSentence sentence = FeatureExpression.getExpr(expr);
+		ModelIteratorInfo mii = createIteratorFor(sentence);
+
+		if (mii == null) {
+			// All features are dead :-)
+			return sentence.getSymbols().values().stream().map((PropositionSymbol s) -> {
+				return s.getSymbol();
+			}).collect(Collectors.toList());
+		}
+
+		List<String> result = new ArrayList<>();
+		for (PropositionSymbol symb : mii.symbols) {
+			try {
+				// If the model cannot be satisfied if the given feature is set to active, then the feature is dead.
+				if (!mii.mi.isSatisfiable(new VecInt(new int[] { mii.indices.get(symb) }))) {
+					result.add(symb.getSymbol());
+				}
+			} catch (TimeoutException te) {
+				// Ignoring for now
+			}
+		}
 		
 		return result;
 	}
 
 	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr) {
-//		Sentence cnf = ConvertToCNF.convert(expr);
-		Sentence cnf = expr.sentence; // Assume sentence is already in CNF to avoid complexity of generating CNF.
-		
-		Set<PropositionSymbol> symbols = new HashSet<>(expr.getSymbols().values()); //SymbolCollector.getSymbolsFrom(cnf);
-		Set<Clause> clauses = collectClausesFrom(cnf); //ClauseCollector.getClausesFrom(cnf);
-		Map<PropositionSymbol, Integer> indices = getSymbol2IndexMap(symbols);
+		ModelIteratorInfo mii = createIteratorFor(expr);
 
-		int numberOfVariables = symbols.size();
-		int numberOfClauses = clauses.size();
-
-		ISolver solver = SolverFactory.newDefault();
-        ModelIterator mi = new ModelIterator(solver);
-		mi.newVar(numberOfVariables);
-		mi.setExpectedNumberOfClauses(numberOfClauses);
+		if (mii == null) {
+			return new ArrayList<>();
+		}
 
 		List<List<String>> result = new ArrayList<>();
-		for (Clause clause : clauses) {
-			if (clause.isFalse()) {
-				return result;
-			}
-			if (!clause.isTautology()) {
-				int[] clauseArray = convertToArray(clause, indices);
-				try {
-					mi.addClause(new VecInt(clauseArray));
-				} catch (ContradictionException e) {
-//					e.printStackTrace();
-					return result;
-				}
-			}
-		}
-
-		Map<Integer, PropositionSymbol> reverseIndex = new HashMap<>();
-		for (Entry<PropositionSymbol, Integer> ind : indices.entrySet()) {
-			reverseIndex.put(ind.getValue(), ind.getKey());
-		}
 
 		try {
-			while (mi.isSatisfiable()) {
-				int[] model = mi.model();
+			while (mii.mi.isSatisfiable()) {
+				int[] model = mii.mi.model();
 				List<String> sol = new LinkedList<>();
-				
+
 				for (int i : model) {
 					if (i > 0) {
-						PropositionSymbol ps = reverseIndex.get(i);
+						PropositionSymbol ps = mii.reverseIndex.get(i);
 						if (ps != null) {
 							sol.add(ps.getSymbol());
 						}
 					}
 				}
 				/*
-				 * Steffen: Swapped this around to reduce the number of loops within loops. That gave us a little bit of extra performance, though not a huge amount.
-				for (PropositionSymbol key : indices.keySet()) {
-					int index = indices.get(key);
-					for (int i : model) {
-						if (i > 0 && i == index) {
-							sol.add(key.getSymbol());
-						}
-					}
-				}
-				*/
+				 * Steffen: Swapped this around to reduce the number of loops within loops. That
+				 * gave us a little bit of extra performance, though not a huge amount. for
+				 * (PropositionSymbol key : indices.keySet()) { int index = indices.get(key);
+				 * for (int i : model) { if (i > 0 && i == index) { sol.add(key.getSymbol()); }
+				 * } }
+				 */
 				result.add(sol);
 			}
 			return result;
@@ -319,10 +360,10 @@ public class SatSolver {
 		String expr1 = "a | b | c | d | e | f";
 		System.out.println(SatSolver.checkSatisfiable(expr1));
 		System.out.println(SatSolver.getAllSolutions(expr1));
-			
+
 		String expr2 = "a & ~a";
 		System.out.println(SatSolver.checkSatisfiable(expr2));
-		System.out.println(SatSolver.getAllSolutions(expr2));	
+		System.out.println(SatSolver.getAllSolutions(expr2));
 	}
 
 }
