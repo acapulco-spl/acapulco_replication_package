@@ -6,6 +6,7 @@ import acapulco.rulesgeneration.activationdiagrams.ActivationDiagramNode
 import java.util.Set
 
 import static org.junit.Assert.assertTrue
+import static extension acapulco.rulesgeneration.activationdiagrams.FADHelper.*
 
 class DeParent extends FADPrincipleTester {
 	override checkPrincipleApplies(Feature f, Set<ActivationDiagramNode> activationDiagram,

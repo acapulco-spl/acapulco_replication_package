@@ -20,6 +20,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import acapulco.engine.variability.SatSolver
 
 import static extension acapulco.rulesgeneration.activationdiagrams.VBRuleFeatureConstraintGenerator.computeConstraintExpression
+import static extension acapulco.rulesgeneration.activationdiagrams.FADHelper.*
 
 /**
  * A feature-activation sub-diagram is the subset of the nodes in a feature-activation diagrams required for a particular activation decision.
@@ -198,8 +199,7 @@ class FeatureActivationSubDiagram {
 		]
 
 		transitiveOrLoops = identifyTransitiveOrLoops
-		println('''FASD for «rootDecision» contains «transitiveOrLoops.size» transitive or loops before dead-feature removal.''')
-		
+//		println('''FASD for «rootDecision» contains «transitiveOrLoops.size» transitive or loops before dead-feature removal.''')
 
 		// 5. Minimise feature exclusions
 		featureExclusions = new HashSet<Pair<VBRuleFeature, VBRuleFeature>>(
@@ -223,8 +223,23 @@ class FeatureActivationSubDiagram {
 				]
 			].toSet)
 
-		// 6. Calculate dead features and clean up sub-diagram
+		// 6. Find equivalent or-alternatives (for which an abstract decision could be introduced)
+		println('''FASD for «rootDecision» has «findEquivalentAlternatives.size» equivalent alternatives.''')
+
+		// 7. Calculate dead features and clean up sub-diagram
 		removeDeadFeatures
+	}
+	
+	private def findEquivalentAlternatives() {
+		vbRuleFeatures.children.map[orFeature |
+			val fdConsequences = (orFeature as VBRuleOrFeature).orNode.consequences.collectFeatureDecisions
+			
+			fdConsequences.groupBy[consequences.sortBy[ID]]
+			
+			// TODO: Filter by activation and PC
+			
+			null
+		]
 	}
 
 	private def identifyTransitiveOrLoops() {

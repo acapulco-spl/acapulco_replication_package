@@ -72,22 +72,4 @@ abstract class FADPrincipleTester {
 	protected dispatch def Iterable<OrNode> collectOrNodes(FeatureDecision fd) {
 		#{}
 	}
-
-	protected dispatch def Iterable<FeatureDecision> collectFeatureDecisions(
-		Iterable<ActivationDiagramNode> consequences) {
-		consequences.flatMap[collectFeatureDecisions]
-	}
-
-	protected dispatch def Iterable<FeatureDecision> collectFeatureDecisions(OrNode or) {
-		or.consequences.collectFeatureDecisions
-	}
-
-	protected dispatch def Iterable<FeatureDecision> collectFeatureDecisions(AndNode and) {
-		and.consequences.collectFeatureDecisions
-	}
-
-	protected dispatch def Iterable<FeatureDecision> collectFeatureDecisions(FeatureDecision fd) {
-		#{fd}
-	}
-
 }
