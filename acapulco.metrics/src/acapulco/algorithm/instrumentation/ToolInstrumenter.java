@@ -1,4 +1,4 @@
-package mdeoptimiser4efm.algorithm.instrumentation;
+package acapulco.algorithm.instrumentation;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import org.moeaframework.analysis.collector.Accumulator;
 import org.moeaframework.analysis.collector.Collector;
 import org.moeaframework.analysis.collector.ElapsedTimeCollector;
 
+import acapulco.algorithm.instrumentation.collector.PopulationCollector;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
-import mdeoptimiser4efm.algorithm.instrumentation.collector.PopulationCollector;
 
 public class ToolInstrumenter {
 

@@ -1,4 +1,4 @@
-package mdeoptimiser4efm.algorithm.termination;
+package acapulco.algorithm.termination;
 
 public enum StoppingCondition {
 	EVOLUTIONS,

@@ -32,12 +32,13 @@ import jmetal.operators.selection.Selection;
 import jmetal.problems.ProblemFactory;
 import jmetal.util.JMException;
 import jmetal.util.comparators.FitnessComparator;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
 import jmetal.core.Problem;
 
 /**

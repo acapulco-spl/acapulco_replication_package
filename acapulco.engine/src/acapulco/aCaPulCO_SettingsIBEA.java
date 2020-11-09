@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.henshin.model.Module;
 import org.eclipse.emf.henshin.model.Rule;
 
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
 import acapulco.engine.HenshinFileReader;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
@@ -32,8 +34,6 @@ import jmetal.experiments.Settings;
 import jmetal.operators.selection.BinaryTournament;
 import jmetal.util.JMException;
 import jmetal.util.comparators.FitnessComparator;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 public class aCaPulCO_SettingsIBEA extends Settings {
 

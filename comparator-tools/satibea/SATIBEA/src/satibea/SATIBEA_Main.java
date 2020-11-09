@@ -44,13 +44,14 @@ import org.sat4j.reader.DimacsReader;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.IVecInt;
 import org.sat4j.tools.ModelIterator;
+
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
+import acapulco.tool.executor.AbstractExecutor;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
-import mdeoptimiser4efm.tool.executor.AbstractExecutor;
 
 /**
  *

@@ -1,4 +1,4 @@
-package mdeoptimiser4efm.algorithm.instrumentation.collector;
+package acapulco.algorithm.instrumentation.collector;
 
 import java.util.ArrayList;
 import org.moeaframework.analysis.collector.Accumulator;
@@ -7,10 +7,10 @@ import org.moeaframework.analysis.collector.Collector;
 import org.moeaframework.core.EvolutionaryAlgorithm;
 import org.moeaframework.core.Population;
 
+import acapulco.algorithm.instrumentation.MoeaOptimisationSolution;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
-import mdeoptimiser4efm.algorithm.instrumentation.MoeaOptimisationSolution;
 
 /** Collects the population from an {@link EvolutionaryAlgorithm}. */
 public class PopulationCollector {

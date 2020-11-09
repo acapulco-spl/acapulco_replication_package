@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 import org.uma.mo_dagame.algorithm.main.MoDagameStudy;
 
 import acapulco.aCaPulCO_Main;
+import acapulco.algorithm.termination.StoppingCondition;
 import acapulco.featureide.utils.FeatureIDEUtils;
 import acapulco.model.FeatureModel;
 import acapulco.preparation.PreparationPipeline;
 import acapulco.rulesgeneration.CpcoGenerator;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 import satibea.SATIBEA_Main;
 
 public class PipelineRunner {

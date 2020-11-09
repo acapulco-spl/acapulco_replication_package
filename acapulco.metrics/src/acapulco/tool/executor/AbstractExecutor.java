@@ -1,10 +1,10 @@
-package mdeoptimiser4efm.tool.executor;
+package acapulco.tool.executor;
 
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
+import acapulco.algorithm.termination.StoppingCondition;
 import picocli.CommandLine.Option;
 
 /**
- * Define an abstract exeuctor to reuse across all the tools that can run search
+ * Define an abstract executor to reuse across all the tools that can run search
  * over feature models. This enforces the same kind of signature for all the
  * tools extending this class
  * 

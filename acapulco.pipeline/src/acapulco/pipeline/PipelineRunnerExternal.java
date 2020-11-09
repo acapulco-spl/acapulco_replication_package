@@ -20,14 +20,14 @@ import org.apache.commons.cli.ParseException;
 import org.uma.mo_dagame.algorithm.main.MoDagameStudy;
 
 import acapulco.aCaPulCO_Main;
+import acapulco.algorithm.termination.StoppingCondition;
+import acapulco.evaluation.output.ParseResults;
+import acapulco.evaluation.output.Results;
+import acapulco.evaluation.paretotruefront.MergedPTF;
 import acapulco.featureide.utils.FeatureIDEUtils;
 import acapulco.model.FeatureModel;
 import acapulco.preparation.PreparationPipeline;
 import acapulco.rulesgeneration.CpcoGenerator;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
-import mdeoptimiser4efm.evaluation.output.ParseResults;
-import mdeoptimiser4efm.evaluation.output.Results;
-import mdeoptimiser4efm.evaluation.paretotruefront.MergedPTF;
 import satibea.SATIBEA_Main;
 
 public class PipelineRunnerExternal {
