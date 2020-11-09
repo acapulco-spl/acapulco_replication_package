@@ -21,7 +21,7 @@ import java.util.Set;
 public class MergedPTF {
 
 	private static String fileFormatIn(String tool1, String _case, int runs) {
-		return tool1 + "_" + _case + "_" + runs + "runs_results.dat";
+		return "output/" + tool1 + "_" + _case + "_" + runs + "runs_results.dat";
 	}
 	
 	/***
@@ -91,7 +91,7 @@ public class MergedPTF {
 		// Write ptf
 		String ptfRepresentation = getParetoFrontRepresentation(ptf);
 		
-		Path path = Paths.get(_case + "-paretotruefront.txt");
+		Path path = Paths.get("output/" + _case + "-paretotruefront.txt");
 		Files.deleteIfExists(path);
 		Files.createFile(path);
 		byte[] strToBytes = ptfRepresentation.getBytes();

@@ -212,7 +212,7 @@ public class PipelineRunnerExternal {
             System.out.println("Calculating hypervolumes using the pareto true front (" + runs + " runs)...");
     		
             try {
-    			String ptfSolutionSet = Files.readString(Paths.get(fmNameInput + "-paretotruefront.txt"));
+    			String ptfSolutionSet = Files.readString(Paths.get(outputPath + "/" + fmNameInput + "-paretotruefront.txt"));
     			double[][] ptf = Results.solutionSetToArray(ptfSolutionSet);
     			
     			for (int i = 0; i < tools1.length; i++) {
@@ -245,8 +245,8 @@ public class PipelineRunnerExternal {
     	}
     	
     	// Serialize the results
-        String statsResultsFilename = sTool + "_" + fmNameInput + "_statsResults.dat";
-        String runsResultsFilename = sTool + "_" + fmNameInput + "_" + runs + "runs_results.dat"; 
+        String statsResultsFilename = outputPath + "/" + sTool + "_" + fmNameInput + "_statsResults.dat";
+        String runsResultsFilename = outputPath + "/" + sTool + "_" + fmNameInput + "_" + runs + "runs_results.dat"; 
         if (ptf == null) {
         	results.saveResults(statsResultsFilename);
             results.saveRunsResults(runsResultsFilename);

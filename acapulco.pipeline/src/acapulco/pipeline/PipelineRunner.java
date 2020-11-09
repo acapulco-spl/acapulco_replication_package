@@ -2,7 +2,6 @@ package acapulco.pipeline;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.uma.mo_dagame.algorithm.main.MoDagameStudy;
@@ -40,6 +39,7 @@ public class PipelineRunner {
 			Integer sv = 50;
 			boolean debug = true;
 			String fullFmPath = generatedPath + "/" + fmNameCanonical + "/acapulco/" + fmNameCanonical + ".dimacs";
+			System.out.println("Running ACAPULCO...");
 			acapulcoSearch.run(fullFmPath, sc, sv, debug);
 			
 			
