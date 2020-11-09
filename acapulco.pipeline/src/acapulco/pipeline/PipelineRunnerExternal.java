@@ -108,12 +108,14 @@ public class PipelineRunnerExternal {
      
         // Tool execution
         boolean allTools = cmd.hasOption("allTools");
-        if (!cmd.hasOption("tool") && !allTools) {
+        boolean ptfOption = cmd.hasOption("ptfOption");
+        if (!cmd.hasOption("tool") && !allTools && !ptfOption) {
+        	System.out.println("You must specified at least one of these options: 'tool', 'allTools', 'ptfOption'");
             formatter.printHelp("java -jar Pipeline.jar", header, options, footer, true);
             System.exit(1);
         }
         
-        String sTool = cmd.getOptionValue("tool");
+        String sTool = cmd.hasOption("tool") ? cmd.getOptionValue("tool") : "None";
         String stoppingcondition = cmd.hasOption("stoppingcondition") ? cmd.getOptionValue("stoppingcondition"): "evols";
         String stoppingvalue = cmd.hasOption("stoppingvalue") ? cmd.getOptionValue("stoppingvalue") : "50";     
 		Integer runs = cmd.hasOption("runs") ? Integer.parseInt(cmd.getOptionValue("runs")) : 1;
@@ -192,9 +194,6 @@ public class PipelineRunnerExternal {
         }
         
         // Calculate true pareto front
-        boolean ptfOption = cmd.hasOption("ptfOption");
-        System.out.println("allTools: " + allTools);
-        System.out.println("ptfOption: " + ptfOption);
         if (allTools || ptfOption) {
         	System.out.println("Generating pareto true front from results (" + runs + " runs)...");
             Map<String, List<String>> pfMap = new HashMap<>();
