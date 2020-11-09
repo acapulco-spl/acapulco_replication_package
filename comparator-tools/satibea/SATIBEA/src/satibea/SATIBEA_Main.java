@@ -91,7 +91,8 @@ public class SATIBEA_Main extends AbstractExecutor {
 
             for (int i = 0; i < pop.size(); i++) {
                 Variable v = pop.get(i).getDecisionVariables()[0];
-                for (int j = 0; j < pop.get(i).getNumberOfObjectives(); j++) {
+ 
+                for (int j = 0; j < p.getNumberOfObjectives(); j++) {
                     System.out.print(pop.get(i).getObjective(j) + " ");
                 }
                 System.out.println("");
