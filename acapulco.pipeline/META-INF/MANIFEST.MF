@@ -9,3 +9,4 @@ Require-Bundle: acapulco.model,
  acapulco.preparation,
  acapulco.metrics,
  acapulco.engine
+Import-Package: org.apache.commons.cli

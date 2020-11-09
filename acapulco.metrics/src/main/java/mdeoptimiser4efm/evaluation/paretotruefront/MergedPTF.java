@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,31 +19,9 @@ import java.util.Set;
  *
  */
 public class MergedPTF {
-	static String[] tools1 = { "ACAPULCO", "MODAGAME", "SATIBEA" };
-	static String[] tools2 = { "Acapulco",  "Modagame", "Satibea" };
-	//static String[] cases = { "Wget", "TankWar", "mobile_media2", "WeaFQAs", "linuxbase", "busyBox", "embtoolkit", "cdl_ea2468", "linuxdist", "linux26", "automotive2_1"
-	//static String[] cases = { "Wget", "TankWar", "mobile_media2", "WeaFQAs", "linuxbase", "busyBox", "embtoolkit", "cdl_ea2468", "linuxdist"
-	static String[] cases = { "linux"
-	};
 
-	private static String fileFormatIn(String tool1, String tool2, String _case) {
-		return "data\\" + tool1 + "\\" + tool2 + "_" + _case + "_30runs_results.dat";
-	}
-
-	private static String fileFormatOut(String _case) {
-		return "output" + _case;
-	}
-
-	public static void main(String[] args) throws Exception {
-		for (String _case : cases) {
-			System.out.println("# ** Results from case: " + _case + " **");
-			Map<String, List<String>> pfMap = new HashMap<>();
-			for (int i = 0; i < tools1.length; i++) {
-				fillMaps(_case, pfMap, i);
-			}
-			
-			buildMergePTF(_case, pfMap);
-		}
+	private static String fileFormatIn(String tool1, String _case, int runs) {
+		return tool1 + "_" + _case + "_" + runs + "runs_results.dat";
 	}
 	
 	/***
@@ -56,11 +33,10 @@ public class MergedPTF {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void fillMaps(String _case, Map<String, List<String>> pfMap, int i) throws FileNotFoundException, IOException {
-		String tool = tools1[i];
+	public static void fillMaps(String _case, String tool, Map<String, List<String>> pfMap, int runs) throws FileNotFoundException, IOException {
 		List<String> pfs = new ArrayList<>();
 		pfMap.put(tool, pfs);
-		String path = fileFormatIn(tool, tools2[i], _case);
+		String path = fileFormatIn(tool, _case, runs);
 		BufferedReader br = new BufferedReader(new FileReader(path));
 
 		try {
@@ -86,7 +62,7 @@ public class MergedPTF {
 	 * @param pfMap
 	 * @throws Exception
 	 */
-	private static void buildMergePTF(String _case, Map<String, List<String>> pfMap) throws Exception {
+	public static void buildMergePTF(String _case, Map<String, List<String>> pfMap) throws Exception {
 		Set<Set<Point>> paretoFronts = new HashSet<Set<Point>>();
 		for (List<String> runs : pfMap.values()) {
 			for (String pf : runs) {
@@ -129,6 +105,7 @@ public class MergedPTF {
 	 * @return
 	 */
 	private static Set<Point> createPTF(Set<Set<Point>> paretoFronts) {
+		System.out.println(paretoFronts);
 		Set<Point> result = new HashSet<Point>();
 		paretoFronts.forEach(p -> result.addAll(p));
 		

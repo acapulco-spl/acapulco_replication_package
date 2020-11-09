@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,9 +27,9 @@ public class ParseResults {
 		/**********************************************************************/
 		
 		Results results = new Results();
-		List<String> resultFilepaths = getAllResultsFilepath(path, runs);
+		List<String> resultFilepaths = getAllResultsFilepath(path, toolName, runs);
     	for (int i = 1; i <= runs; i++) {
-    		results.addRun(i, getResults(resultFilepaths.get(i-1)));
+    		results.addRun(i, getResults(resultFilepaths.get(i-1), toolName));
     	}
     	
         // Serialize the results
@@ -56,18 +58,28 @@ public class ParseResults {
     	
 	}
 	
-	public static List<String> getAllResultsFilepath(String path, int runs) {
+	/**
+	 * Return all .csv files with the output results. It returns only the latest X files where X is the number of runs.
+	 *  
+	 * @param path
+	 * @param tool
+	 * @param runs
+	 * @return
+	 */
+	public static List<String> getAllResultsFilepath(String path, String tool, int runs) {
 		// Get all files of results (.csv)
 		List<File> files = finder(path, ".csv", true);
 		// Filter the results files with the appropriate name
 		files = files.stream().filter(f -> f.getName().contains("data-steps")).collect(Collectors.toList());
+		// Filter by the tool
+		files = files.stream().filter(f -> f.getPath().contains(tool)).collect(Collectors.toList());
 		// Get the newest files of results
 		List<File> newestFiles = findNewestFiles(files);
 		
 		return newestFiles.subList(0, runs).stream().map(f -> f.getPath()).collect(Collectors.toList());
 	}
 	
-	public static Map<Integer, Data> getResults(String filepath) {
+	public static Map<Integer, Data> getResults(String filepath, String tool) {
 		Map<Integer, Data> results = new HashMap<Integer, Data>();
 		try {
 			FileReader fr = new FileReader(new File(filepath));
@@ -76,8 +88,16 @@ public class ParseResults {
 			while ((line = csvReader.readNext()) != null) {
 				int nfe = Integer.parseInt(line[0].trim());
 				double elapsedTime = Double.parseDouble(line[1].trim());
-				double[][] approximationSet = solutionSetToArray(line[2].trim());
-				double[][] population = solutionSetToArray(line[3].trim());
+				double[][] approximationSet = null;
+				double[][] population = null;
+				if (tool.equalsIgnoreCase("modagame")) {
+					approximationSet = solutionSetToArraySimple(line[2].trim());
+					population = solutionSetToArraySimple(line[3].trim());
+				} else {
+					approximationSet = solutionSetToArray(line[2].trim());
+					population = solutionSetToArray(line[3].trim());	
+				}
+				
 				int populationSize = Integer.parseInt(line[4].trim());
 			
 				Data data = new Data(nfe, elapsedTime, approximationSet, population, populationSize);
@@ -90,10 +110,11 @@ public class ParseResults {
 		return results;
 	}
 	
-	public static double[][] solutionSetToArray(String solutionSet) {
+	public static double[][] solutionSetToArraySimple(String solutionSet) {
 		if (solutionSet.equals("[]")) {
 			return null;
 		}
+		solutionSet = solutionSet.replaceAll("\"", "");
 		String[] sols = solutionSet.split(", ");
 		double[][] results = new double[sols.length][];
 		for (int s = 0; s < sols.length; s++) { 
@@ -105,6 +126,26 @@ public class ParseResults {
 			}
 		}
 		return results;
+	}
+	
+	public static double[][] solutionSetToArray(String solutionSet) {
+		if (solutionSet.equals("[]")) {
+			return null;
+		}
+		String[] sols = solutionSet.split(", ");
+		ArrayList<double[]> results = new ArrayList<>();
+		for (int s = 0; s < sols.length; s++) {
+			String[] values = sols[s].split(",");
+			if (values[0].equals("[0.0")) {
+				double[] entry = new double[values.length-2];
+				for (int v = 2; v < values.length; v++) {
+					String val = values[v].replaceAll("\\[", "").replaceAll("\\]", "");
+					entry[v-2] = Double.parseDouble(val);
+				}
+				results.add(entry);
+			}
+		}
+		return results.toArray(new double[results.size()][]);
 	}
 	
 	/**

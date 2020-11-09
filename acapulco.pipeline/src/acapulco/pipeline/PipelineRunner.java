@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
 import org.uma.mo_dagame.algorithm.main.MoDagameStudy;
 
 import acapulco.aCaPulCO_Main;
@@ -15,6 +13,7 @@ import acapulco.model.FeatureModel;
 import acapulco.preparation.PreparationPipeline;
 import acapulco.rulesgeneration.CpcoGenerator;
 import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
+import satibea.SATIBEA_Main;
 
 public class PipelineRunner {
 	public static void main(String[] args) throws IOException {
@@ -48,14 +47,13 @@ public class PipelineRunner {
 			 *  SATIBEA execution with external Java .jar because of incompatibility with SAT4J library (MiniSAT solver).
 			 *  Between library in thirdpartyplugins and SATIBEA libs.
 			 */
-			//String[] satibeaArgs = new String[]{"-fm", generatedPath + "/" + fmNameCanonical + "/satibea/" + fmNameCanonical + ".dimacs", "-sc", sc.toString() , "-sv", sv.toString()};
+			String[] satibeaArgs = new String[]{"-fm", generatedPath + "/" + fmNameCanonical + "/satibea/" + fmNameCanonical + ".dimacs", "-sc", sc.toString() , "-sv", sv.toString()};
 			
-			String satibeaCommand = "java -jar SATIBEA.jar -fm " + generatedPath + "/" + fmNameCanonical + "/satibea/" + fmNameCanonical + ".dimacs" +
-					" -sc " + sc.toString() + " -sv " + sv.toString();
+			//String satibeaCommand = "java -jar SATIBEA.jar -fm " + generatedPath + "/" + fmNameCanonical + "/satibea/" + fmNameCanonical + ".dimacs" + " -sc " + sc.toString() + " -sv " + sv.toString();
 			try {
 				System.out.println("Running SATIBEA...");
-				runCLI(".", satibeaCommand);
-				//SATIBEA_Main.main(satibeaArgs);
+				//runCLI(".", satibeaCommand);
+				SATIBEA_Main.main(satibeaArgs);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -76,22 +74,6 @@ public class PipelineRunner {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-	}
-	
-	/**
-	 * To execute Java .jar executables for Satibea and Modagame.
-	 * @param basedir
-	 * @param command
-	 */
-	public static void runCLI(String basedir, String command) {
-		try {
-			CommandLine cmdLine = CommandLine.parse(command);
-			DefaultExecutor executor = new DefaultExecutor();
-			executor.setWorkingDirectory(new File(basedir));
-			int exitValue = executor.execute(cmdLine);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

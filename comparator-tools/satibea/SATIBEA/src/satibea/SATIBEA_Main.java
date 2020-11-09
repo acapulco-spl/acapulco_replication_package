@@ -109,7 +109,7 @@ public class SATIBEA_Main extends AbstractExecutor {
     public static void main(String[] args) throws Exception {
 
         int exitCode = new CommandLine(new SATIBEA_Main()).execute(args);
-        System.exit(exitCode);
+        //System.exit(exitCode);
     }
 
     public static int numViolatedConstraints(Binary b) {
