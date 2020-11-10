@@ -1,0 +1,111 @@
+WeaFQAs with transitive or-loops:
+
+Always active features are: [FQAs].
+Real optional features are: [Security, Usability, Persistence, ContextAwareness, Performance, Encryption, Authentication, Hashing, Confidentiality, Privacy, Integrity, Non_Repudiation, Logging, ContextualHelp, ExecutionControl, Internationalization, Feedback, FileStorage, DatabaseStorage, LocationAware, TimeAware, DeviceAware, UserAware, EnvironmentAware, Caching, EncryptionAlgorithms, KeySize, EncryptionImplementations, EncryptionOperations, Mode, Padding, AuthenticationImplementations, AuthenticationOperations, AuthenticationMechanism, PasswordLength, PasswordType, LimitedSession, AuthenticationLogging, AnonymousUser, HashingImplementations, HashingOperations, HashingAlgorithms, LoggingOperations, LoggingImplementations, Handler, Format, Level, CypheredMessages, HistoryLog, ErrorLog, ContextualHelpOperations, ContextualHelpImplementations, HelpType, UserType, AuthenticatedUser, ExecutionControl_1, Shortcuts, Locale, InteractionFeedback, ProgressFeedback, SystemStatusDisplay, Alerts, FileStorageOperations, FileType, FileStorageImplementations, TemporalFile, DatabaseStorageOperations, DatabaseStorageImplementations, DatabaseType, DataType, SecureDatabase, GPS, WiFiLocation, BatteryStatus, IRSensor, CachingOperations, CachingImplementations, MaxSizeCache, CacheType, MaxLifeSeconds, EternalObjects, Asymmetric, Symmetric, JavaxCrypto, BouncyCastle, Encrypt, Decrypt, CBC, ECB, CFB, CTR, CTS, PKCS5, PKCS1, OAEP, JAAS, SpringSecurity, Authenticate, UserPassword, DigitalCertificate, Biometric, SocialID, Pin, MatrixCode, Numeric, Alphanumeric, SpecialChars, JavaSecurityMessageDigest, Guava, Hash, MD5, SHA1, SHA256, SHA512, Log, Log4J, LogBack, JavaUtilLogging, SimpleImplementationSLF4J, ConsoleLog, FileLog, DatabaseLog, TXT, XML, HTML, JSON, Trace, Debug, Info, Warning, Error, TraceFile, ShowHelp, JavaWizardAPI, Tutorial, Wizard, Beginner, Intermediate, Advanced, Expert, Undo, Redo, Cancel, GoBack, CreateFile, ModifyFile, DeleteFile, Binary, TXTFile, XMLFile, JSONFile, JavaIO, Store, Query, MySQL, MongoDB, OracleDB, Relational, NoSQL, Integers, Strings, Floats, Objects, CacheStore, CacheQuery, CacheUpdate, JavaCachingSystem, Caffeine, LocalCache, RemoteCache, RSA, DSA, ECDSA, AES, DESede, Blowfish, DES, PseudonymousCertificate].
+FASD for Security+ contains 3182 transitive or loops before dead-feature removal.
+FASD for Security- contains 2362 transitive or loops before dead-feature removal.
+Checking feature-activation diagram for feature Security.
+Checking activation of feature Security.
+FASD for Security+ has 0 redundant features.
+FASD for Security+ had 595 VB rule features (151 or-features).
+There are 5518 feature exclusion pairs and 444 or-implications with an average 7 implied or features.
+FASD contains exclusions for 571 or overlaps for 264 or-node pairs.
+FASD contains 4 or-to-root exclusions.
+FASD contains 2673 transitive or loops.
+The constraint expression string is 1466113 characters long.
+(Security+) We generated 63151 solutions.
+(Security+) This produced 63151 unique rule instances.
+Checking deactivation of feature Security.
+FASD for Security- has 0 redundant features.
+FASD for Security- had 441 VB rule features (143 or-features).
+There are 2595 feature exclusion pairs and 298 or-implications with an average 8 implied or features.
+FASD contains exclusions for 352 or overlaps for 245 or-node pairs.
+FASD contains 45 or-to-root exclusions.
+FASD contains 1363 transitive or loops.
+The constraint expression string is 864675 characters long.
+(Security-) We generated 84748 solutions.
+(Security-) This produced 31636 unique rule instances.
+
+WeaFQAs with transitive or-loops, second run:
+
+Always active features are: [FQAs].
+Real optional features are: [Security, Usability, Persistence, ContextAwareness, Performance, Encryption, Authentication, Hashing, Confidentiality, Privacy, Integrity, Non_Repudiation, Logging, ContextualHelp, ExecutionControl, Internationalization, Feedback, FileStorage, DatabaseStorage, LocationAware, TimeAware, DeviceAware, UserAware, EnvironmentAware, Caching, EncryptionAlgorithms, KeySize, EncryptionImplementations, EncryptionOperations, Mode, Padding, AuthenticationImplementations, AuthenticationOperations, AuthenticationMechanism, PasswordLength, PasswordType, LimitedSession, AuthenticationLogging, AnonymousUser, HashingImplementations, HashingOperations, HashingAlgorithms, LoggingOperations, LoggingImplementations, Handler, Format, Level, CypheredMessages, HistoryLog, ErrorLog, ContextualHelpOperations, ContextualHelpImplementations, HelpType, UserType, AuthenticatedUser, ExecutionControl_1, Shortcuts, Locale, InteractionFeedback, ProgressFeedback, SystemStatusDisplay, Alerts, FileStorageOperations, FileType, FileStorageImplementations, TemporalFile, DatabaseStorageOperations, DatabaseStorageImplementations, DatabaseType, DataType, SecureDatabase, GPS, WiFiLocation, BatteryStatus, IRSensor, CachingOperations, CachingImplementations, MaxSizeCache, CacheType, MaxLifeSeconds, EternalObjects, Asymmetric, Symmetric, JavaxCrypto, BouncyCastle, Encrypt, Decrypt, CBC, ECB, CFB, CTR, CTS, PKCS5, PKCS1, OAEP, JAAS, SpringSecurity, Authenticate, UserPassword, DigitalCertificate, Biometric, SocialID, Pin, MatrixCode, Numeric, Alphanumeric, SpecialChars, JavaSecurityMessageDigest, Guava, Hash, MD5, SHA1, SHA256, SHA512, Log, Log4J, LogBack, JavaUtilLogging, SimpleImplementationSLF4J, ConsoleLog, FileLog, DatabaseLog, TXT, XML, HTML, JSON, Trace, Debug, Info, Warning, Error, TraceFile, ShowHelp, JavaWizardAPI, Tutorial, Wizard, Beginner, Intermediate, Advanced, Expert, Undo, Redo, Cancel, GoBack, CreateFile, ModifyFile, DeleteFile, Binary, TXTFile, XMLFile, JSONFile, JavaIO, Store, Query, MySQL, MongoDB, OracleDB, Relational, NoSQL, Integers, Strings, Floats, Objects, CacheStore, CacheQuery, CacheUpdate, JavaCachingSystem, Caffeine, LocalCache, RemoteCache, RSA, DSA, ECDSA, AES, DESede, Blowfish, DES, PseudonymousCertificate].
+FASD for Security+ contains 3182 transitive or loops before dead-feature removal.
+FASD for Security- contains 2362 transitive or loops before dead-feature removal.
+Checking feature-activation diagram for feature Security.
+Checking activation of feature Security.
+FASD for Security+ has 0 redundant features.
+FASD for Security+ had 595 VB rule features (151 or-features).
+There are 5518 feature exclusion pairs and 444 or-implications with an average 7 implied or features.
+FASD contains exclusions for 571 or overlaps for 264 or-node pairs.
+FASD contains 4 or-to-root exclusions.
+FASD contains 2673 transitive or loops.
+The constraint expression string is 1466113 characters long.
+(Security+) We generated 64332 solutions.
+(Security+) This produced 64332 unique rule instances.
+Checking deactivation of feature Security.
+FASD for Security- has 0 redundant features.
+FASD for Security- had 441 VB rule features (143 or-features).
+There are 2595 feature exclusion pairs and 298 or-implications with an average 8 implied or features.
+FASD contains exclusions for 352 or overlaps for 245 or-node pairs.
+FASD contains 45 or-to-root exclusions.
+FASD contains 1363 transitive or loops.
+The constraint expression string is 864675 characters long.
+(Security-) We generated 91960 solutions.
+(Security-) This produced 34102 unique rule instances.
+
+WeaFQAs without transitive or loops:
+
+Always active features are: [FQAs].
+Real optional features are: [Security, Usability, Persistence, ContextAwareness, Performance, Encryption, Authentication, Hashing, Confidentiality, Privacy, Integrity, Non_Repudiation, Logging, ContextualHelp, ExecutionControl, Internationalization, Feedback, FileStorage, DatabaseStorage, LocationAware, TimeAware, DeviceAware, UserAware, EnvironmentAware, Caching, EncryptionAlgorithms, KeySize, EncryptionImplementations, EncryptionOperations, Mode, Padding, AuthenticationImplementations, AuthenticationOperations, AuthenticationMechanism, PasswordLength, PasswordType, LimitedSession, AuthenticationLogging, AnonymousUser, HashingImplementations, HashingOperations, HashingAlgorithms, LoggingOperations, LoggingImplementations, Handler, Format, Level, CypheredMessages, HistoryLog, ErrorLog, ContextualHelpOperations, ContextualHelpImplementations, HelpType, UserType, AuthenticatedUser, ExecutionControl_1, Shortcuts, Locale, InteractionFeedback, ProgressFeedback, SystemStatusDisplay, Alerts, FileStorageOperations, FileType, FileStorageImplementations, TemporalFile, DatabaseStorageOperations, DatabaseStorageImplementations, DatabaseType, DataType, SecureDatabase, GPS, WiFiLocation, BatteryStatus, IRSensor, CachingOperations, CachingImplementations, MaxSizeCache, CacheType, MaxLifeSeconds, EternalObjects, Asymmetric, Symmetric, JavaxCrypto, BouncyCastle, Encrypt, Decrypt, CBC, ECB, CFB, CTR, CTS, PKCS5, PKCS1, OAEP, JAAS, SpringSecurity, Authenticate, UserPassword, DigitalCertificate, Biometric, SocialID, Pin, MatrixCode, Numeric, Alphanumeric, SpecialChars, JavaSecurityMessageDigest, Guava, Hash, MD5, SHA1, SHA256, SHA512, Log, Log4J, LogBack, JavaUtilLogging, SimpleImplementationSLF4J, ConsoleLog, FileLog, DatabaseLog, TXT, XML, HTML, JSON, Trace, Debug, Info, Warning, Error, TraceFile, ShowHelp, JavaWizardAPI, Tutorial, Wizard, Beginner, Intermediate, Advanced, Expert, Undo, Redo, Cancel, GoBack, CreateFile, ModifyFile, DeleteFile, Binary, TXTFile, XMLFile, JSONFile, JavaIO, Store, Query, MySQL, MongoDB, OracleDB, Relational, NoSQL, Integers, Strings, Floats, Objects, CacheStore, CacheQuery, CacheUpdate, JavaCachingSystem, Caffeine, LocalCache, RemoteCache, RSA, DSA, ECDSA, AES, DESede, Blowfish, DES, PseudonymousCertificate].
+FASD for Security+ contains 0 transitive or loops before dead-feature removal.
+FASD for Security- contains 0 transitive or loops before dead-feature removal.
+Checking feature-activation diagram for feature Security.
+Checking activation of feature Security.
+FASD for Security+ has 0 redundant features.
+FASD for Security+ had 596 VB rule features (151 or-features).
+There are 5534 feature exclusion pairs and 445 or-implications with an average 7 implied or features.
+FASD contains exclusions for 571 or overlaps for 264 or-node pairs.
+FASD contains 4 or-to-root exclusions.
+FASD contains 0 transitive or loops.
+The constraint expression string is 1176899 characters long.
+(Security+) We generated 74120 solutions.
+(Security+) This produced 44354 unique rule instances.
+Checking deactivation of feature Security.
+FASD for Security- has 0 redundant features.
+FASD for Security- had 442 VB rule features (143 or-features).
+There are 2611 feature exclusion pairs and 299 or-implications with an average 8 implied or features.
+FASD contains exclusions for 352 or overlaps for 245 or-node pairs.
+FASD contains 45 or-to-root exclusions.
+FASD contains 0 transitive or loops.
+The constraint expression string is 714736 characters long.
+(Security-) We generated 73680 solutions.
+(Security-) This produced 16096 unique rule instances.
+
+WeaFQAs without transitive or loops, run a second time -- watch the differences in numbers...:
+
+Always active features are: [FQAs].
+Real optional features are: [Security, Usability, Persistence, ContextAwareness, Performance, Encryption, Authentication, Hashing, Confidentiality, Privacy, Integrity, Non_Repudiation, Logging, ContextualHelp, ExecutionControl, Internationalization, Feedback, FileStorage, DatabaseStorage, LocationAware, TimeAware, DeviceAware, UserAware, EnvironmentAware, Caching, EncryptionAlgorithms, KeySize, EncryptionImplementations, EncryptionOperations, Mode, Padding, AuthenticationImplementations, AuthenticationOperations, AuthenticationMechanism, PasswordLength, PasswordType, LimitedSession, AuthenticationLogging, AnonymousUser, HashingImplementations, HashingOperations, HashingAlgorithms, LoggingOperations, LoggingImplementations, Handler, Format, Level, CypheredMessages, HistoryLog, ErrorLog, ContextualHelpOperations, ContextualHelpImplementations, HelpType, UserType, AuthenticatedUser, ExecutionControl_1, Shortcuts, Locale, InteractionFeedback, ProgressFeedback, SystemStatusDisplay, Alerts, FileStorageOperations, FileType, FileStorageImplementations, TemporalFile, DatabaseStorageOperations, DatabaseStorageImplementations, DatabaseType, DataType, SecureDatabase, GPS, WiFiLocation, BatteryStatus, IRSensor, CachingOperations, CachingImplementations, MaxSizeCache, CacheType, MaxLifeSeconds, EternalObjects, Asymmetric, Symmetric, JavaxCrypto, BouncyCastle, Encrypt, Decrypt, CBC, ECB, CFB, CTR, CTS, PKCS5, PKCS1, OAEP, JAAS, SpringSecurity, Authenticate, UserPassword, DigitalCertificate, Biometric, SocialID, Pin, MatrixCode, Numeric, Alphanumeric, SpecialChars, JavaSecurityMessageDigest, Guava, Hash, MD5, SHA1, SHA256, SHA512, Log, Log4J, LogBack, JavaUtilLogging, SimpleImplementationSLF4J, ConsoleLog, FileLog, DatabaseLog, TXT, XML, HTML, JSON, Trace, Debug, Info, Warning, Error, TraceFile, ShowHelp, JavaWizardAPI, Tutorial, Wizard, Beginner, Intermediate, Advanced, Expert, Undo, Redo, Cancel, GoBack, CreateFile, ModifyFile, DeleteFile, Binary, TXTFile, XMLFile, JSONFile, JavaIO, Store, Query, MySQL, MongoDB, OracleDB, Relational, NoSQL, Integers, Strings, Floats, Objects, CacheStore, CacheQuery, CacheUpdate, JavaCachingSystem, Caffeine, LocalCache, RemoteCache, RSA, DSA, ECDSA, AES, DESede, Blowfish, DES, PseudonymousCertificate].
+FASD for Security+ contains 0 transitive or loops before dead-feature removal.
+FASD for Security- contains 0 transitive or loops before dead-feature removal.
+Checking feature-activation diagram for feature Security.
+Checking activation of feature Security.
+FASD for Security+ has 0 redundant features.
+FASD for Security+ had 596 VB rule features (151 or-features).
+There are 5534 feature exclusion pairs and 445 or-implications with an average 7 implied or features.
+FASD contains exclusions for 571 or overlaps for 264 or-node pairs.
+FASD contains 4 or-to-root exclusions.
+FASD contains 0 transitive or loops.
+The constraint expression string is 1176899 characters long.
+(Security+) We generated 74609 solutions.
+(Security+) This produced 44354 unique rule instances.
+Checking deactivation of feature Security.
+FASD for Security- has 0 redundant features.
+FASD for Security- had 442 VB rule features (143 or-features).
+There are 2611 feature exclusion pairs and 299 or-implications with an average 8 implied or features.
+FASD contains exclusions for 352 or overlaps for 245 or-node pairs.
+FASD contains 45 or-to-root exclusions.
+FASD contains 0 transitive or loops.
+The constraint expression string is 714736 characters long.
+(Security-) We generated 75838 solutions.
+(Security-) This produced 16679 unique rule instances.
