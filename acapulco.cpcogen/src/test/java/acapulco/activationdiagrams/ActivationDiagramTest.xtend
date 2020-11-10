@@ -137,7 +137,8 @@ class ActivationDiagramTest {
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
 		sentence.assertIsCNF
 
-		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
+		// Timebox to one minute
+		val solutions = SatSolver.getAllSolutions(featureConstraint, 60000l).toSet
 
 		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
 
