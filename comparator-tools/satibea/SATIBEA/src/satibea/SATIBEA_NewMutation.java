@@ -307,11 +307,13 @@ public class SATIBEA_NewMutation extends Mutation {
             }
 
             //dimacsSolver.reset();
-            ISolver dimacsSolver2 = SolverFactory.instance().createSolverByName("MiniSAT");
+            //ISolver dimacsSolver2 = SolverFactory.instance().createSolverByName("MiniSAT");
+            ISolver dimacsSolver2 = SolverFactory.newDefault();
             dimacsSolver2.setTimeout(SATtimeout);
 
             DimacsReader dr = new DimacsReader(dimacsSolver2);
-            dr.parseInstance(new FileReader(fm));
+            dr.parseInstance(fm);
+            //dr.parseInstance(new FileReader(fm));
             ((Solver) dimacsSolver2).setOrder(order);
 
             ISolver solverIterator = new ModelIterator(dimacsSolver2);
@@ -367,11 +369,13 @@ public class SATIBEA_NewMutation extends Mutation {
             }
 
             //dimacsSolver.reset();
-            ISolver dimacsSolver2 = SolverFactory.instance().createSolverByName("MiniSAT");
+            //ISolver dimacsSolver2 = SolverFactory.instance().createSolverByName("MiniSAT");
+            ISolver dimacsSolver2 = SolverFactory.newDefault();
             dimacsSolver2.setTimeout(SATtimeout);
 
             DimacsReader dr = new DimacsReader(dimacsSolver2);
-            dr.parseInstance(new FileReader(fm));
+            dr.parseInstance(fm);
+            //dr.parseInstance(new FileReader(fm));
             ((Solver) dimacsSolver2).setOrder(order);
 
             ISolver solverIterator = new ModelIterator(dimacsSolver2);

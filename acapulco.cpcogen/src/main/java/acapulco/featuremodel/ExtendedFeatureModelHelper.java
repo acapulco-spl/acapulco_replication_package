@@ -20,7 +20,7 @@ public class ExtendedFeatureModelHelper extends FeatureModelHelper {
 		this.qaModel = fm.getOwnedQualityAttributeModel();
 		
 		if (qaModel == null) {
-			throw new Exception("Quality Attribute Model not inialized.");
+			throw new Exception("Quality Attribute Model not initialized.");
 		}
 	}
 	

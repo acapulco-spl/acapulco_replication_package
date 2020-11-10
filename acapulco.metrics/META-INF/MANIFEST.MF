@@ -8,7 +8,9 @@ Import-Package: picocli,
  org.moeaframework.core,
  org.moeaframework.analysis.collector,
  jmetal.core
-Export-Package: mdeoptimiser4efm.algorithm.instrumentation,
- mdeoptimiser4efm.algorithm.instrumentation.collector,
- mdeoptimiser4efm.algorithm.termination,
- mdeoptimiser4efm.tool.executor
+Export-Package: acapulco.algorithm.instrumentation,
+ acapulco.algorithm.instrumentation.collector,
+ acapulco.algorithm.termination,
+ acapulco.evaluation.output,
+ acapulco.evaluation.paretotruefront,
+ acapulco.tool.executor

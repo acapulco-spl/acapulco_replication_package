@@ -1,12 +1,12 @@
 package acapulco;
 
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 import jmetal.util.Ranking;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
 
 public class IBEATimeLimited extends AbstractIBEA {
 

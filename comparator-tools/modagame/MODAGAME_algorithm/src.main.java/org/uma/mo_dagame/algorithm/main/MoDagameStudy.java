@@ -41,11 +41,11 @@ import org.uma.mo_dagame.feature_models.FeatureModel;
 import org.uma.mo_dagame.feature_models.ObjectivesValuesParser;
 import org.uma.mo_dagame.feature_models.SxfmParser;
 
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
 import jmetal.core.Algorithm;
 import jmetal.experiments.Settings;
 import jmetal.util.JMException;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 /**
  * Class implementing a typical experimental study. Five algorithms are

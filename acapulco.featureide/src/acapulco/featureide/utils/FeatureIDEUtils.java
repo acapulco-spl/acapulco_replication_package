@@ -12,10 +12,8 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -23,22 +21,19 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-import de.ovgu.featureide.fm.core.ConstraintAttribute;
+import acapulco.featureide.FeatureIDE2FM;
 import de.ovgu.featureide.fm.core.FeatureModelAnalyzer;
+import de.ovgu.featureide.fm.core.analysis.cnf.LiteralSet;
 import de.ovgu.featureide.fm.core.base.IConstraint;
 import de.ovgu.featureide.fm.core.base.IFeatureModel;
-import de.ovgu.featureide.fm.core.base.impl.Constraint;
 import de.ovgu.featureide.fm.core.base.impl.DefaultFeatureModelFactory;
 import de.ovgu.featureide.fm.core.base.impl.FMFormatManager;
 import de.ovgu.featureide.fm.core.base.impl.FeatureModel;
-import de.ovgu.featureide.fm.core.io.IFeatureModelFormat;
 import de.ovgu.featureide.fm.core.io.IPersistentFormat;
 import de.ovgu.featureide.fm.core.io.manager.FeatureModelManager;
 import de.ovgu.featureide.fm.core.io.manager.FileHandler;
 import de.ovgu.featureide.fm.core.io.sxfm.SXFMFormat;
 import de.ovgu.featureide.fm.core.job.monitor.NullMonitor;
-import acapulco.featureide.FeatureIDE2FM;
-import de.ovgu.featureide.fm.core.configuration.Configuration;
 
 /**
  * Feature IDE Utils
@@ -88,7 +83,7 @@ private static PrintStream _err;
 	public static void removeRedundantConstraints(IFeatureModel fm) {
 		FeatureModelAnalyzer analyzer = FeatureModelManager.getAnalyzer(fm);
 //		= fm.getAnalyser();
-		List<IConstraint> redundant = analyzer.getRedundantConstraints(new NullMonitor());
+		List<IConstraint> redundant = analyzer.getRedundantConstraints(new NullMonitor<List<LiteralSet>>());
 		redundant.forEach(c -> fm.removeConstraint(c));
 		
 //		analyzer.calculateRedundantConstraints = true;

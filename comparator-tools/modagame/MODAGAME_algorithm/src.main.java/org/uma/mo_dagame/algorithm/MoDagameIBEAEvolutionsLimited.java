@@ -24,6 +24,8 @@ import org.uma.mo_dagame.algorithm.jmetalcustomization.MoDagameAlgorithm;
 import org.uma.mo_dagame.algorithm.jmetalcustomization.MoDagameAlgorithmResult;
 import org.uma.mo_dagame.feature_models.Configuration;
 
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +36,6 @@ import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 import jmetal.util.Ranking;
 import jmetal.util.comparators.DominanceComparator;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
 
 /**
  * This class implementing the IBEA algorithm

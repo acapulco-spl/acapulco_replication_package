@@ -18,15 +18,15 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.henshin.model.Module;
 import org.eclipse.emf.henshin.model.Rule;
 
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
 import acapulco.engine.HenshinFileReader;
+import acapulco.tool.executor.AbstractExecutor;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.encodings.variable.Binary;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
-import mdeoptimiser4efm.tool.executor.AbstractExecutor;
 import picocli.CommandLine;
 
 public class aCaPulCO_Main extends AbstractExecutor {

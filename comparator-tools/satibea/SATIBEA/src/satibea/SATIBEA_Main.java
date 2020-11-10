@@ -44,13 +44,14 @@ import org.sat4j.reader.DimacsReader;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.IVecInt;
 import org.sat4j.tools.ModelIterator;
+
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
+import acapulco.tool.executor.AbstractExecutor;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
-import mdeoptimiser4efm.tool.executor.AbstractExecutor;
 
 /**
  *
@@ -91,7 +92,8 @@ public class SATIBEA_Main extends AbstractExecutor {
 
             for (int i = 0; i < pop.size(); i++) {
                 Variable v = pop.get(i).getDecisionVariables()[0];
-                for (int j = 0; j < pop.get(i).getNumberOfObjectives(); j++) {
+ 
+                for (int j = 0; j < p.getNumberOfObjectives(); j++) {
                     System.out.print(pop.get(i).getObjective(j) + " ");
                 }
                 System.out.println("");
@@ -108,7 +110,7 @@ public class SATIBEA_Main extends AbstractExecutor {
     public static void main(String[] args) throws Exception {
 
         int exitCode = new CommandLine(new SATIBEA_Main()).execute(args);
-        System.exit(exitCode);
+        //System.exit(exitCode);
     }
 
     public static int numViolatedConstraints(Binary b) {

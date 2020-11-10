@@ -26,6 +26,9 @@ import org.uma.mo_dagame.algorithm.MoFmProblem;
 import org.uma.mo_dagame.feature_models.Configuration;
 import org.uma.mo_dagame.feature_models.FeatureModel;
 
+import acapulco.algorithm.instrumentation.ToolInstrumenter;
+import acapulco.algorithm.termination.StoppingCondition;
+
 import java.util.HashMap;
 
 import jmetal.core.Algorithm;
@@ -36,8 +39,6 @@ import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.BinaryTournament;
 import jmetal.util.JMException;
 import jmetal.util.comparators.FitnessComparator;
-import mdeoptimiser4efm.algorithm.instrumentation.ToolInstrumenter;
-import mdeoptimiser4efm.algorithm.termination.StoppingCondition;
 
 /**
  * Settings class of algorithm IBEA
