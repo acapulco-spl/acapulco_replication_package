@@ -203,20 +203,20 @@ class ActivationDiagramTest {
 		}
 	}
 
-	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
+	private def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
 		FeatureActivationSubDiagram fasd) '''
 		From feature activation sub-diagram for «fasd.rootDecision», the following redundant rule instances were generated:
 		
-		«ruleInstances.values.filter[size > 1].map[generateRedundancyDescription].join('\n\n')»
+		«ruleInstances.entrySet.filter[value.size > 1].map[generateRedundancyDescription].join('\n\n')»
 		-------------
 		
 	'''
 
-	def generateRedundancyDescription(List<List<String>> configurationVariants) {
-		val sharedFeatures = configurationVariants.head.filter [ feature |
-			configurationVariants.tail.forall[contains(feature)]
+	private def generateRedundancyDescription(Entry<Set<Pair<Feature, Boolean>>, List<List<String>>> configurationVariants) {
+		val sharedFeatures = configurationVariants.value.head.filter [ feature |
+			configurationVariants.value.tail.forall[contains(feature)]
 		]
-		val distinctFeatures = configurationVariants.map[reject[sharedFeatures.contains(it)].sort]
+		val distinctFeatures = configurationVariants.value.map[reject[sharedFeatures.contains(it)].sort]
 
 		'''
 			- Shared features: («sharedFeatures.sort.join(', ')»)
@@ -224,8 +224,14 @@ class ActivationDiagramTest {
 			  Distinct feature sets:
 			  
 			    «distinctFeatures.map['''- («join(', ')»)'''].join('\n')»
+			    
+			  Resulting feature decisions:
+			  
+			  	(«configurationVariants.key.sortBy[key.name].map[toFDString].join(', ')»)
 		'''
 	}
+	
+	private def toFDString(Pair<Feature, Boolean> fd) '''«fd.key.name»«fd.value?'+':'-'»'''
 
 	// Check that the given sentence is in CNF form
 	private def void assertIsCNF(Sentence sentence) {
