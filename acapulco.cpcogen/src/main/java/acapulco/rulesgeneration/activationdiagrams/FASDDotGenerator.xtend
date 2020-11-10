@@ -25,9 +25,13 @@ class FASDDotGenerator {
 	'''
 
 	private def renderNodes() {
-		fasd.subdiagramContents.map[renderNode].join('\n')
+		fasd.subdiagramContents.reject[notInFASD].map[renderNode].join('\n')
 	}
 
+	private def notInFASD(ActivationDiagramNode node) {
+		(node instanceof FeatureDecision) && (fasd.presenceConditions.get(node) === null)
+	}
+	
 	var andNodeIndex = 0
 	var orNodeIndex = 0
 	val andNodeRegistry = new HashMap<AndNode, Integer>
@@ -73,14 +77,14 @@ class FASDDotGenerator {
 
 	private def String recursivelyRenderConsequenceEdges(ActivationDiagramNode node,
 		Set<ActivationDiagramNode> visited) {
-		if (visited.contains(node)) {
+		if (visited.contains(node) ||  node.notInFASD) {
 			return ""
 		}
 
 		visited += node
 
 		'''
-			«node.consequences.map['''«node.nodeID» -> «it.nodeID»'''].join('\n')»
+			«node.consequences.reject[notInFASD].map['''«node.nodeID» -> «it.nodeID»'''].join('\n')»
 			«node.consequences.map[recursivelyRenderConsequenceEdges(visited)].join('\n')»
 		'''
 	}
