@@ -175,10 +175,15 @@ public class SatSolver {
 	}
 
 	public static List<List<String>> getAllSolutions(String expr) {
+		return getAllSolutions(expr, null);
+	}
+	
+	public static List<List<String>> getAllSolutions(String expr, Long timeoutInMillis) {
+		// TODO: Should perhaps include the timeout in the cache...
 		List<List<String>> result = cachedSolutions.get(expr);
 		if (result == null) {
 			ExtendedSentence sentence = FeatureExpression.getExpr(expr);
-			result = calculateAllSolutions(sentence);
+			result = calculateAllSolutions(sentence, timeoutInMillis);
 			cachedSolutions.put(expr, result);
 		}
 		return result;
@@ -319,7 +324,7 @@ public class SatSolver {
 		return result;
 	}
 
-	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr) {
+	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr, Long timeoutInMillis) {
 		ModelIteratorInfo mii = createIteratorFor(expr);
 
 		if (mii == null) {
@@ -328,6 +333,8 @@ public class SatSolver {
 
 		List<List<String>> result = new ArrayList<>();
 
+		long startTime = System.currentTimeMillis();
+		
 		try {
 			while (mii.mi.isSatisfiable()) {
 				int[] model = mii.mi.model();
@@ -341,14 +348,17 @@ public class SatSolver {
 						}
 					}
 				}
-				/*
-				 * Steffen: Swapped this around to reduce the number of loops within loops. That
-				 * gave us a little bit of extra performance, though not a huge amount. for
-				 * (PropositionSymbol key : indices.keySet()) { int index = indices.get(key);
-				 * for (int i : model) { if (i > 0 && i == index) { sol.add(key.getSymbol()); }
-				 * } }
-				 */
+				
 				result.add(sol);
+				
+				if (timeoutInMillis != null) {
+					// Check if we still have time for another round
+					long currentTime = System.currentTimeMillis();
+					
+					if ((currentTime-startTime) >= timeoutInMillis) {
+						break;
+					}
+				}
 			}
 			return result;
 		} catch (TimeoutException e) {

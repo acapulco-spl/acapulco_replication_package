@@ -12,10 +12,18 @@ import java.util.Set
  * Helper class to make the constraint generation reusable.
  */
 abstract class VBRuleFeatureConstraintGenerator {
-	static def computeConstraintExpression(FeatureActivationSubDiagram fasd) {
+	static def String computeConstraintExpression(FeatureActivationSubDiagram fasd) {
 		(
-			fasd.featureModelExpressions + fasd.orImplicationExpressions + fasd.featureExclusionExpressions + fasd.orOverlapExpressions
+			fasd.featureModelExpressions + 
+			fasd.orImplicationExpressions + 
+			fasd.featureExclusionExpressions + 
+			fasd.orOverlapExpressions +
+			fasd.transitiveOrLoopsExpressions
 		).join(' & ')
+	}
+
+	private static def transitiveOrLoopsExpressions(FeatureActivationSubDiagram fasd) {
+		fasd.transitiveOrLoops.map['''(!«key.name» | !«value.key.name» | «value.value.name»)''']
 	}
 
 	private static def orOverlapExpressions(FeatureActivationSubDiagram fasd) {

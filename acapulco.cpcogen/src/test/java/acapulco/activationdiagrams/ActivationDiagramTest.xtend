@@ -38,6 +38,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import static org.junit.Assert.*
 import java.io.FileWriter
 import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
+import java.util.stream.Collectors
 
 class ActivationDiagramTest {
 
@@ -51,12 +52,15 @@ class ActivationDiagramTest {
 		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
-				
-		val redundancyOutputFolderPath = Paths.get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').toString
+
+		val redundancyOutputFolderPath = Paths.
+			get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').
+			toString
 		val redundancyOutputFolder = new File(redundancyOutputFolderPath)
-		redundancyOutputFolder.mkdirs		
-		val redundancyOutputFilePath = Paths.get('''«redundancyOutputFolderPath»/«Paths.get(fmPath).fileName».log''').toString		
-		 
+		redundancyOutputFolder.mkdirs
+		val redundancyOutputFilePath = Paths.get('''«redundancyOutputFolderPath»/«Paths.get(fmPath).fileName».log''').
+			toString
+
 		extension val fh = new FeatureModelHelper(fm)
 		val alwaysActiveFeatures = fh.alwaysActiveFeatures
 		println('''Always active features are: «alwaysActiveFeatures.map[name]».''')
@@ -98,12 +102,14 @@ class ActivationDiagramTest {
 	private def countRedundantFeatures(extension FeatureActivationSubDiagram fasd) {
 		val vbFeatures = (#{vbRuleFeatures} + vbRuleFeatures.children.flatMap[children]).toSet
 
-		val numRedundantFeatures = vbFeatures.flatMap[vbf1|
-			vbFeatures.filter[vbf2|
-				(vbf1 !== vbf2) && (presenceConditions.values.filter[contains(vbf1)] == presenceConditions.values.filter[contains(vbf2)]) 
+		val numRedundantFeatures = vbFeatures.flatMap [ vbf1 |
+			vbFeatures.filter [ vbf2 |
+				(vbf1 !== vbf2) && (presenceConditions.values.filter[contains(vbf1)] == presenceConditions.values.filter [
+					contains(vbf2)
+				])
 			].map[vbf1 -> it]
 		].size / 2
-		
+
 		println('''FASD for «fasd.rootDecision» has «numRedundantFeatures» redundant features.''')
 	}
 
@@ -130,26 +136,31 @@ class ActivationDiagramTest {
 		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
 		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
 		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
+		println('''FASD contains «fasd.transitiveOrLoops.size» transitive or loops.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 //		fasd.writeDotFile(redundancyOutputFilePath)
-
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
 		sentence.assertIsCNF
 
-		val solutions = SatSolver.getAllSolutions(featureConstraint).toSet
+		// Timebox to one minute
+		val solutions = SatSolver.getAllSolutions(featureConstraint, 60000l).toSet
 
 		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
-		val uniqueRuleInstances = solutions.groupBy[solution|rule.activeFeatureDecisionsFor(solution, fh.featureModel)]
+		// Use parallel stream to speed up the process
+		val uniqueRuleInstances = solutions.parallelStream.collect(Collectors.groupingByConcurrent [ solution |
+			rule.activeFeatureDecisionsFor(solution, fh.featureModel)
+		])
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.keySet.size» unique rule instances.''')
 		if (uniqueRuleInstances.keySet.size < solutions.size) {
 			uniqueRuleInstances.recordRedundantRuleInstances(fasd, redundancyOutputFilePath)
 			fasd.writeDotFile(redundancyOutputFilePath)
 		}
 
-		uniqueRuleInstances.keySet.forEach [ ruleInstance |
+		// Use parallel checking of the rules so we can use all processor cores...
+		uniqueRuleInstances.keySet.parallelStream.forEach [ ruleInstance |
 			// 3.1 no conflicting decisions
 			assertTrue(
 				"No rule instance should contain conflicting feature decisions.",
@@ -173,42 +184,47 @@ class ActivationDiagramTest {
 //			val ruleInstance = RuleProvider.provideRule(rule, features.toInvertedMap[solution.contains(it)])
 //		]
 	}
-	
-	private def void recordRedundantRuleInstances(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd, String path) {
+
+	private def void recordRedundantRuleInstances(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
+		FeatureActivationSubDiagram fasd, String path) {
 		val fOutput = new File(path)
 		try (val writer = new FileWriter(fOutput, true)) {
 			writer.write(ruleInstances.generateRedundancyReport(fasd))
 			writer.flush
-		}		
+		}
 	}
-	
+
 	private def void writeDotFile(FeatureActivationSubDiagram fasd, String path) {
-		val fDotFile = new File(path + '''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
+		val fDotFile = new File(path +
+			'''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
 		try (val writer = new FileWriter(fDotFile)) {
 			writer.write(new FASDDotGenerator(fasd, true).render)
 			writer.flush
-		}		
+		}
 	}
-	
-	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances, FeatureActivationSubDiagram fasd) '''
+
+	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
+		FeatureActivationSubDiagram fasd) '''
 		From feature activation sub-diagram for «fasd.rootDecision», the following redundant rule instances were generated:
 		
 		«ruleInstances.values.filter[size > 1].map[generateRedundancyDescription].join('\n\n')»
 		-------------
 		
 	'''
-	
+
 	def generateRedundancyDescription(List<List<String>> configurationVariants) {
-		val sharedFeatures = configurationVariants.head.filter[feature | configurationVariants.tail.forall[contains(feature)]]
+		val sharedFeatures = configurationVariants.head.filter [ feature |
+			configurationVariants.tail.forall[contains(feature)]
+		]
 		val distinctFeatures = configurationVariants.map[reject[sharedFeatures.contains(it)].sort]
-		
+
 		'''
 			- Shared features: («sharedFeatures.sort.join(', ')»)
 			
 			  Distinct feature sets:
 			  
 			    «distinctFeatures.map['''- («join(', ')»)'''].join('\n')»
-		'''		
+		'''
 	}
 
 	// Check that the given sentence is in CNF form
