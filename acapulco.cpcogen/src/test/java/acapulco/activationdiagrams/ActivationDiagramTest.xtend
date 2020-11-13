@@ -82,17 +82,17 @@ class ActivationDiagramTest {
 
 			// TODO: Test presence conditions -- need to provide data oracle for this, I think
 			// TODO: Test or implications -- need to provide data oracle for this, I think
-			println('''Checking activation of feature «f.name».''')
-			fasdActivate.assertRootFeatureProperties(f, true)
-			fasdActivate.checkExclusions
-			fasdActivate.countRedundantFeatures
-			fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
-
 			println('''Checking deactivation of feature «f.name».''')
 			fasdDeActivate.assertRootFeatureProperties(f, false)
 			fasdDeActivate.checkExclusions
 			fasdDeActivate.countRedundantFeatures
 			fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+
+			println('''Checking activation of feature «f.name».''')
+			fasdActivate.assertRootFeatureProperties(f, true)
+			fasdActivate.checkExclusions
+			fasdActivate.countRedundantFeatures
+			fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
 		]
 
 		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
