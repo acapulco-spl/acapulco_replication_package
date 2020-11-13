@@ -1,5 +1,6 @@
 package acapulco.engine.variability;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,13 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
-import org.sat4j.specs.TimeoutException;
 import org.sat4j.tools.ModelIterator;
 
 import aima.core.logic.propositional.kb.data.Clause;
@@ -38,6 +45,8 @@ public class SatSolver {
 
 	private static List<String> solution;
 
+	final static Duration TIMEOUT_DURATION = Duration.ofMillis(500);
+	
 	public static ISolver createModelIterator(String expr, Map<Integer, String> symbolsToIndices) {
 		Sentence cnf = ConvertToCNF.convert(FeatureExpression.getExpr(expr));
 
@@ -133,8 +142,8 @@ public class SatSolver {
 				}
 			}
 			return Boolean.valueOf(satisfiable);
-		} catch (TimeoutException e) {
-			throw new RuntimeException("Timeout during evaluation of satisfiability.");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -311,7 +320,7 @@ public class SatSolver {
 				if (!mii.mi.isSatisfiable(new VecInt(new int[] { mii.indices.get(symb) }))) {
 					result.add(symb.getSymbol());
 				}
-			} catch (TimeoutException te) {
+			} catch (Exception te) {
 				// Ignoring for now
 			}
 		}
@@ -327,33 +336,50 @@ public class SatSolver {
 		}
 
 		List<List<String>> result = new ArrayList<>();
+		iterateAllSolutionsWithTimeout(mii, result);
+		return new ArrayList<>(result);
+	}
+
+	private static void iterateAllSolutionsWithTimeout(ModelIteratorInfo mii, List<List<String>> result) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+
+		@SuppressWarnings("unchecked")
+		final Future<Void> handler = executor.submit(new Callable() {
+		    @Override
+		    public Object call() throws Exception {
+				try {
+//					boolean found = false;
+					while (mii.mi.isSatisfiable()) {
+						int[] model = mii.mi.model();
+						List<String> sol = new LinkedList<>();
+
+						for (int i : model) {
+							if (i > 0) {
+								PropositionSymbol ps = mii.reverseIndex.get(i);
+								if (ps != null) {
+									sol.add(ps.getSymbol());
+								}
+							}
+						}
+						result.add(sol);
+//						found = true;
+					}
+				} catch (Exception e) {  // For SAT4J exceptions, irrelevant here
+					throw new RuntimeException(e);
+				}
+				return null;
+		    }
+		});
 
 		try {
-			while (mii.mi.isSatisfiable()) {
-				int[] model = mii.mi.model();
-				List<String> sol = new LinkedList<>();
-
-				for (int i : model) {
-					if (i > 0) {
-						PropositionSymbol ps = mii.reverseIndex.get(i);
-						if (ps != null) {
-							sol.add(ps.getSymbol());
-						}
-					}
-				}
-				/*
-				 * Steffen: Swapped this around to reduce the number of loops within loops. That
-				 * gave us a little bit of extra performance, though not a huge amount. for
-				 * (PropositionSymbol key : indices.keySet()) { int index = indices.get(key);
-				 * for (int i : model) { if (i > 0 && i == index) { sol.add(key.getSymbol()); }
-				 * } }
-				 */
-				result.add(sol);
-			}
-			return result;
-		} catch (TimeoutException e) {
-			throw new RuntimeException("Timeout during evaluation of satisfiability.");
+		    handler.get(TIMEOUT_DURATION.toMillis(), TimeUnit.MILLISECONDS);
+		} catch (TimeoutException | InterruptedException | ExecutionException e) {
+		    handler.cancel(true);
+//		    System.out.println("Timeout during SAT evaluation, returning incomplete solution set.");
 		}
+
+		executor.shutdownNow();
+		
 	}
 
 	public static void main(String[] args) {
