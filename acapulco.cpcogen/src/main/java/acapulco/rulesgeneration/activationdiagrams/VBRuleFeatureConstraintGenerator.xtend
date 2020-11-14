@@ -56,34 +56,40 @@ abstract class VBRuleFeatureConstraintGenerator {
 	}
 
 	private static def orImplicationExpressions(FeatureActivationSubDiagram fasd) {
-		val separatedOrImplications = fasd.orImplications.entrySet.flatMap[e|e.value.map[it -> e.key]].fold(
-			new HashMap<VBRuleOrFeature, Set<VBRuleFeature>>) [ acc, p |
-			var set = acc.get(p.key)
-			if (set === null) {
-				set = new HashSet<VBRuleFeature>
-				acc.put(p.key, set)
-			}
-
-			set += p.value
-
-			acc
-		]
+//		val separatedOrImplications = fasd.orImplications.entrySet.flatMap[e|e.value.map[it -> e.key]].fold(
+//			new HashMap<VBRuleOrFeature, Set<VBRuleFeature>>) [ acc, p |
+//			var set = acc.get(p.key)
+//			if (set === null) {
+//				set = new HashSet<VBRuleFeature>
+//				acc.put(p.key, set)
+//			}
+//
+//			set += p.value
+//
+//			acc
+//		]
+		val separatedOrImplications = fasd.orImplications.entrySet.flatMap[e|e.value.map[it -> e.key]].groupBy[key].mapValues[map[value].toSet]
+		
 
 		(
-			// Ensure or nodes are activated when they are needed...
-			fasd.orImplications.entrySet.reject[value.empty].flatMap[key.impliesAllOf(value)] + // ... and only when they are needed
-		separatedOrImplications.entrySet.reject[value.empty].map[key.impliesOneOf(value)]
+			/*
+			 * Ensure or nodes are activated when they are needed...
+			 */
+			fasd.orImplications.entrySet.reject[value.empty].flatMap[key.impliesAllOf(value)] +
+			/*
+			 * ... and only when they are needed
+			 */
+			separatedOrImplications.entrySet.reject[value.empty].map[key.impliesOneOf(value)]
 		)
 	}
 
 	private static def featureModelExpressions(FeatureActivationSubDiagram fasd) {
-		#{fasd.vbRuleFeatures.name} + // Selecting an or-feature means selecting one of its alternative features
+		#{fasd.vbRuleFeatures.name} + 
+		/*
+		 *  Selecting an or-feature means selecting one of its alternative features
+		 */
 		fasd.vbRuleFeatures.children.flatMap [ feature |
 			#{feature.impliesOneOf(feature.children)} + feature.children.eachImplies(feature)
-
-//			val alternatives = '''(«children.map[name].join(' | ')»)'''
-//
-//			'''(!«name» | «alternatives») & (!«alternatives» | «name»)'''
 		] +
 		/*
 		 * Selecting one alternative feature means none of its sibling features can be selected -- VB-rule or features are actually XOR features.		 *
@@ -92,7 +98,6 @@ abstract class VBRuleFeatureConstraintGenerator {
 		 */
 		fasd.vbRuleFeatures.children.flatMap [ orFeature |
 			orFeature.children.flatMap [ alternative |
-//				'''(!«alternative.name» | !(«orFeature.children.reject[it === alternative].map[name].join(' | ')»))'''
 				alternative.impliesNoneOf(orFeature.children.reject[it === alternative])
 			]
 		]
