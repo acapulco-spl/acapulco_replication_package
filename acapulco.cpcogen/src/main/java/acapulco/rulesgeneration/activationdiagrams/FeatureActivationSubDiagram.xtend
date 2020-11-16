@@ -308,10 +308,6 @@ class FeatureActivationSubDiagram {
 		feature.children.forEach[removeUselessFeatures(uselessFeatures)]
 	}
 
-	private static def Iterable<VBRuleFeature> collectFeatures(VBRuleFeature feature) {
-		feature.children.flatMap[collectFeatures] + #{feature}
-	}
-
 	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom,
 		VBRuleOrFeature predecessorOrNode) {
 		if (subdiagramContents.contains(or)) {

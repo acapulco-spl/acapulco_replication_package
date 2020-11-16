@@ -11,24 +11,24 @@ import acapulco.featuremodel.configuration.FMConfigurationMetamodelGenerator
 import acapulco.model.Feature
 import acapulco.model.FeatureModel
 import acapulco.rulesgeneration.ActivationDiagToRuleConverter
+import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
-import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import aima.core.logic.propositional.parsing.ast.ComplexSentence
 import aima.core.logic.propositional.parsing.ast.Sentence
 import java.io.File
+import java.io.FileWriter
 import java.nio.file.Paths
 import java.text.DateFormat
 import java.time.Instant
-import java.util.ArrayList
-import java.util.Collections
 import java.util.Date
 import java.util.LinkedList
 import java.util.List
 import java.util.Map
 import java.util.Map.Entry
 import java.util.Set
+import java.util.stream.Collectors
 import org.eclipse.emf.henshin.model.ModelElement
 import org.eclipse.emf.henshin.model.Node
 import org.eclipse.emf.henshin.model.Rule
@@ -36,9 +36,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
-import java.io.FileWriter
-import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
-import java.util.stream.Collectors
+import acapulco.rulesgeneration.activationdiagrams.OrImplicationDotGenerator
+import org.junit.jupiter.api.Test
 
 class ActivationDiagramTest {
 
@@ -99,6 +98,31 @@ class ActivationDiagramTest {
 			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
 	}
 
+	@Test
+	def void exploreSpecificFeature() {
+		val fmPath = "testdata/WeaFQAs.sxfm.xml"
+		val featureName = "Security"
+		val featureActivation = false
+		
+		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
+		val outputFolderPath = Paths.
+			get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').
+			toString
+		val outputFolder = new File(outputFolderPath)
+		outputFolder.mkdirs
+
+		extension val fh = new FeatureModelHelper(fm)
+		val alwaysActiveFeatures = fh.alwaysActiveFeatures
+		println('''Always active features are: «alwaysActiveFeatures.map[name]».''')
+		val allRealOptionalFeatures = fh.features.reject[alwaysActiveFeatures.contains(it)].toSet
+		println('''Real optional features are: «allRealOptionalFeatures.map[name]».''')
+
+		val fad = new FeatureActivationDiagram(fm)
+		val fasd = fad.calculateSubdiagramFor(allRealOptionalFeatures.findFirst[name == featureName], featureActivation)
+		
+		fasd.writeDotFiles('''«outputFolderPath»/«featureName»«featureActivation?'Act':'DeAct'».orimplications.dot''')
+	}
+
 	private def countRedundantFeatures(extension FeatureActivationSubDiagram fasd) {
 		val vbFeatures = (#{vbRuleFeatures} + vbRuleFeatures.children.flatMap[children]).toSet
 
@@ -156,7 +180,7 @@ class ActivationDiagramTest {
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.keySet.size» unique rule instances.''')
 		if (uniqueRuleInstances.keySet.size < solutions.size) {
 			uniqueRuleInstances.recordRedundantRuleInstances(fasd, redundancyOutputFilePath)
-			fasd.writeDotFile(redundancyOutputFilePath)
+			fasd.writeDotFiles(redundancyOutputFilePath)
 		}
 
 		// Use parallel checking of the rules so we can use all processor cores...
@@ -194,11 +218,18 @@ class ActivationDiagramTest {
 		}
 	}
 
-	private def void writeDotFile(FeatureActivationSubDiagram fasd, String path) {
-		val fDotFile = new File(path +
+	private def void writeDotFiles(FeatureActivationSubDiagram fasd, String path) {
+		val fasdDotFile = new File(path +
 			'''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
-		try (val writer = new FileWriter(fDotFile)) {
+		try (val writer = new FileWriter(fasdDotFile)) {
 			writer.write(new FASDDotGenerator(fasd, true).render)
+			writer.flush
+		}
+
+		val orImplicationsDotFile = new File(path +
+			'''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'»OrImplications.dot''')
+		try (val writer = new FileWriter(orImplicationsDotFile)) {
+			writer.write(new OrImplicationDotGenerator (fasd).render)
 			writer.flush
 		}
 	}
@@ -354,23 +385,23 @@ class ActivationDiagramTest {
 	 * 		}
 	 * 	}
 	 */
-	def private void printFeatureActivationSubDiagram(FeatureActivationSubDiagram sd) {
-		var List<String> outputList = new ArrayList<String>()
-		for (Entry<FeatureDecision, Set<VBRuleFeature>> pc : sd.getPresenceConditions().entrySet()) {
-			var String output = '''«pc.getKey()» -> '''
-			if (pc.getValue().size() === 1) {
-				output += pc.getValue().iterator().next().getName()
-			} else {
-				output += "or( "
-				for (VBRuleFeature pcComponent : pc.getValue()) {
-					output += pcComponent.getName()
-					output += " "
-				}
-				output += " )"
-			}
-			outputList.add(output)
-		}
-		Collections.sort(outputList)
-		outputList.forEach([e|System.out.println(e)])
-	}
+//	def private void printFeatureActivationSubDiagram(FeatureActivationSubDiagram sd) {
+//		var List<String> outputList = new ArrayList<String>()
+//		for (Entry<FeatureDecision, Set<VBRuleFeature>> pc : sd.getPresenceConditions().entrySet()) {
+//			var String output = '''«pc.getKey()» -> '''
+//			if (pc.getValue().size() === 1) {
+//				output += pc.getValue().iterator().next().getName()
+//			} else {
+//				output += "or( "
+//				for (VBRuleFeature pcComponent : pc.getValue()) {
+//					output += pcComponent.getName()
+//					output += " "
+//				}
+//				output += " )"
+//			}
+//			outputList.add(output)
+//		}
+//		Collections.sort(outputList)
+//		outputList.forEach([e|System.out.println(e)])
+//	}
 }

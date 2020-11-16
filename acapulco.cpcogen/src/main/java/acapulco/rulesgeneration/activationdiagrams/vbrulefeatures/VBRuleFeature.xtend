@@ -17,4 +17,8 @@ class VBRuleFeature {
 	private static def getFreshID() {
 		lastID++
 	}
+	
+	def Iterable<VBRuleFeature> collectFeatures() {
+		children.flatMap[collectFeatures] + #{this}
+	}
 }
