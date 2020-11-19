@@ -1,6 +1,7 @@
 package acapulco.engine.variability;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,7 +33,7 @@ import aima.core.logic.propositional.visitors.SymbolCollector;
  *
  */
 public class SatSolver {
-	static Map<String, List<List<String>>> cachedSolutions = new HashMap<>();
+	static Map<String, List<SatSolution>> cachedSolutions = new HashMap<>();
 
 	static Map<String, Boolean> cachedSatisfiable = new HashMap<>();
 
@@ -174,13 +175,13 @@ public class SatSolver {
 		return solution;
 	}
 
-	public static List<List<String>> getAllSolutions(String expr) {
+	public static List<SatSolution> getAllSolutions(String expr) {
 		return getAllSolutions(expr, null);
 	}
 	
-	public static List<List<String>> getAllSolutions(String expr, Long timeoutInMillis) {
+	public static List<SatSolution> getAllSolutions(String expr, Long timeoutInMillis) {
 		// TODO: Should perhaps include the timeout in the cache...
-		List<List<String>> result = cachedSolutions.get(expr);
+		List<SatSolution> result = cachedSolutions.get(expr);
 		if (result == null) {
 			ExtendedSentence sentence = FeatureExpression.getExpr(expr);
 			result = calculateAllSolutions(sentence, timeoutInMillis);
@@ -256,7 +257,24 @@ public class SatSolver {
 		public Set<PropositionSymbol> symbols;
 		public Map<PropositionSymbol, Integer> indices;
 	}
-
+	
+	/**
+	 * An individual SAT solver solution, compactly encoded.
+	 * 
+	 * @author k1074611
+	 */
+	public static class SatSolution {
+		/**
+		 * Maps feature names into indices into the bit set.
+		 */
+		public Map<String, Integer> featureNameIndices;
+		
+		/**
+		 * The solution encoded as a bit set. If a bit is set, it indicates the corresponding feature has been selected.
+		 */
+		public BitSet solution;
+	}
+	
 	private static ModelIteratorInfo createIteratorFor(ExtendedSentence expr) {
 		ModelIteratorInfo mii = new ModelIteratorInfo();
 
@@ -324,32 +342,33 @@ public class SatSolver {
 		return result;
 	}
 
-	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr, Long timeoutInMillis) {
-		ModelIteratorInfo mii = createIteratorFor(expr);
+	private static List<SatSolution> calculateAllSolutions(ExtendedSentence expr, Long timeoutInMillis) {
+		final ModelIteratorInfo mii = createIteratorFor(expr);
 
 		if (mii == null) {
 			return new ArrayList<>();
 		}
 
-		List<List<String>> result = new ArrayList<>();
+		List<SatSolution> result = new ArrayList<>();
+		final Map<String, Integer> featureIndex = new HashMap<>();
+		mii.indices.keySet().forEach(ps -> {
+			featureIndex.put(ps.getSymbol(), mii.indices.get(ps) - 1);
+		});
 
 		long startTime = System.currentTimeMillis();
 		
 		try {
 			while (mii.mi.isSatisfiable()) {
 				int[] model = mii.mi.model();
-				List<String> sol = new LinkedList<>();
-
-				for (int i : model) {
-					if (i > 0) {
-						PropositionSymbol ps = mii.reverseIndex.get(i);
-						if (ps != null) {
-							sol.add(ps.getSymbol());
-						}
-					}
-				}
+				SatSolution solution = new SatSolution();
+				solution.featureNameIndices = featureIndex;
+				solution.solution = new BitSet(featureIndex.size());
 				
-				result.add(sol);
+				for (int i : model) {
+					solution.solution.set(Math.abs(i) - 1, i > 0);
+				}
+								
+				result.add(solution);
 				
 				if (timeoutInMillis != null) {
 					// Check if we still have time for another round
