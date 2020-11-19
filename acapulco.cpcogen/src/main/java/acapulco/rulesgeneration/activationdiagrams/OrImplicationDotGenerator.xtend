@@ -1,8 +1,9 @@
 package acapulco.rulesgeneration.activationdiagrams
 
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
-import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
+import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
+import java.util.List
 
 class OrImplicationDotGenerator {
 	val OrImplicationGraph orImplications
@@ -14,18 +15,39 @@ class OrImplicationDotGenerator {
 	}
 
 	def String render() '''
-		digraph "«fasd.rootDecision»" {
+		strict digraph "«fasd.rootDecision»" { packmode=array_c1;
 			«renderNodes»
 			
 			«renderEdges»
 		}
 	'''
 
-	// TODO: Render nodes in sub-graphs according to the connected components, always keeping the component containing root at the top.
+	private def renderNodes() '''
+		subgraph rootGraph { rank = source;
+			«fasd.vbRuleFeatures.renderNode»
+		}
+		
+		«orImplications.nodes.reject[it === fasd.vbRuleFeatures].map[renderNode].join('\n')»
+	'''
 
-	private def renderNodes() {
-		orImplications.nodes.map[renderNode].join('\n')
-	}
+// Uncommented this for now in favour of using the standard DOT packing of connected components	
+//
+//	private def renderNodes() {
+//		orImplications.connectedComponents.map[renderComponent].join('\n')
+//	}
+//	
+//	// TODO: Render nodes in sub-graphs according to the connected components, always keeping the component containing root at the top.
+//	private def renderComponent(List<VBRuleFeature> connectedComponent) '''
+//		subgraph { rank = «connectedComponent.contains(fasd.vbRuleFeatures)?'source':'same'»;
+//			subgraph orNodes { rank = same;
+//				«connectedComponent.filter(VBRuleOrFeature).map[renderNode].join('\n')»
+//			}
+//			
+//			subgraph orAlternativeNodes { rank = same;
+//				«connectedComponent.filter[(it instanceof VBRuleOrAlternative) || (it === fasd.vbRuleFeatures)].map[renderNode].join('\n')»
+//			}
+//		}
+//	'''
 
 	private def renderEdges() {
 		orImplications.edges.map[renderEdge].join('\n')

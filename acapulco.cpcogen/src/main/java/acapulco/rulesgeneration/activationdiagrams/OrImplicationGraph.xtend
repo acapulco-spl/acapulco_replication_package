@@ -66,7 +66,13 @@ class OrImplicationGraph {
 		
 		visited += feature;
 		
-		(internalTransposedEdges.get(feature).flatMap[collectConnectedComponent(visited)] + #[feature]).toList		 
+		val transposedEdges = internalTransposedEdges.get(feature)
+		
+		if (transposedEdges !== null) {
+			(internalTransposedEdges.get(feature).flatMap[collectConnectedComponent(visited)] + #[feature]).toList		
+		} else {
+			#[feature]
+		}
 	}
 
 	private def void findOrder(VBRuleFeature feature, HashSet<VBRuleFeature> visited, Stack<VBRuleFeature> orderStack) {
