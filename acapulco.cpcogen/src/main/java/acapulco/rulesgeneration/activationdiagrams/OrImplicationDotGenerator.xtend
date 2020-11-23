@@ -4,6 +4,7 @@ import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
 import java.util.List
+import java.util.Map.Entry
 
 class OrImplicationDotGenerator {
 	val OrImplicationGraph orImplications
@@ -50,7 +51,7 @@ class OrImplicationDotGenerator {
 //	'''
 
 	private def renderEdges() {
-		orImplications.edges.map[renderEdge].join('\n')
+		orImplications.edges.entrySet.map[doRenderEdges].join('\n')
 	}
 
 	private dispatch def renderNode(VBRuleFeature node) { node.renderAlternativeNode }
@@ -65,7 +66,11 @@ class OrImplicationDotGenerator {
 		«node.name» [shape=rectangle]
 	'''
 	
-	private def renderEdge(Pair<VBRuleFeature, VBRuleFeature> edge) '''
-		«edge.key.name» -> «edge.value.name»
+	private def doRenderEdges(Entry<VBRuleFeature, List<? extends VBRuleFeature>> edgeSet) {
+		edgeSet.value.map[renderEdge(edgeSet.key, it)]
+	} 
+	
+	private def renderEdge(VBRuleFeature from, VBRuleFeature to) '''
+		«from.name» -> «to.name»
 	'''
 }
