@@ -22,8 +22,8 @@ public class PipelineRunner {
 		String inputPath = "input";
 		String generatedPath = "generated";
 
-		String fmNameInput = "ad-test-1";		String fmNameCanonical = "test1";
-//		String fmNameInput = "TankWar";			String fmNameCanonical = "tankwar";
+//		String fmNameInput = "ad-test-1";		String fmNameCanonical = "test1";
+		String fmNameInput = "TankWar";			String fmNameCanonical = "tankwar";
 //		String fmNameInput = "WeaFQAs";			String fmNameCanonical = "weafqas";
 //		String fmNameInput = "mobile_media2";	String fmNameCanonical = "mobilemedia";
 		
