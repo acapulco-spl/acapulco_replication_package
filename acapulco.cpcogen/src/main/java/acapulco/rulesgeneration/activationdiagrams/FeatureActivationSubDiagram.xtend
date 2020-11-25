@@ -435,5 +435,5 @@ class FeatureActivationSubDiagram {
 	 */
 	private def sanitise(String featureName) {
 		featureName.replaceAll("\\W", "")
-	}
+	}	
 }

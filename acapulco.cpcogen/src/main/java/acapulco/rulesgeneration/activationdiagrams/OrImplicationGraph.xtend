@@ -76,41 +76,50 @@ class OrImplicationGraph {
 
 		fasd.vbRuleFeatures.recursivelyComputeCycles(stack, visited, null)
 	}
-	
+
 	/**
 	 * @return the set of features for which we have found a cycle
 	 */
 	// This variant should only be invoked for the root feature
-	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleFeature feature, Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
+	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleFeature feature,
+		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
 		if (visited.contains(feature)) {
 			return emptySet
 		}
-		
+
 		visited += feature
-		
+
 		edges.get(feature)?.forEach[recursivelyComputeCycles(stack, visited, null)]
-		
+
 		return emptySet
 	}
-	
-	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleOrAlternative feature, Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
+
+	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleOrAlternative feature,
+		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
 		if (visited.contains(feature)) {
 			// We're only detecting cycles over or-features, so all we have to do is break off here 
 			return emptySet
 		}
-		
+
 		visited += feature
-		
-		// Remove feature from cycle entries for any or feature on the stack
-		stack.filter(VBRuleOrFeature).filter[cycleEntries.containsKey(it)].forEach[orFeature |
+
+		// Remove feature from cycle entries for any or-feature on the stack
+		stack.filter(VBRuleOrFeature).filter[cycleEntries.containsKey(it)].forEach [ orFeature |
 			cycleEntries.get(orFeature).remove(feature)
 		]
-				
-		edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, feature)].toSet
+
+		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, feature)]?.toSet
+
+		if (result !== null) {
+			result
+		} else {
+			emptySet
+		}
 	}
-	
-	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleOrFeature feature, Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
-		if (visited.contains(feature)) {			
+
+	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleOrFeature feature,
+		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
+		if (visited.contains(feature)) {
 			if (stack.contains(feature)) {
 				// We've found a cycle, record it...
 				var cycleEntriesForFeature = cycleEntries.get(feature)
@@ -122,23 +131,54 @@ class OrImplicationGraph {
 				} else {
 					cycleEntriesForFeature -= comingFrom
 				}
-								
+
 				return #{feature}
 			} else {
 				return emptySet
 			}
 		}
-		
+
 		stack += feature
 		visited += feature
-		
-		// TODO: after each return, add our incoming edges to the cycle entries for any cycle set returned
-		// CHECK: Do we need to do this in the loop or is it OK to do it once at the end (which would be more efficient)?
-		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, null)].toSet
-		
+
+		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, null)]?.toSet
+
 		stack -= feature
-		result -= feature
-		
-		return result
+
+		if (result !== null) {
+			/*
+			 * Add our incoming edges (except those that are on a cycle to this feature to the cycle entries for any cycle set returned
+			 * 
+			 * Note that doing this here rather than after each descend call is both more efficient and removes the need for indirect
+			 * representations of in-edges that need to be resolved later.
+			 */
+			val cycleEntriesForFeature = cycleEntries.get(feature)
+			if (cycleEntriesForFeature !== null) {
+				/*
+				 * During the above descend we have found at least one cycle to this feature. result will contain the feature and we need to
+				 * make sure to add only the cycle entries to the cycles still remaining.
+				 */
+				result -= feature
+				result.forEach [ cycleFeature |
+					cycleEntries.get(cycleFeature) += cycleEntriesForFeature
+				]
+			} else {
+				/*
+				 * This feature isn't involved in any cycles as an "endpoint", so all entries, except the one we came in on, need to be added
+				 * as potential entry points for any cycle we have found during descent.
+				 * 
+				 * Note that at this point result cannot contain feature, so there is no need to remove it.
+				 */
+				// Using toList to ensure this is calculated only once
+				val nodesToAdd = invertedOrImplications.get(feature).reject[it === comingFrom].toList
+				result.forEach [ cycleFeature |
+					cycleEntries.get(cycleFeature) += nodesToAdd
+				]
+			}
+
+			result
+		} else {
+			emptySet
+		}
 	}
 }

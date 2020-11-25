@@ -18,8 +18,15 @@ abstract class VBRuleFeatureConstraintGenerator {
 			fasd.orImplicationExpressions + 
 			fasd.featureExclusionExpressions + 
 			fasd.orOverlapExpressions +
-			fasd.transitiveOrLoopsExpressions
+			fasd.transitiveOrLoopsExpressions + 
+			fasd.orCycleBreakers
 		).join(' & ')
+	}
+
+	private static def orCycleBreakers(FeatureActivationSubDiagram fasd) {
+		val orImplGraph = new OrImplicationGraph(fasd)
+		
+		orImplGraph.cycleEntries.entrySet.map[key.impliesOneOf(value)]
 	}
 
 	private static def transitiveOrLoopsExpressions(FeatureActivationSubDiagram fasd) {
