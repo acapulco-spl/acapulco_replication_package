@@ -1,5 +1,6 @@
 package acapulco.engine.variability;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -16,15 +17,14 @@ import aima.core.logic.propositional.parsing.ast.PropositionSymbol;
 
 public class RuleBuilder {
 	private Rule inputRule;
-	private Model m;
-
-	public RuleBuilder(Rule rule, Map<String, Boolean> configuration) {
+	private Map<Node, BitSet> compiledPCs;
+	private BitSet configuration;
+	
+	public RuleBuilder(Rule rule, Map<Node, BitSet> compiledPCs, BitSet configuration) {
 		fixInconsistencies(rule);
 		this.inputRule = rule;
-		Map<PropositionSymbol, Boolean> configurationMap = new HashMap<>();
-		configuration.entrySet()
-				.forEach(e -> configurationMap.put(FeatureExpression.getSymbolExpr(e.getKey()), e.getValue()));
-		this.m = new Model(configurationMap);
+		this.compiledPCs = compiledPCs;
+		this.configuration = configuration;
 	}
 
 	public ConfigurationSearchOperator buildRule() {
@@ -49,16 +49,11 @@ public class RuleBuilder {
 	}
 
 	private boolean pcFulfilled(ModelElement n) {
-		String pc = n.getAnnotations().get(0).getValue();
-		if (pc == null || pc.isBlank())
+		if (n instanceof Node) {
+			return compiledPCs.get(n).intersects(configuration);
+		} else {
 			return true;
-		
-		boolean isTrue = m.isTrue(FeatureExpression.getExpr(pc));
-		boolean isFalse = m.isFalse(FeatureExpression.getExpr(pc));
-
-		if (isTrue == isFalse)
-			throw new RuntimeException("Error during PC evaluation (Rule: "+inputRule.getName()+ ", PC: "+pc+"). Probably one feature unknown?");
-		return isTrue;
+		}
 	}
 
 	private void fixInconsistencies(Rule rule) {
