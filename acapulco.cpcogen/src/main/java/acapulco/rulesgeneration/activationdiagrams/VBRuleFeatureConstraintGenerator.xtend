@@ -24,7 +24,7 @@ abstract class VBRuleFeatureConstraintGenerator {
 	}
 
 	private static def orCycleBreakers(FeatureActivationSubDiagram fasd) {
-		val orImplGraph = new OrImplicationGraph(fasd)
+		val orImplGraph = new OrImplicationGraph(fasd, false)
 		
 		orImplGraph.cycleEntries.entrySet.map[key.impliesOneOf(value)]
 	}

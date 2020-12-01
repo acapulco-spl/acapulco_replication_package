@@ -12,7 +12,7 @@ class OrImplicationDotGenerator {
 
 	new(FeatureActivationSubDiagram fasd) {
 		this.fasd = fasd
-		orImplications = new OrImplicationGraph(fasd)
+		orImplications = new OrImplicationGraph(fasd, true)
 	}
 
 	def String render() '''
@@ -51,7 +51,7 @@ class OrImplicationDotGenerator {
 //	'''
 
 	private def renderEdges() {
-		orImplications.edges.entrySet.map[doRenderEdges].join('\n')
+		orImplications.edges.entrySet.flatMap[doRenderEdges].join('\n')
 	}
 
 	private dispatch def renderNode(VBRuleFeature node) { node.renderAlternativeNode }

@@ -15,6 +15,7 @@ import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
+import acapulco.rulesgeneration.activationdiagrams.OrImplicationDotGenerator
 import aima.core.logic.propositional.parsing.ast.ComplexSentence
 import aima.core.logic.propositional.parsing.ast.Sentence
 import java.io.File
@@ -32,12 +33,11 @@ import java.util.stream.Collectors
 import org.eclipse.emf.henshin.model.ModelElement
 import org.eclipse.emf.henshin.model.Node
 import org.eclipse.emf.henshin.model.Rule
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
-import acapulco.rulesgeneration.activationdiagrams.OrImplicationDotGenerator
-import org.junit.jupiter.api.Test
 
 class ActivationDiagramTest {
 
