@@ -55,7 +55,7 @@ class ActivationDiagramTest {
 
 	@Test
 	def void exploreSpecificFeature() {
-		coreTest("testdata/WeaFQAs.sxfm.xml", "Security", false)		
+		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)		
 	}
 
 	private def coreTest(String fmPath) {
@@ -233,14 +233,14 @@ class ActivationDiagramTest {
 
 	private def void writeDotFiles(FeatureActivationSubDiagram fasd, String path) {
 		val fasdDotFile = new File(path +
-			'''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
+			'''/«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
 		try (val writer = new FileWriter(fasdDotFile)) {
 			writer.write(new FASDDotGenerator(fasd, true).render)
 			writer.flush
 		}
 
 		val orImplicationsDotFile = new File(path +
-			'''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'»OrImplications.dot''')
+			'''/«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'»OrImplications.dot''')
 		try (val writer = new FileWriter(orImplicationsDotFile)) {
 			writer.write(new OrImplicationDotGenerator (fasd).render)
 			writer.flush
