@@ -50,6 +50,22 @@ class ActivationDiagramTest {
 	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml",
 		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
+		fmPath.coreTest
+	}
+
+	@Test
+	def void exploreSpecificFeature() {
+		coreTest("testdata/WeaFQAs.sxfm.xml", "Security", false)		
+	}
+
+	private def coreTest(String fmPath) {
+		fmPath.coreTest(null, null)
+	}
+
+	/**
+	 * Run the test suite for the specified feature model, possibly focusing in on only a specific feature or feature activation (if those parameters aren't null.
+	 */
+	private def coreTest(String fmPath, String featureName, Boolean featureActivation) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 
 		val redundancyOutputFolderPath = Paths.
@@ -72,56 +88,53 @@ class ActivationDiagramTest {
 
 		val fad = new FeatureActivationDiagram(fm)
 		val diagramNodes = fad.diagramNodes
-		allRealOptionalFeatures.forEach [ f |
-			val fasdActivate = fad.calculateSubdiagramFor(f, true)
-			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
-
-			println('''Checking feature-activation diagram for feature «f.name».''')
-			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
+		allRealOptionalFeatures.filter[(featureName === null) || (name == featureName)].forEach [ f |
+			var FeatureActivationSubDiagram fasdActivate = null			
+			if ((featureActivation === null) || featureActivation) {
+				fasdActivate = fad.calculateSubdiagramFor(f, true)			
+			}
+			var FeatureActivationSubDiagram fasdDeActivate = null			
+			if ((featureActivation === null) || !featureActivation) {
+				fasdDeActivate = fad.calculateSubdiagramFor(f, false)			
+			}
+			
+			if (featureActivation === null) {
+				println('''Checking feature-activation diagram for feature «f.name».''')
+				FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)				
+			}
 
 			// TODO: Test presence conditions -- need to provide data oracle for this, I think
 			// TODO: Test or implications -- need to provide data oracle for this, I think
-			println('''Checking deactivation of feature «f.name».''')
-			fasdDeActivate.assertRootFeatureProperties(f, false)
-			fasdDeActivate.checkExclusions
-			fasdDeActivate.countRedundantFeatures
-			fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			
+			
+			if ((featureActivation === null) || !featureActivation) {
+				println('''Checking deactivation of feature «f.name».''')
+				fasdDeActivate.assertRootFeatureProperties(f, false)
+				fasdDeActivate.checkExclusions
+				fasdDeActivate.countRedundantFeatures
+				fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			}
 
-			println('''Checking activation of feature «f.name».''')
-			fasdActivate.assertRootFeatureProperties(f, true)
-			fasdActivate.checkExclusions
-			fasdActivate.countRedundantFeatures
-			fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			if ((featureActivation === null) || featureActivation) {
+				println('''Checking activation of feature «f.name».''')
+				fasdActivate.assertRootFeatureProperties(f, true)
+				fasdActivate.checkExclusions
+				fasdActivate.countRedundantFeatures
+				fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			}
+			
+			if (featureName !== null) {
+				fasdActivate?.writeDotFiles(redundancyOutputFolderPath)
+				fasdDeActivate?.writeDotFiles(redundancyOutputFolderPath)
+			}
 		]
 
-		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
-			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
+		if (featureName === null) {
+			assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
+				allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)					
+		}
 	}
 
-	@Test
-	def void exploreSpecificFeature() {
-		val fmPath = "testdata/WeaFQAs.sxfm.xml"
-		val featureName = "Security"
-		val featureActivation = false
-		
-		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
-		val outputFolderPath = Paths.
-			get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').
-			toString
-		val outputFolder = new File(outputFolderPath)
-		outputFolder.mkdirs
-
-		extension val fh = new FeatureModelHelper(fm)
-		val alwaysActiveFeatures = fh.alwaysActiveFeatures
-		println('''Always active features are: «alwaysActiveFeatures.map[name]».''')
-		val allRealOptionalFeatures = fh.features.reject[alwaysActiveFeatures.contains(it)].toSet
-		println('''Real optional features are: «allRealOptionalFeatures.map[name]».''')
-
-		val fad = new FeatureActivationDiagram(fm)
-		val fasd = fad.calculateSubdiagramFor(allRealOptionalFeatures.findFirst[name == featureName], featureActivation)
-		
-		fasd.writeDotFiles('''«outputFolderPath»/«featureName»«featureActivation?'Act':'DeAct'».orimplications.dot''')
-	}
 
 	private def countRedundantFeatures(extension FeatureActivationSubDiagram fasd) {
 		val vbFeatures = (#{vbRuleFeatures} + vbRuleFeatures.children.flatMap[children]).toSet
