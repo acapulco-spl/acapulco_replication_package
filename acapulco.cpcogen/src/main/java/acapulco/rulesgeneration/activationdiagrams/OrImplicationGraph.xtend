@@ -82,10 +82,6 @@ class OrImplicationGraph {
 			additions.reject[deletions.contains(it)].toSet
 		}
 		
-		def remove(VBRuleFeature feature) {
-			deletions += feature
-		}
-		
 		def operator_add(AdditionDeletionSet features) {
 			additions += features.additions
 			deletions += features.deletions
@@ -160,7 +156,7 @@ class OrImplicationGraph {
 				writer?.
 					println('''Removing «feature.name» from entry points of «orFeature.name» because it's on the DFS stack.''')
 			}
-			internalCycleEntries.get(orFeature).remove(feature)
+			internalCycleEntries.get(orFeature) -= feature
 		]
 
 		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, feature, writer)]?.toSet
@@ -182,12 +178,13 @@ class OrImplicationGraph {
 					cycleEntriesForFeature = new AdditionDeletionSet
 					internalCycleEntries.put(feature, cycleEntriesForFeature)
 
-					val featuresToAdd = invertedOrImplications.get(feature).reject[it === comingFrom].toList
+					val featuresToAdd = invertedOrImplications.get(feature).toList
 					cycleEntriesForFeature += featuresToAdd
+					cycleEntriesForFeature -= comingFrom
 
 					if (feature.name.startsWith("UsabilityAct")) {
 						writer?.
-							println('''Found first cycle for «feature.name», adding «featuresToAdd.sortBy[name].join("[", ", ", "]", [name])»''')
+							println('''Found first cycle for «feature.name», adding «featuresToAdd.sortBy[name].join("[", ", ", "]", [name])», removing «comingFrom.name».''')
 					}
 				} else {
 					cycleEntriesForFeature -= comingFrom
@@ -251,15 +248,17 @@ class OrImplicationGraph {
 				 * Note that at this point result cannot contain feature, so there is no need to remove it.
 				 */
 				// Using toList to ensure this is calculated only once
-				val nodesToAdd = invertedOrImplications.get(feature).reject[it === comingFrom].toList
+				val nodesToAdd = invertedOrImplications.get(feature).toList
 				result.forEach [ cycleFeature |
 					if (cycleFeature.name.startsWith("UsabilityAct")) {
 						writer?.
 							println('''Adding all entry points for «feature.name» to list of entries of «cycleFeature.name» because we came across it when tracking back out of a «cycleFeature.name» cycle.''')
 						writer?.
-							println('''Entry features added are: «nodesToAdd.sortBy[name].join('[', ', ', ']', [name])»''')
+							println('''Entry features added are: «nodesToAdd.sortBy[name].join('[', ', ', ']', [name])», removing «comingFrom.name».''')
 					}
-					internalCycleEntries.get(cycleFeature) += nodesToAdd
+					val cycleEntriesForLoopedFeature = internalCycleEntries.get(cycleFeature)
+					cycleEntriesForLoopedFeature += nodesToAdd
+					cycleEntriesForLoopedFeature -= comingFrom
 				]
 			}
 
