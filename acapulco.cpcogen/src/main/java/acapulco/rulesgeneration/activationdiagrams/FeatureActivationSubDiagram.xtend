@@ -275,7 +275,7 @@ class FeatureActivationSubDiagram {
 		val newOrOverlaps = new HashMap
 		newOrOverlaps.putAll(orOverlaps.filter [ orPair, orAlternativeList |
 			!(featuresToCleanOut.contains(orPair.key) || featuresToCleanOut.contains(orPair.value))
-		].mapValues[reject[featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value)].toList])
+		].mapValues[reject[featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value)].toList].filter[k, v | !v.empty])
 		orOverlaps.clear
 		orOverlaps.putAll(newOrOverlaps)
 
