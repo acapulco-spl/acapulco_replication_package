@@ -3,7 +3,6 @@ package acapulco.rulesgeneration.activationdiagrams
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
-import java.io.PrintWriter
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -25,19 +24,13 @@ class OrImplicationGraph {
 	// The or alternatives implying a given or-feature
 	val invertedOrImplications = new HashMap<VBRuleOrFeature, Set<VBRuleFeature>>
 
-	new(FeatureActivationSubDiagram fasd, boolean debug) {
+	new(FeatureActivationSubDiagram fasd) {
 		this.fasd = fasd
 
-		if (debug) {
-			try(val PrintWriter = new PrintWriter("testoutputs/UsabilityAnalysis.txt")) {
-				initialise(PrintWriter)
-			}
-		} else {
-			initialise(null)
-		}
+		initialise
 	}
 
-	private def initialise(PrintWriter writer) {
+	private def initialise() {
 		nodes += fasd.vbRuleFeatures.collectFeatures
 
 		fasd.vbRuleFeatures.children.forEach [ orFeature |
@@ -56,7 +49,7 @@ class OrImplicationGraph {
 			]
 		]
 
-		computeCycles(writer)
+		computeCycles
 	}
 
 	/**
@@ -104,16 +97,13 @@ class OrImplicationGraph {
 	 * 
 	 * We do this through a single depth-first search sweep through the or-implications graph.
 	 */
-	private def computeCycles(PrintWriter writer) {
+	private def computeCycles() {
 		val visited = new HashSet<VBRuleFeature>
 		// Stack captures what we have visited in the current path rather than in the graph globally
 		// We use a set for the stack as we will have to quickly look up things deeper in the stack and a hash set makes this O(1)
 		val stack = new HashSet<VBRuleOrFeature>
 
-		fasd.vbRuleFeatures.recursivelyComputeCycles(stack, visited, null, writer)
-
-		writer?.
-			println('''Nodes not visited: «nodes.reject[visited.contains(it)].sortBy[name].join('[', ', ', ']', [name])».''')
+		fasd.vbRuleFeatures.recursivelyComputeCycles(stack, visited, null)
 			
 		cycleEntries.clear
 		cycleEntries.putAll (internalCycleEntries.mapValues[effectiveSet])
@@ -124,8 +114,7 @@ class OrImplicationGraph {
 	 */
 	// This variant should only be invoked for the root feature
 	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleFeature feature,
-		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom, PrintWriter writer) {
-		writer?.println('''Entering generic descent for feature «feature.name».''')
+		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
 
 		if (visited.contains(feature)) {
 			return emptySet
@@ -133,16 +122,13 @@ class OrImplicationGraph {
 
 		visited += feature
 
-		edges.get(feature)?.forEach[recursivelyComputeCycles(stack, visited, null, writer)]
+		edges.get(feature)?.forEach[recursivelyComputeCycles(stack, visited, null)]
 
 		return emptySet
 	}
 
 	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleOrAlternative feature,
-		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom, PrintWriter writer) {
-		if (feature.name.startsWith("PerformanceDeAct") && feature.name.endsWith("UsabilityAct")) {
-			writer?.println('''Visiting «feature.name».''')
-		}
+		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
 		if (visited.contains(feature)) {
 			// We're only detecting cycles over or-features, so all we have to do is break off here 
 			return emptySet
@@ -152,14 +138,10 @@ class OrImplicationGraph {
 
 		// Remove feature from cycle entries for any or-feature on the stack
 		stack.filter(VBRuleOrFeature).filter[internalCycleEntries.containsKey(it)].forEach [ orFeature |
-			if (orFeature.name.startsWith("UsabilityAct")) {
-				writer?.
-					println('''Removing «feature.name» from entry points of «orFeature.name» because it's on the DFS stack.''')
-			}
 			internalCycleEntries.get(orFeature) -= feature
 		]
 
-		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, feature, writer)]?.toSet
+		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, feature)]?.toSet
 
 		if (result !== null) {
 			result
@@ -169,7 +151,7 @@ class OrImplicationGraph {
 	}
 
 	private dispatch def Set<VBRuleOrFeature> recursivelyComputeCycles(VBRuleOrFeature feature,
-		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom, PrintWriter writer) {
+		Set<VBRuleOrFeature> stack, Set<VBRuleFeature> visited, VBRuleOrAlternative comingFrom) {
 		if (visited.contains(feature)) {
 			if (stack.contains(feature)) {
 				// We've found a cycle, record it...
@@ -181,24 +163,12 @@ class OrImplicationGraph {
 					val featuresToAdd = invertedOrImplications.get(feature).toList
 					cycleEntriesForFeature += featuresToAdd
 					cycleEntriesForFeature -= comingFrom
-
-					if (feature.name.startsWith("UsabilityAct")) {
-						writer?.
-							println('''Found first cycle for «feature.name», adding «featuresToAdd.sortBy[name].join("[", ", ", "]", [name])», removing «comingFrom.name».''')
-					}
 				} else {
 					cycleEntriesForFeature -= comingFrom
-					if (feature.name.startsWith("UsabilityAct")) {
-						writer?.println('''Found later cycle for «feature.name», removing «comingFrom.name»''')
-					}
 				}
 
 				return #{feature}
 			} else {
-				if (feature.name.startsWith("UsabilityAct")) {
-					writer?.
-						println('''Ignoring revisit of «feature.name» via «comingFrom.name» because it isn't visited on a cycle.''')
-				}
 				return emptySet
 			}
 		}
@@ -206,7 +176,7 @@ class OrImplicationGraph {
 		stack += feature
 		visited += feature
 
-		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, null, writer)]?.toSet
+		val result = edges.get(feature)?.flatMap[recursivelyComputeCycles(stack, visited, null)]?.toSet
 
 		stack -= feature
 
@@ -223,23 +193,10 @@ class OrImplicationGraph {
 				 * During the above descend we have found at least one cycle to this feature. result will contain the feature and we need to
 				 * make sure to add only the cycle entries to the cycles still remaining.
 				 */
-				if (feature.name.startsWith("UsabilityAct")) {
-					writer?.println('''Completely tracked out of cycles for «feature.name».''')
-				}
 				result -= feature
 				result.forEach [ cycleFeature |
-					if (cycleFeature.name.startsWith("UsabilityAct")) {
-						writer?.
-							println('''Adding cycle entries for «feature.name» to list of entries of «cycleFeature.name» because we came across it when tracking back out of a «cycleFeature.name» cycle.''')
-						writer?.
-							println('''Entry features added are: «cycleEntriesForFeature.effectiveSet.sortBy[name].join('[', ', ', ']', [name])»''')
-					}
 					internalCycleEntries.get(cycleFeature) += cycleEntriesForFeature
 				]
-				if (feature.name.startsWith("UsabilityAct")) {
-					writer?.
-						println('''Final cycle entries for «feature.name» are «cycleEntriesForFeature.effectiveSet.sortBy[name].join('[', ', ', ']', [name])».''')
-				}
 			} else {
 				/*
 				 * This feature isn't involved in any cycles as an "endpoint", so all entries, except the one we came in on, need to be added
@@ -250,12 +207,6 @@ class OrImplicationGraph {
 				// Using toList to ensure this is calculated only once
 				val nodesToAdd = invertedOrImplications.get(feature).toList
 				result.forEach [ cycleFeature |
-					if (cycleFeature.name.startsWith("UsabilityAct")) {
-						writer?.
-							println('''Adding all entry points for «feature.name» to list of entries of «cycleFeature.name» because we came across it when tracking back out of a «cycleFeature.name» cycle.''')
-						writer?.
-							println('''Entry features added are: «nodesToAdd.sortBy[name].join('[', ', ', ']', [name])», removing «comingFrom.name».''')
-					}
 					val cycleEntriesForLoopedFeature = internalCycleEntries.get(cycleFeature)
 					cycleEntriesForLoopedFeature += nodesToAdd
 					cycleEntriesForLoopedFeature -= comingFrom

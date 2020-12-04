@@ -12,7 +12,7 @@ class OrImplicationDotGenerator {
 
 	new(FeatureActivationSubDiagram fasd) {
 		this.fasd = fasd
-		orImplications = new OrImplicationGraph(fasd, true)
+		orImplications = new OrImplicationGraph(fasd)
 	}
 
 	def String render() '''
