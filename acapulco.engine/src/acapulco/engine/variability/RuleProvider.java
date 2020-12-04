@@ -6,12 +6,12 @@ import java.util.Map;
 import org.eclipse.emf.henshin.model.Rule;
 
 public class RuleProvider {
-	static Map<Rule,Map<String, Rule>> ruleCache = new HashMap<>();
+	static Map<Rule,Map<String, ConfigurationSearchOperator>> ruleCache = new HashMap<>();
 	
-	public static Rule provideRule(Rule rule, Map<String,Boolean> config) {
-		Map<String, Rule> map = ruleCache.get(rule);
+	public static ConfigurationSearchOperator provideRule(Rule rule, Map<String,Boolean> config) {
+		Map<String, ConfigurationSearchOperator> map = ruleCache.get(rule);
 		if (map == null) {
-			map = new HashMap<String, Rule>();
+			map = new HashMap<String, ConfigurationSearchOperator>();
 			ruleCache.put(rule, map);
 		}
 		
@@ -19,7 +19,7 @@ public class RuleProvider {
 		config.entrySet().forEach(e -> configCodeSb.append(e.getValue() ? 1 : 0));
 		String configCode = configCodeSb.toString();
 		
-		Rule result = map.get(configCode);
+		ConfigurationSearchOperator result = map.get(configCode);
 		if (result == null) {
 			result = new RuleBuilder(rule, config).buildRule();
 			map.put(configCode, result);
