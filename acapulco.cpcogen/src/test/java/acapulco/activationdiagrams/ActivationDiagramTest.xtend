@@ -54,6 +54,11 @@ class ActivationDiagramTest {
 	}
 
 	@Test
+	def void testLinux() {
+		"testdata/linux-2.6.33.3.sxfm.xml".coreTest
+	}
+
+	@Test
 	def void exploreSpecificFeature() {
 //		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)
 		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
@@ -191,6 +196,12 @@ class ActivationDiagramTest {
 		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
+//		// Assume rules are unique (they should be now :-) )
+//
+//		val ruleInstances = solutions.parallelStream.map[ solution |
+//			rule.activeFeatureDecisionsFor(solution, fh.featureModel)
+//		].collect(Collectors.toSet)
+
 		// Extract unique rule instances
 		// Use parallel stream to speed up the process
 		val uniqueRuleInstances = solutions.parallelStream.collect(Collectors.groupingByConcurrent [ solution |
@@ -204,6 +215,7 @@ class ActivationDiagramTest {
 
 		// Use parallel checking of the rules so we can use all processor cores...
 		uniqueRuleInstances.keySet.parallelStream.forEach [ ruleInstance |
+//		ruleInstances.parallelStream.forEach[ ruleInstance |
 			// 3.1 no conflicting decisions
 			assertTrue(
 				"No rule instance should contain conflicting feature decisions.",
