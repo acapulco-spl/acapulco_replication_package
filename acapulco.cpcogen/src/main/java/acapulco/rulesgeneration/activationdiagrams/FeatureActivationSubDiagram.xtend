@@ -287,7 +287,7 @@ class FeatureActivationSubDiagram {
 		val newResolvedOrImplications = new HashMap
 		newResolvedOrImplications.putAll(resolvedOrImplications.filter[key, value|!featuresToCleanOut.contains(key)].mapValues [
 			reject[featuresToCleanOut.contains(it)].toSet
-		])
+		].filter[k, v | !v.empty])
 		resolvedOrImplications.clear
 		resolvedOrImplications.putAll(newResolvedOrImplications)
 

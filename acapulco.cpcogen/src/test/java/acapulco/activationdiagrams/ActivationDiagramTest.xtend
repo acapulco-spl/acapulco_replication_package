@@ -55,7 +55,8 @@ class ActivationDiagramTest {
 
 	@Test
 	def void exploreSpecificFeature() {
-		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)		
+//		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)
+		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
 	}
 
 	private def coreTest(String fmPath) {
@@ -170,7 +171,12 @@ class ActivationDiagramTest {
 		val features = featuresAsString.split(",").map[trim].toList
 
 		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features («fasd.vbRuleFeatures.children.size» or-features).''')
-		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
+		println('''There are «fasd.featureExclusions.size» feature exclusion pairs.''')
+		if (fasd.orImplications.size > 0) {
+			println('''There are «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')		
+		} else {
+			println('''There are 0 or-implications.''')
+		}
 		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
 		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
 		println('''FASD contains «fasd.transitiveOrLoops.size» transitive or loops.''')
