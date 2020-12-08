@@ -61,7 +61,8 @@ class ActivationDiagramTest {
 	@Test
 	def void exploreSpecificFeature() {
 //		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)
-		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
+//		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
+		coreTest("testdata/linux-2.6.33.3.sxfm.xml", "X86_32", false)
 	}
 
 	private def coreTest(String fmPath) {
@@ -164,6 +165,8 @@ class ActivationDiagramTest {
 		// 1. Generate rule
 		val rule = ActivationDiagToRuleConverter.convert(fasd, metamodelgen.geteClasses)
 		assertNotNull("No rule generated", rule)
+		
+		println('''VB rule for «fasd.rootDecision» had «rule.rhs.nodes.size» nodes.''')
 
 		// Check that only one LHS node checks the selected state and that that is the one corresponding to the root feature decision
 		val checkingNodes = rule.lhs.nodes.reject[attributes.empty]
