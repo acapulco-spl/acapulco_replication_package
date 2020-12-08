@@ -23,7 +23,9 @@ import java.io.FileWriter
 import java.nio.file.Paths
 import java.text.DateFormat
 import java.time.Instant
+import java.util.BitSet
 import java.util.Date
+import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.Map
@@ -189,7 +191,7 @@ class ActivationDiagramTest {
 		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
 		println('''FASD contains «fasd.transitiveOrLoops.size» transitive or loops.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
-//		fasd.writeDotFile(redundancyOutputFilePath)
+
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
 		sentence.assertIsCNF
 
@@ -199,13 +201,20 @@ class ActivationDiagramTest {
 		println('''(«fasd.rootDecision») We generated «solutions.size» solutions.''')
 
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
-//		// Assume rules are unique (they should be now :-) )
-//
-//		val ruleInstances = solutions.parallelStream.map[ solution |
-//			rule.activeFeatureDecisionsFor(solution, fh.featureModel)
-//		].collect(Collectors.toSet)
-
 		// Extract unique rule instances
+		// TODO: The below is a start at trying to make things a bit more efficient in rule instantiation to see if this makes a difference for X86_32-. **WiP**
+		val featureMap = new HashMap<String, Feature>
+		featureMap.putAll(fh.featureModel.eAllContents.filter(Feature).groupBy[name].mapValues[head])
+		val presenceConditions = new HashMap<Feature, BitSet>
+		rule.rhs.nodes.forEach[n |
+			val feature = featureMap.get(n.type.name)
+
+			val pc = n.annotations.head.value
+			// We know the PC is only a disjunction...
+			// Param for split must be a regexp...
+			val pcs = pc.split("\\|").map[trim]			
+		]
+
 		// Use parallel stream to speed up the process
 		val uniqueRuleInstances = solutions.parallelStream.collect(Collectors.groupingByConcurrent [ solution |
 			rule.activeFeatureDecisionsFor(solution, fh.featureModel)
