@@ -11,34 +11,33 @@ import acapulco.featuremodel.configuration.FMConfigurationMetamodelGenerator
 import acapulco.model.Feature
 import acapulco.model.FeatureModel
 import acapulco.rulesgeneration.ActivationDiagToRuleConverter
+import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram
 import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
-import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
+import acapulco.rulesgeneration.activationdiagrams.OrImplicationDotGenerator
 import aima.core.logic.propositional.parsing.ast.ComplexSentence
 import aima.core.logic.propositional.parsing.ast.Sentence
 import java.io.File
+import java.io.FileWriter
 import java.nio.file.Paths
 import java.text.DateFormat
 import java.time.Instant
-import java.util.ArrayList
-import java.util.Collections
 import java.util.Date
 import java.util.LinkedList
 import java.util.List
 import java.util.Map
 import java.util.Map.Entry
 import java.util.Set
+import java.util.stream.Collectors
 import org.eclipse.emf.henshin.model.ModelElement
 import org.eclipse.emf.henshin.model.Node
 import org.eclipse.emf.henshin.model.Rule
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 import static org.junit.Assert.*
-import java.io.FileWriter
-import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
-import java.util.stream.Collectors
 
 class ActivationDiagramTest {
 
@@ -51,6 +50,23 @@ class ActivationDiagramTest {
 	@ValueSource(strings=#["testdata/ad-test-1.sxfm.xml", "testdata/ad-test-2.sxfm.xml",
 		"testdata/mobile_media2.sxfm.xml", "testdata/TankWar.sxfm.xml", "testdata/WeaFQAs.sxfm.xml"])
 	def void testFeatureSubDiagramCreation(String fmPath) {
+		fmPath.coreTest
+	}
+
+	@Test
+	def void exploreSpecificFeature() {
+//		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)
+		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
+	}
+
+	private def coreTest(String fmPath) {
+		fmPath.coreTest(null, null)
+	}
+
+	/**
+	 * Run the test suite for the specified feature model, possibly focusing in on only a specific feature or feature activation (if those parameters aren't null.
+	 */
+	private def coreTest(String fmPath, String featureName, Boolean featureActivation) {
 		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get(fmPath).toString)
 
 		val redundancyOutputFolderPath = Paths.
@@ -73,31 +89,53 @@ class ActivationDiagramTest {
 
 		val fad = new FeatureActivationDiagram(fm)
 		val diagramNodes = fad.diagramNodes
-		allRealOptionalFeatures.forEach [ f |
-			val fasdActivate = fad.calculateSubdiagramFor(f, true)
-			val fasdDeActivate = fad.calculateSubdiagramFor(f, false)
-
-			println('''Checking feature-activation diagram for feature «f.name».''')
-			FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)
+		allRealOptionalFeatures.filter[(featureName === null) || (name == featureName)].forEach [ f |
+			var FeatureActivationSubDiagram fasdActivate = null			
+			if ((featureActivation === null) || featureActivation) {
+				fasdActivate = fad.calculateSubdiagramFor(f, true)			
+			}
+			var FeatureActivationSubDiagram fasdDeActivate = null			
+			if ((featureActivation === null) || !featureActivation) {
+				fasdDeActivate = fad.calculateSubdiagramFor(f, false)			
+			}
+			
+			if (featureActivation === null) {
+				println('''Checking feature-activation diagram for feature «f.name».''')
+				FADPrincipleTester.checkPrinciplesApply(f, diagramNodes, fh)				
+			}
 
 			// TODO: Test presence conditions -- need to provide data oracle for this, I think
 			// TODO: Test or implications -- need to provide data oracle for this, I think
-			println('''Checking activation of feature «f.name».''')
-			fasdActivate.assertRootFeatureProperties(f, true)
-			fasdActivate.checkExclusions
-			fasdActivate.countRedundantFeatures
-			fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			
+			
+			if ((featureActivation === null) || !featureActivation) {
+				println('''Checking deactivation of feature «f.name».''')
+				fasdDeActivate.assertRootFeatureProperties(f, false)
+				fasdDeActivate.checkExclusions
+				fasdDeActivate.countRedundantFeatures
+				fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			}
 
-			println('''Checking deactivation of feature «f.name».''')
-			fasdDeActivate.assertRootFeatureProperties(f, false)
-			fasdDeActivate.checkExclusions
-			fasdDeActivate.countRedundantFeatures
-			fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			if ((featureActivation === null) || featureActivation) {
+				println('''Checking activation of feature «f.name».''')
+				fasdActivate.assertRootFeatureProperties(f, true)
+				fasdActivate.checkExclusions
+				fasdActivate.countRedundantFeatures
+				fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
+			}
+			
+			if (featureName !== null) {
+				fasdActivate?.writeDotFiles(redundancyOutputFolderPath)
+				fasdDeActivate?.writeDotFiles(redundancyOutputFolderPath)
+			}
 		]
 
-		assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
-			allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)
+		if (featureName === null) {
+			assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
+				allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)					
+		}
 	}
+
 
 	private def countRedundantFeatures(extension FeatureActivationSubDiagram fasd) {
 		val vbFeatures = (#{vbRuleFeatures} + vbRuleFeatures.children.flatMap[children]).toSet
@@ -133,7 +171,12 @@ class ActivationDiagramTest {
 		val features = featuresAsString.split(",").map[trim].toList
 
 		println('''FASD for «fasd.rootDecision» had «features.size» VB rule features («fasd.vbRuleFeatures.children.size» or-features).''')
-		println('''There are «fasd.featureExclusions.size» feature exclusion pairs and «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')
+		println('''There are «fasd.featureExclusions.size» feature exclusion pairs.''')
+		if (fasd.orImplications.size > 0) {
+			println('''There are «fasd.orImplications.size» or-implications with an average «fasd.orImplications.values.map[size].fold(0,[acc, i | acc + i])/fasd.orImplications.size» implied or features.''')		
+		} else {
+			println('''There are 0 or-implications.''')
+		}
 		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
 		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
 		println('''FASD contains «fasd.transitiveOrLoops.size» transitive or loops.''')
@@ -156,7 +199,7 @@ class ActivationDiagramTest {
 		println('''(«fasd.rootDecision») This produced «uniqueRuleInstances.keySet.size» unique rule instances.''')
 		if (uniqueRuleInstances.keySet.size < solutions.size) {
 			uniqueRuleInstances.recordRedundantRuleInstances(fasd, redundancyOutputFilePath)
-			fasd.writeDotFile(redundancyOutputFilePath)
+			fasd.writeDotFiles(redundancyOutputFilePath)
 		}
 
 		// Use parallel checking of the rules so we can use all processor cores...
@@ -194,29 +237,36 @@ class ActivationDiagramTest {
 		}
 	}
 
-	private def void writeDotFile(FeatureActivationSubDiagram fasd, String path) {
-		val fDotFile = new File(path +
-			'''«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
-		try (val writer = new FileWriter(fDotFile)) {
+	private def void writeDotFiles(FeatureActivationSubDiagram fasd, String path) {
+		val fasdDotFile = new File(path +
+			'''/«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
+		try (val writer = new FileWriter(fasdDotFile)) {
 			writer.write(new FASDDotGenerator(fasd, true).render)
+			writer.flush
+		}
+
+		val orImplicationsDotFile = new File(path +
+			'''/«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'»OrImplications.dot''')
+		try (val writer = new FileWriter(orImplicationsDotFile)) {
+			writer.write(new OrImplicationDotGenerator (fasd).render)
 			writer.flush
 		}
 	}
 
-	def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
+	private def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
 		FeatureActivationSubDiagram fasd) '''
 		From feature activation sub-diagram for «fasd.rootDecision», the following redundant rule instances were generated:
 		
-		«ruleInstances.values.filter[size > 1].map[generateRedundancyDescription].join('\n\n')»
+		«ruleInstances.entrySet.filter[value.size > 1].map[generateRedundancyDescription].join('\n\n')»
 		-------------
 		
 	'''
 
-	def generateRedundancyDescription(List<List<String>> configurationVariants) {
-		val sharedFeatures = configurationVariants.head.filter [ feature |
-			configurationVariants.tail.forall[contains(feature)]
+	private def generateRedundancyDescription(Entry<Set<Pair<Feature, Boolean>>, List<List<String>>> configurationVariants) {
+		val sharedFeatures = configurationVariants.value.head.filter [ feature |
+			configurationVariants.value.tail.forall[contains(feature)]
 		]
-		val distinctFeatures = configurationVariants.map[reject[sharedFeatures.contains(it)].sort]
+		val distinctFeatures = configurationVariants.value.map[reject[sharedFeatures.contains(it)].sort]
 
 		'''
 			- Shared features: («sharedFeatures.sort.join(', ')»)
@@ -224,8 +274,14 @@ class ActivationDiagramTest {
 			  Distinct feature sets:
 			  
 			    «distinctFeatures.map['''- («join(', ')»)'''].join('\n')»
+			    
+			  Resulting feature decisions:
+			  
+			  	(«configurationVariants.key.sortBy[key.name].map[toFDString].join(', ')»)
 		'''
 	}
+	
+	private def toFDString(Pair<Feature, Boolean> fd) '''«fd.key.name»«fd.value?'+':'-'»'''
 
 	// Check that the given sentence is in CNF form
 	private def void assertIsCNF(Sentence sentence) {
@@ -348,23 +404,23 @@ class ActivationDiagramTest {
 	 * 		}
 	 * 	}
 	 */
-	def private void printFeatureActivationSubDiagram(FeatureActivationSubDiagram sd) {
-		var List<String> outputList = new ArrayList<String>()
-		for (Entry<FeatureDecision, Set<VBRuleFeature>> pc : sd.getPresenceConditions().entrySet()) {
-			var String output = '''«pc.getKey()» -> '''
-			if (pc.getValue().size() === 1) {
-				output += pc.getValue().iterator().next().getName()
-			} else {
-				output += "or( "
-				for (VBRuleFeature pcComponent : pc.getValue()) {
-					output += pcComponent.getName()
-					output += " "
-				}
-				output += " )"
-			}
-			outputList.add(output)
-		}
-		Collections.sort(outputList)
-		outputList.forEach([e|System.out.println(e)])
-	}
+//	def private void printFeatureActivationSubDiagram(FeatureActivationSubDiagram sd) {
+//		var List<String> outputList = new ArrayList<String>()
+//		for (Entry<FeatureDecision, Set<VBRuleFeature>> pc : sd.getPresenceConditions().entrySet()) {
+//			var String output = '''«pc.getKey()» -> '''
+//			if (pc.getValue().size() === 1) {
+//				output += pc.getValue().iterator().next().getName()
+//			} else {
+//				output += "or( "
+//				for (VBRuleFeature pcComponent : pc.getValue()) {
+//					output += pcComponent.getName()
+//					output += " "
+//				}
+//				output += " )"
+//			}
+//			outputList.add(output)
+//		}
+//		Collections.sort(outputList)
+//		outputList.forEach([e|System.out.println(e)])
+//	}
 }

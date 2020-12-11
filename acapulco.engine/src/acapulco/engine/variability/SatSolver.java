@@ -356,6 +356,7 @@ public class SatSolver {
 					long currentTime = System.currentTimeMillis();
 					
 					if ((currentTime-startTime) >= timeoutInMillis) {
+						System.out.println("Timed out SAT solver solution collection after " + (currentTime-startTime) + "ms.");
 						break;
 					}
 				}
