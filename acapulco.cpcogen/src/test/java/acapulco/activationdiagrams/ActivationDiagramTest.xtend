@@ -203,6 +203,7 @@ class ActivationDiagramTest {
 		// 3. Check all rule instantiations for soundness (all principles satisfied, no conflicting decisions)
 		// Extract unique rule instances
 		// TODO: The below is a start at trying to make things a bit more efficient in rule instantiation to see if this makes a difference for X86_32-. **WiP**
+		// Needs the version of the SAT solver that actually produces BitSets...
 		val featureMap = new HashMap<String, Feature>
 		featureMap.putAll(fh.featureModel.eAllContents.filter(Feature).groupBy[name].mapValues[head])
 		val presenceConditions = new HashMap<Feature, BitSet>
