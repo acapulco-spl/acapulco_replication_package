@@ -47,25 +47,6 @@ class FeatureActivationSubDiagram {
 	var Set<Pair<VBRuleFeature, VBRuleFeature>> featureExclusions = null
 
 	/**
-	 * Information about overlaps between or-features. These are redundant paths through the rule
-	 */
-	@Accessors(PUBLIC_GETTER)
-	val orOverlaps = new HashMap<Pair<VBRuleOrFeature, VBRuleOrFeature>, List<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>>
-
-	/**
-	 * Or-nodes where one alternative directly leads to root. In this case, we want to pick this alternative always.
-	 */
-	@Accessors(PUBLIC_GETTER)
-	val orsToRoot = new HashMap<VBRuleOrFeature, VBRuleOrAlternative>
-
-	/**
-	 * Transitive or-loops can be used to pin or choices to decisions that have been made further up in the same path.
-	 * For each element in this path, we need to generate a constraint <code>((key /\ value.key) => value.value)</code> (the value.key bit is actually redundant, but better safe than sorry :-))
-	 */
-	@Accessors(PUBLIC_GETTER)
-	var Set<Pair<VBRuleFeature, Pair<VBRuleOrFeature, VBRuleOrAlternative>>> transitiveOrLoops
-
-	/**
 	 * The list of features that were removed from the VB rule features because they could never be activated
 	 */
 	@Accessors(PUBLIC_GETTER)
@@ -108,11 +89,6 @@ class FeatureActivationSubDiagram {
 	 * this is the set of Or nodes directly reachable from the given node.
 	 */
 	val followOrs = new HashMap<ActivationDiagramNode, Set<OrImplication>>
-
-	/**
-	 * Internal map for collecting direct or-predecessors of any feature decisions so we can compute or-overlap
-	 */
-	val immediateOrPredecessors = new HashMap<FeatureDecision, List<Pair<VBRuleOrFeature, VBRuleOrAlternative>>>
 
 	new(FeatureDecision decision) {
 		this.rootDecision = decision
@@ -164,43 +140,6 @@ class FeatureActivationSubDiagram {
 			].toSet
 		].forEach[resolvedOrImplications.put(key, value)]
 
-		// 4. Resolve or overlaps
-		immediateOrPredecessors.values.reject[size < 2].forEach [ list |
-			list.forEach [ or1, idx1 |
-				// Drop the first items so we only explore the diagonal
-				list.drop(idx1 + 1).forEach [ or2 |
-					val id1 = or1.key.ID
-					val id2 = or2.key.ID
-
-					var Pair<VBRuleOrFeature, VBRuleOrFeature> key = null
-					var Pair<VBRuleOrAlternative, VBRuleOrAlternative> value = null
-
-					if (id1 < id2) {
-						key = or1.key -> or2.key
-						value = or1.value -> or2.value
-					} else {
-						key = or2.key -> or1.key
-						value = or2.value -> or1.value
-					}
-
-					var registry = orOverlaps.get(key)
-					if (registry === null) {
-						registry = new ArrayList<Pair<VBRuleOrAlternative, VBRuleOrAlternative>>
-						orOverlaps.put(key, registry)
-					}
-					registry += value
-				]
-			]
-		]
-		// Also compute ors where one alternative leads to root -- in this case, that's the alternative we always want to choose
-		immediateOrPredecessors.filter[fd, ors|resolvedPCs.get(fd).contains(vbRuleFeatures)].values.flatten.forEach [
-			orsToRoot.put(key, value)
-		]
-
-		transitiveOrLoops = identifyTransitiveOrLoops
-		println('''FASD for «rootDecision» contains «transitiveOrLoops.size» transitive or loops before dead-feature removal.''')
-		
-
 		// 5. Minimise feature exclusions
 		featureExclusions = new HashSet<Pair<VBRuleFeature, VBRuleFeature>>(
 			featureDecisions.values.filter[size === 2].flatMap [
@@ -225,26 +164,6 @@ class FeatureActivationSubDiagram {
 
 		// 6. Calculate dead features and clean up sub-diagram
 		removeDeadOrUnusedFeatures
-	}
-
-	private def identifyTransitiveOrLoops() {
-		immediateOrPredecessors.entrySet.flatMap [
-			val fd = key
-			val predecessorOrs = value
-			val pcs = resolvedPCs.get(fd)
-
-			resolvedOrImplications.filter[orAlternative, orNodes|pcs.contains(orAlternative)].entrySet.flatMap [ e |
-				e.value.map [ orFeature |
-					val preOr = predecessorOrs.findFirst[key == orFeature]
-
-					if (preOr !== null) {
-						e.key -> preOr
-					} else {
-						null
-					}
-				].filterNull
-			]
-		].toSet
 	}
 
 	/**
@@ -272,17 +191,6 @@ class FeatureActivationSubDiagram {
 
 		featureExclusions.removeIf[featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value)]
 
-		val newOrOverlaps = new HashMap
-		newOrOverlaps.putAll(orOverlaps.filter [ orPair, orAlternativeList |
-			!(featuresToCleanOut.contains(orPair.key) || featuresToCleanOut.contains(orPair.value))
-		].mapValues[reject[featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value)].toList].filter[k, v | !v.empty])
-		orOverlaps.clear
-		orOverlaps.putAll(newOrOverlaps)
-
-		val newOrsToRoot = new HashMap
-		newOrsToRoot.putAll(orsToRoot.filter[key, value|!(featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value))])
-		orsToRoot.clear
-		orsToRoot.putAll(newOrsToRoot)
 
 		val newResolvedOrImplications = new HashMap
 		newResolvedOrImplications.putAll(resolvedOrImplications.filter[key, value|!featuresToCleanOut.contains(key)].mapValues [
@@ -290,10 +198,6 @@ class FeatureActivationSubDiagram {
 		].filter[k, v | !v.empty])
 		resolvedOrImplications.clear
 		resolvedOrImplications.putAll(newResolvedOrImplications)
-
-		transitiveOrLoops = new HashSet(transitiveOrLoops.reject [
-			featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value.key) || featuresToCleanOut.contains(value.value)
-		].toSet)
 
 		// 4. Finally clean up resolvedPCs and, thus, feature decisions
 		val newResolvedPCs = new HashMap
@@ -350,20 +254,6 @@ class FeatureActivationSubDiagram {
 
 	private dispatch def Set<OrImplication> visit(FeatureDecision fd, PresenceCondition pc, FeatureDecision comingFrom,
 		VBRuleOrFeature predecessorOrNode) {
-		// Record or-predecessor, if any
-		if (predecessorOrNode !== null) {
-			// This will work because that's the only situation where we would have a non-null predecessorNode
-			val alternative = (pc as FeaturePresenceCondition).feature as VBRuleOrAlternative
-
-			var registry = immediateOrPredecessors.get(fd)
-			if (registry === null) {
-				registry = new ArrayList<Pair<VBRuleOrFeature, VBRuleOrAlternative>>
-				immediateOrPredecessors.put(fd, registry)
-			}
-
-			registry += predecessorOrNode -> alternative
-		}
-
 		var pcs = presenceConditions.get(fd)
 		if (pcs === null) {
 			pcs = new HashSet<PresenceCondition>

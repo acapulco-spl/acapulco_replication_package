@@ -177,9 +177,6 @@ class ActivationDiagramTest {
 		} else {
 			println('''There are 0 or-implications.''')
 		}
-		println('''FASD contains exclusions for «fasd.orOverlaps.values.map[size].fold(0, [a, b | a+b])» or overlaps for «fasd.orOverlaps.keySet.size» or-node pairs.''')
-		println('''FASD contains «fasd.orsToRoot.size» or-to-root exclusions.''')
-		println('''FASD contains «fasd.transitiveOrLoops.size» transitive or loops.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 //		fasd.writeDotFile(redundancyOutputFilePath)
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
