@@ -47,6 +47,13 @@ class FeatureActivationSubDiagram {
 	var Set<Pair<VBRuleFeature, VBRuleFeature>> featureExclusions = null
 
 	/**
+	 * Or-fixings show which alternative of an or-node to select depending on choices made for other or-nodes.
+	 * The map associated to each or-node goes from decisions made elsewhere to the set of or-alternatives of the original or-node.
+	 */
+	@Accessors(PUBLIC_GETTER)
+	var Map<VBRuleOrFeature, Map<VBRuleFeature, Set<VBRuleOrAlternative>>> orFixings
+
+	/**
 	 * The list of features that were removed from the VB rule features because they could never be activated
 	 */
 	@Accessors(PUBLIC_GETTER)
@@ -140,6 +147,9 @@ class FeatureActivationSubDiagram {
 			].toSet
 		].forEach[resolvedOrImplications.put(key, value)]
 
+		// 4. Calculate or-fixings
+		orFixings = calculateOrFixings
+
 		// 5. Minimise feature exclusions
 		featureExclusions = new HashSet<Pair<VBRuleFeature, VBRuleFeature>>(
 			featureDecisions.values.filter[size === 2].flatMap [
@@ -164,6 +174,34 @@ class FeatureActivationSubDiagram {
 
 		// 6. Calculate dead features and clean up sub-diagram
 		removeDeadOrUnusedFeatures
+	}
+
+	private def calculateOrFixings() {
+		val result = new HashMap<VBRuleOrFeature, Map<VBRuleFeature, Set<VBRuleOrAlternative>>>
+		
+		vbRuleFeatures.children.map[it as VBRuleOrFeature].forEach[orFeature |
+			val orNode = orFeature.orNode
+			
+			val orNodeResultMap = new HashMap<VBRuleFeature, Set<VBRuleOrAlternative>>
+			result.put(orFeature, orNodeResultMap)
+			
+			orNode.consequences.forEach[adn, idx|
+				val correspondingAlternative = orFeature.children.get(idx) as VBRuleOrAlternative
+				
+				adn.collectFeatureDecisions.forEach[fd |
+					resolvedPCs.get(fd)?.forEach[pc |
+						var alternativesForFeature = orNodeResultMap.get(pc)
+						if (alternativesForFeature === null) {
+							alternativesForFeature = new HashSet<VBRuleOrAlternative>
+							orNodeResultMap.put(pc, alternativesForFeature)
+						}
+						alternativesForFeature += correspondingAlternative
+					]
+				]
+			]
+		]
+		
+		result
 	}
 
 	/**
@@ -191,6 +229,13 @@ class FeatureActivationSubDiagram {
 
 		featureExclusions.removeIf[featuresToCleanOut.contains(key) || featuresToCleanOut.contains(value)]
 
+		val newOrFixings = new HashMap
+		newOrFixings.putAll(orFixings.filter[k, v| !featuresToCleanOut.contains(k)].mapValues[
+			filter[k2, v2| !featuresToCleanOut.contains(k2)].mapValues[reject[featuresToCleanOut.contains(it)].toSet]
+			.filter[k2, v2| !v2.empty]
+		].filter[k, v| !v.empty])
+		orFixings.clear
+		orFixings.putAll(newOrFixings)
 
 		val newResolvedOrImplications = new HashMap
 		newResolvedOrImplications.putAll(resolvedOrImplications.filter[key, value|!featuresToCleanOut.contains(key)].mapValues [
