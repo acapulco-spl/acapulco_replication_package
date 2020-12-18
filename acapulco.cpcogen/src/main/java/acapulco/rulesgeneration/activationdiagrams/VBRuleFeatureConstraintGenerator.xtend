@@ -1,6 +1,10 @@
 package acapulco.rulesgeneration.activationdiagrams
 
 import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleFeature
+import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrAlternative
+import acapulco.rulesgeneration.activationdiagrams.vbrulefeatures.VBRuleOrFeature
+import java.util.Map
+import java.util.Set
 
 /**
  * Helper class to make the constraint generation reusable.
@@ -11,8 +15,17 @@ abstract class VBRuleFeatureConstraintGenerator {
 			fasd.featureModelExpressions + 
 			fasd.orImplicationExpressions + 
 			fasd.featureExclusionExpressions + 
+			fasd.orFixingExpressions +
 			fasd.orCycleBreakers
 		).join(' & ')
+	}
+
+	private static def orFixingExpressions(FeatureActivationSubDiagram fasd) {
+		fasd.orFixings.entrySet.flatMap[orFixingExpressionsFor(key, value)]
+	}
+
+	private static def orFixingExpressionsFor(VBRuleOrFeature orFeature, Map<VBRuleFeature, Set<VBRuleOrAlternative>> fixings) {
+		fixings.entrySet.map[#[orFeature, key].allJointlyImply(value.head)]
 	}
 
 	private static def orCycleBreakers(FeatureActivationSubDiagram fasd) {
@@ -89,4 +102,8 @@ abstract class VBRuleFeatureConstraintGenerator {
 	private static def eachImplies(Iterable<? extends VBRuleFeature> antecedent, VBRuleFeature consequent) {
 		antecedent.map['''(!«name» | «consequent.name»)''']
 	}
+
+	private static def allJointlyImply(Iterable<? extends VBRuleFeature> antecedents, VBRuleFeature consequent) '''
+		(«antecedents.map['''!«name»'''].join(' | ')» | «consequent.name»)
+	'''
 }

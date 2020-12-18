@@ -55,8 +55,8 @@ class ActivationDiagramTest {
 
 	@Test
 	def void exploreSpecificFeature() {
-//		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)
-		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
+		coreTest("testdata/WeaFQAs.sxfm.xml", "Feedback", false)
+//		coreTest("testdata/WeaFQAs.sxfm.xml", "CachingOperations", null)
 	}
 
 	private def coreTest(String fmPath) {
