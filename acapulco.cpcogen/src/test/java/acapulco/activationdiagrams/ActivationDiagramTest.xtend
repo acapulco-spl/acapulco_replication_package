@@ -26,6 +26,7 @@ import java.time.Instant
 import java.util.BitSet
 import java.util.Date
 import java.util.HashMap
+import java.util.HashSet
 import java.util.LinkedList
 import java.util.List
 import java.util.Map
@@ -343,14 +344,16 @@ class ActivationDiagramTest {
 	}
 
 	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures, FeatureModel fm) {
-		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures)].map[createFeatureDecision(fm)].toSet
+		val selectedFeatureSet = new HashSet<String>
+		selectedFeatureSet += selectedFeatures
+		rule.rhs.nodes.filter[pcFulfilled(selectedFeatureSet)].map[createFeatureDecision(fm)].toSet
 	}
 
 	private def createFeatureDecision(Node n, FeatureModel fm) {
 		fm.eAllContents.filter(Feature).findFirst[name == n.type.name] -> (n.attributes.head.value == "true")
 	}
 
-	private def pcFulfilled(ModelElement n, List<String> selectedFeatures) {
+	private def pcFulfilled(ModelElement n, Set<String> selectedFeatures) {
 		val pc = n.annotations.head.value
 		if (pc === null || pc.isBlank) {
 			return true
