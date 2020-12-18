@@ -10,10 +10,10 @@ import acapulco.model.FeatureModel
 import acapulco.rulesgeneration.ActivationDiagToRuleConverter
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
 import java.nio.file.Paths
-import java.util.HashSet
-import java.util.List
+import java.util.BitSet
+import java.util.HashMap
+import java.util.Map
 import java.util.Random
-import java.util.Set
 import org.eclipse.emf.henshin.model.ModelElement
 import org.eclipse.emf.henshin.model.Node
 import org.eclipse.emf.henshin.model.Rule
@@ -48,8 +48,12 @@ class LinuxExplorer {
 		
 		println('''Generated «solutions.size» solutions.''')
 		
+		val bitSetPCs = new HashMap<Node, BitSet>
+		rule.rhs.nodes.forEach[n |
+			bitSetPCs.put(n, n.calculateBitSetPC(solutions.head.featureNameIndices))
+		]
 		val time = System.currentTimeMillis
-		val instantiatedRule = rule.activeFeatureDecisionsFor(solutions.random, fh.featureModel)
+		val instantiatedRule = rule.activeFeatureDecisionsFor(solutions.random, fh.featureModel, bitSetPCs)
 		val time2 = System.currentTimeMillis
 		val timeTaken = time2 - time
 		println('''Instantiating one rule instance took «timeTaken» milliseconds.''')
@@ -57,25 +61,28 @@ class LinuxExplorer {
 		println('''Estimated time for instantiating all rules, thus, is: «((timeTaken * solutions.size)/1000d)/60» minutes.''')
 	}
 	
-	private static def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures, FeatureModel fm) {
-		val selectedFeatureSet = new HashSet<String>
-		selectedFeatureSet += selectedFeatures
-		rule.rhs.nodes.filter[pcFulfilled(selectedFeatureSet)].map[createFeatureDecision(fm)].toSet
+	private static def activeFeatureDecisionsFor(Rule rule, SatSolver.SatSolution selectedFeatures, FeatureModel fm, Map<Node, BitSet> bitSetPCs) {
+		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures.solution, bitSetPCs)].map[createFeatureDecision(fm)].toSet
+	}
+	
+	private static def calculateBitSetPC(Node n, Map<String, Integer> featureNameIndices) {
+		val pc = n.annotations.head.value
+		
+		new BitSet(featureNameIndices.size) => [
+			if (pc === null || pc.isBlank) {
+				set(0, featureNameIndices.size - 1, true)
+			}
+			
+			pc.split("\\|").map[featureNameIndices.get(it)].forEach[idx | set(idx)]
+		]
 	}
 
 	private static def createFeatureDecision(Node n, FeatureModel fm) {
 		fm.eAllContents.filter(Feature).findFirst[name == n.type.name] -> (n.attributes.head.value == "true")
 	}
 
-	private static def pcFulfilled(ModelElement n, Set<String> selectedFeatures) {
-		val pc = n.annotations.head.value
-		if (pc === null || pc.isBlank) {
-			return true
-		}
-
-		// We know the PC is only a disjunction...
-		// Param for split must be a regexp...
-		pc.split("\\|").exists[selectedFeatures.contains(it.trim)]
+	private static def pcFulfilled(ModelElement n, BitSet selectedFeatures, Map<Node, BitSet> pcs) {
+		pcs.get(n).intersects(selectedFeatures)
 	}
 
 	static val Random rand = new Random

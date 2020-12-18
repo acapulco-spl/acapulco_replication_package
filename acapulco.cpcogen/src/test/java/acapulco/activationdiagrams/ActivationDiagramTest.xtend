@@ -26,11 +26,9 @@ import java.time.Instant
 import java.util.BitSet
 import java.util.Date
 import java.util.HashMap
-import java.util.HashSet
 import java.util.LinkedList
 import java.util.List
 import java.util.Map
-import java.util.Map.Entry
 import java.util.Set
 import java.util.stream.Collectors
 import org.eclipse.emf.henshin.model.ModelElement
@@ -254,7 +252,7 @@ class ActivationDiagramTest {
 //		]
 	}
 
-	private def void recordRedundantRuleInstances(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
+	private def void recordRedundantRuleInstances(Map<Set<Pair<Feature, Boolean>>, List<SatSolver.SatSolution>> ruleInstances,
 		FeatureActivationSubDiagram fasd, String path) {
 		val fOutput = new File(path)
 		try (val writer = new FileWriter(fOutput, true)) {
@@ -279,23 +277,32 @@ class ActivationDiagramTest {
 		}
 	}
 
-	private def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<List<String>>> ruleInstances,
+	private def String generateRedundancyReport(Map<Set<Pair<Feature, Boolean>>, List<SatSolver.SatSolution>> ruleInstances,
 		FeatureActivationSubDiagram fasd) '''
 		From feature activation sub-diagram for «fasd.rootDecision», the following redundant rule instances were generated:
 		
-		«ruleInstances.entrySet.filter[value.size > 1].map[generateRedundancyDescription].join('\n\n')»
+		«ruleInstances.values.filter[size > 1].map[generateRedundancyDescription].join('\n\n')»
 		-------------
 		
 	'''
 
-	private def generateRedundancyDescription(Entry<Set<Pair<Feature, Boolean>>, List<List<String>>> configurationVariants) {
-		val sharedFeatures = configurationVariants.value.head.filter [ feature |
-			configurationVariants.value.tail.forall[contains(feature)]
+	private def generateRedundancyDescription(List<SatSolver.SatSolution> configurationVariants) {
+		val featureNameIndices = configurationVariants.head.featureNameIndices
+		val invertedIndex = featureNameIndices.keySet.groupBy[featureNameIndices.get(it)].mapValues[head]
+		
+		val sharedFeatures = configurationVariants.head.solution.clone as BitSet
+		configurationVariants.tail.forEach[sharedFeatures.and(solution)]
+		val sharedFeaturesList = sharedFeatures.stream.boxed.map[invertedIndex.get(it)].sorted.collect(Collectors.toList)
+		
+		val distinctFeatures = configurationVariants.map[
+			val unsharedFeatures = solution.clone as BitSet
+			unsharedFeatures.andNot(sharedFeatures)
+			
+			unsharedFeatures.stream.boxed.map[invertedIndex.get(it)].sorted.collect(Collectors.toList)
 		]
-		val distinctFeatures = configurationVariants.value.map[reject[sharedFeatures.contains(it)].sort]
 
 		'''
-			- Shared features: («sharedFeatures.sort.join(', ')»)
+			- Shared features: («sharedFeaturesList.join(', ')»)
 			
 			  Distinct feature sets:
 			  
@@ -303,7 +310,7 @@ class ActivationDiagramTest {
 			    
 			  Resulting feature decisions:
 			  
-			  	(«configurationVariants.key.sortBy[key.name].map[toFDString].join(', ')»)
+«««			  	(«configurationVariants.key.sortBy[key.name].map[toFDString].join(', ')»)
 		'''
 	}
 	
@@ -343,25 +350,33 @@ class ActivationDiagramTest {
 		}
 	}
 
-	private def activeFeatureDecisionsFor(Rule rule, List<String> selectedFeatures, FeatureModel fm) {
-		val selectedFeatureSet = new HashSet<String>
-		selectedFeatureSet += selectedFeatures
-		rule.rhs.nodes.filter[pcFulfilled(selectedFeatureSet)].map[createFeatureDecision(fm)].toSet
+	private def activeFeatureDecisionsFor(Rule rule, SatSolver.SatSolution selectedFeatures, FeatureModel fm) {
+		val bitSetPCs = new HashMap<Node, BitSet>
+		rule.rhs.nodes.forEach[n |
+			bitSetPCs.put(n, n.calculateBitSetPC(selectedFeatures.featureNameIndices))
+		]		
+		
+		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures.solution, bitSetPCs)].map[createFeatureDecision(fm)].toSet
+	}
+	
+	private def calculateBitSetPC(Node n, Map<String, Integer> featureNameIndices) {
+		val pc = n.annotations.head.value
+		
+		new BitSet(featureNameIndices.size) => [
+			if (pc === null || pc.isBlank) {
+				set(0, featureNameIndices.size - 1, true)
+			}
+			
+			pc.split("\\|").map[featureNameIndices.get(it)].forEach[idx | set(idx)]
+		]
 	}
 
 	private def createFeatureDecision(Node n, FeatureModel fm) {
 		fm.eAllContents.filter(Feature).findFirst[name == n.type.name] -> (n.attributes.head.value == "true")
 	}
 
-	private def pcFulfilled(ModelElement n, Set<String> selectedFeatures) {
-		val pc = n.annotations.head.value
-		if (pc === null || pc.isBlank) {
-			return true
-		}
-
-		// We know the PC is only a disjunction...
-		// Param for split must be a regexp...
-		pc.split("\\|").exists[selectedFeatures.contains(it.trim)]
+	private def pcFulfilled(ModelElement n, BitSet selectedFeatures, Map<Node, BitSet> pcs) {
+		pcs.get(n).intersects(selectedFeatures)
 	}
 
 	private def checkExclusions(FeatureActivationSubDiagram fasd) {

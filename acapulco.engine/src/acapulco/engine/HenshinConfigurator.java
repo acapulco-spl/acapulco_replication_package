@@ -21,26 +21,26 @@ public class HenshinConfigurator {
 		// Assumption: If rules have annotations, they are VB,
 		// and the first annotation is the feature constraint.
 		if (rule.getAnnotations().isEmpty() || rule.getAnnotations().get(0).getValue().isBlank()) {
-			return new RuleBuilder(rule, Collections.emptyMap()).buildRule(false);
+			return new RuleBuilder(rule, null, null).buildRule(false);
 		}
 
 		String featureConstraint = XorEncoderUtil.encodeXor(rule.getAnnotations().get(0).getValue());
 		String featuresAsString = rule.getAnnotations().get(2).getValue().replace(" ", "");
 		List<String> features = new ArrayList<String>(Arrays.asList(featuresAsString.split(",")));
 
-		List<List<String>> solutions = SatSolver.getAllSolutions(featureConstraint);
+		List<SatSolver.SatSolution> solutions = SatSolver.getAllSolutions(featureConstraint);
 		int index = (int) (Math.random() * solutions.size());
 		if (solutions.size() == 0) {
 			System.err.println(rule.getName());
 			throw new Exception("Could not satisfy FM: "+featureConstraint);
 		}
-		List<String> solution = solutions.get(index);
+		SatSolver.SatSolution solution = solutions.get(index);
 		
-		Map<String, Boolean> config = new HashMap<>();
-		for (String f : features) {
-			config.put(f, solution.contains(f));
-		}
-		return RuleProvider.provideRule(rule,config);
+//		Map<String, Boolean> config = new HashMap<>();
+//		for (String f : features) {
+//			config.put(f, solution.contains(f));
+//		}
+		return RuleProvider.provideRule(rule, solution);
 	}
 
 }
