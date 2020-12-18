@@ -48,17 +48,22 @@ class LinuxExplorer {
 		
 		println('''Generated «solutions.size» solutions.''')
 		
+		val bitSetStartTime = System.currentTimeMillis
 		val bitSetPCs = new HashMap<Node, BitSet>
 		rule.rhs.nodes.forEach[n |
 			bitSetPCs.put(n, n.calculateBitSetPC(solutions.head.featureNameIndices))
 		]
+		val bitSetEndTime = System.currentTimeMillis
+		val bitSetTimeTaken = bitSetEndTime - bitSetStartTime
+		println('''Setting up PC bitsets took: «bitSetTimeTaken» milliseconds.''')
+		
 		val time = System.currentTimeMillis
 		val instantiatedRule = rule.activeFeatureDecisionsFor(solutions.random, fh.featureModel, bitSetPCs)
 		val time2 = System.currentTimeMillis
 		val timeTaken = time2 - time
 		println('''Instantiating one rule instance took «timeTaken» milliseconds.''')
 		
-		println('''Estimated time for instantiating all rules, thus, is: «((timeTaken * solutions.size)/1000d)/60» minutes.''')
+		println('''Estimated time for instantiating all rules, thus, is: «((bitSetTimeTaken + (timeTaken * solutions.size))/1000d)/60» minutes.''')
 	}
 	
 	private static def activeFeatureDecisionsFor(Rule rule, SatSolver.SatSolution selectedFeatures, FeatureModel fm, Map<Node, BitSet> bitSetPCs) {
