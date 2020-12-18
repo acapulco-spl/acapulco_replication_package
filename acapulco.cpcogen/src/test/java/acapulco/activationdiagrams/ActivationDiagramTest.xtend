@@ -199,6 +199,8 @@ class ActivationDiagramTest {
 			fasd.writeDotFiles(redundancyOutputFilePath)
 		}
 
+		assertTrue('''FASD for «fasd.rootDecision» produced no valid rule instances.''', uniqueRuleInstances.keySet.size > 0)
+
 		// Use parallel checking of the rules so we can use all processor cores...
 		uniqueRuleInstances.keySet.parallelStream.forEach [ ruleInstance |
 			// 3.1 no conflicting decisions
