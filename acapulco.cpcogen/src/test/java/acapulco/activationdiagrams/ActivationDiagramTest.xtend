@@ -112,7 +112,6 @@ class ActivationDiagramTest {
 				println('''Checking deactivation of feature «f.name».''')
 				fasdDeActivate.assertRootFeatureProperties(f, false)
 				fasdDeActivate.checkExclusions
-				fasdDeActivate.countRedundantFeatures
 				fasdDeActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
 			}
 
@@ -120,7 +119,6 @@ class ActivationDiagramTest {
 				println('''Checking activation of feature «f.name».''')
 				fasdActivate.assertRootFeatureProperties(f, true)
 				fasdActivate.checkExclusions
-				fasdActivate.countRedundantFeatures
 				fasdActivate.generateAndCheckRule(fh, metamodelGen, redundancyOutputFilePath)
 			}
 			
@@ -134,21 +132,6 @@ class ActivationDiagramTest {
 			assertEquals("There should be exactly 2 feature decisions for every real-optional feature.",
 				allRealOptionalFeatures.size * 2, diagramNodes.filter(FeatureDecision).size)					
 		}
-	}
-
-
-	private def countRedundantFeatures(extension FeatureActivationSubDiagram fasd) {
-		val vbFeatures = (#{vbRuleFeatures} + vbRuleFeatures.children.flatMap[children]).toSet
-
-		val numRedundantFeatures = vbFeatures.flatMap [ vbf1 |
-			vbFeatures.filter [ vbf2 |
-				(vbf1 !== vbf2) && (presenceConditions.values.filter[contains(vbf1)] == presenceConditions.values.filter [
-					contains(vbf2)
-				])
-			].map[vbf1 -> it]
-		].size / 2
-
-		println('''FASD for «fasd.rootDecision» has «numRedundantFeatures» redundant features.''')
 	}
 
 	/**
@@ -177,6 +160,7 @@ class ActivationDiagramTest {
 		} else {
 			println('''There are 0 or-implications.''')
 		}
+		println('''FASD for «fasd.rootDecision» had «fasd.orFixings.values.map[size].fold(0)[acc, x | acc + x]» or-fixings.''')
 		println('''The constraint expression string is «featureConstraint.length» characters long.''')
 //		fasd.writeDotFile(redundancyOutputFilePath)
 		val sentence = FeatureExpression.getExpr(featureConstraint).sentence
