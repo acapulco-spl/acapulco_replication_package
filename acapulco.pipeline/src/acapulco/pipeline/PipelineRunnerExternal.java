@@ -239,7 +239,7 @@ public class PipelineRunnerExternal {
 		}
         Results results = new Results();
 		List<String> resultFilepaths = ParseResults.getAllResultsFilepath(outputPath, sTool, runs);
-    	for (int i = 1; i <= runs; i++) {
+    	for (int i = 1; i <= resultFilepaths.size(); i++) {
     		System.out.println(resultFilepaths.get(i-1));
     		results.addRun(i, ParseResults.getResults(resultFilepaths.get(i-1), sTool));
     	}

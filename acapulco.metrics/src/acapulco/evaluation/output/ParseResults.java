@@ -75,7 +75,12 @@ public class ParseResults {
 		// Get the newest files of results
 		List<File> newestFiles = findNewestFiles(files);
 		
-		return newestFiles.subList(0, runs).stream().map(f -> f.getPath()).collect(Collectors.toList());
+		if (newestFiles.size() < runs) {
+			return newestFiles.stream().map(f -> f.getPath()).collect(Collectors.toList());	
+		} else {
+			return newestFiles.subList(0, runs).stream().map(f -> f.getPath()).collect(Collectors.toList());
+		}
+		
 	}
 	
 	public static Map<Integer, Data> getResults(String filepath, String tool) {
