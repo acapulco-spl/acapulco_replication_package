@@ -1,5 +1,6 @@
 package acapulco;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,7 +54,7 @@ public class aCaPulCO_Mutation extends Mutation {
 		this.abstract2concrete = abstract2concrete;
 		this.feature2ActivationRule = feature2ActivationRule;
 		this.feature2DeactivationRule = feature2DeactivationRule;
-		this.trueOptionalFeatures = trueOptionalFeatures;
+		this.trueOptionalFeatures = new ArrayList<>(feature2DeactivationRule.keySet());
 		this.constraints = constraints;
 
 		this.activationRule2feature = new HashMap<>();
@@ -78,8 +79,11 @@ public class aCaPulCO_Mutation extends Mutation {
 	public void doMutation(double probability, Solution solution) throws JMException {
 		int featureIndex = trueOptionalFeatures.get((int) (Math.random() * trueOptionalFeatures.size()));
 		boolean active = ((Binary) solution.getDecisionVariables()[0]).bits_.get(featureIndex);
-		int ruleIndex = active ? feature2DeactivationRule.get(featureIndex + 1)
-				: feature2ActivationRule.get(featureIndex + 1);
+		Integer ruleIndexInteger = active ? feature2DeactivationRule.get(featureIndex)
+				: feature2ActivationRule.get(featureIndex);
+		
+		
+		int ruleIndex = (int) ruleIndexInteger;
 
 		applyCpcoRuleToSolution(solution, ruleIndex);
 	}

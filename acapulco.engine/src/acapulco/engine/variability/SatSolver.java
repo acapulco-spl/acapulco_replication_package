@@ -32,11 +32,17 @@ import aima.core.logic.propositional.visitors.SymbolCollector;
  *
  */
 public class SatSolver {
+	// Maximal number of solutions computed when "getAlLSolutions".
+	// -1 = no cap
+	private static int MAX_SOLUTION_CAP = 1;
+
 	static Map<String, List<List<String>>> cachedSolutions = new HashMap<>();
 
 	static Map<String, Boolean> cachedSatisfiable = new HashMap<>();
 
 	private static List<String> solution;
+
+
 
 	public static ISolver createModelIterator(String expr, Map<Integer, String> symbolsToIndices) {
 		Sentence cnf = ConvertToCNF.convert(FeatureExpression.getExpr(expr));
@@ -175,15 +181,15 @@ public class SatSolver {
 	}
 
 	public static List<List<String>> getAllSolutions(String expr) {
-		return getAllSolutions(expr, null);
+		return getAllSolutions(expr, MAX_SOLUTION_CAP );
 	}
 	
-	public static List<List<String>> getAllSolutions(String expr, Long timeoutInMillis) {
+	public static List<List<String>> getAllSolutions(String expr, int maxSolutions) {
 		// TODO: Should perhaps include the timeout in the cache...
 		List<List<String>> result = cachedSolutions.get(expr);
 		if (result == null) {
 			ExtendedSentence sentence = FeatureExpression.getExpr(expr);
-			result = calculateAllSolutions(sentence, timeoutInMillis);
+			result = calculateAllSolutions(sentence, maxSolutions);
 			cachedSolutions.put(expr, result);
 		}
 		return result;
@@ -324,7 +330,7 @@ public class SatSolver {
 		return result;
 	}
 
-	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr, Long timeoutInMillis) {
+	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr, int maxSolutions) {
 		ModelIteratorInfo mii = createIteratorFor(expr);
 
 		if (mii == null) {
@@ -333,8 +339,7 @@ public class SatSolver {
 
 		List<List<String>> result = new ArrayList<>();
 
-		long startTime = System.currentTimeMillis();
-		
+		int counter = 0;		
 		try {
 			while (mii.mi.isSatisfiable()) {
 				int[] model = mii.mi.model();
@@ -351,14 +356,10 @@ public class SatSolver {
 				
 				result.add(sol);
 				
-				if (timeoutInMillis != null) {
+				counter ++;
+				if (counter == maxSolutions) {
 					// Check if we still have time for another round
-					long currentTime = System.currentTimeMillis();
-					
-					if ((currentTime-startTime) >= timeoutInMillis) {
-						System.out.println("Timed out SAT solver solution collection after " + (currentTime-startTime) + "ms.");
 						break;
-					}
 				}
 			}
 			return result;
