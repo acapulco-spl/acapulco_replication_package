@@ -358,7 +358,6 @@ public class SatSolver {
 				
 				counter ++;
 				if (counter == maxSolutions) {
-					// Check if we still have time for another round
 						break;
 				}
 			}
