@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
 import org.uma.mo_dagame.algorithm.main.MoDagameStudy;
 
 import acapulco.aCaPulCO_Main;
@@ -34,7 +34,7 @@ public class PipelineRunnerExternal {
 	private static final String ACAPULCO_TOOL_NAME = "acapulco";
 	private static final String MODAGAME_TOOL_NAME = "modagame";
 	private static final String SATIBEA_TOOL_NAME = "satibea";
-	private static final String[] tools1 = {ACAPULCO_TOOL_NAME, MODAGAME_TOOL_NAME, SATIBEA_TOOL_NAME};
+	private static String[] tools1 = {ACAPULCO_TOOL_NAME, MODAGAME_TOOL_NAME, SATIBEA_TOOL_NAME};
 	
 	private static final String inputPath = "input";
 	private static final String outputPath = "output";
@@ -138,6 +138,7 @@ public class PipelineRunnerExternal {
 				for (int i = 1; i <= runs; i++) {
 					System.out.println("ACAPULCO Run " + i + "/" + runs + "...");
 					acapulcoSearch.run(fullFmPath, sc, sv, false);
+					Thread.sleep(1000);
 					System.gc();
 				}
 				
@@ -162,6 +163,7 @@ public class PipelineRunnerExternal {
 				for (int i = 1; i <= runs; i++) {
 					System.out.println("MODAGAME Run " + i + "/" + runs + "...");
 					MoDagameStudy.main(modagameArgs);
+					Thread.sleep(1000);
 					System.gc();
 				}
 				
@@ -183,6 +185,7 @@ public class PipelineRunnerExternal {
 				for (int i = 1; i <= runs; i++) {
 					System.out.println("SATIBEA Run " + i + "/" + runs + "...");
 					SATIBEA_Main.main(satibeaArgs);
+					Thread.sleep(1000);
 					System.gc();
 				}
 
@@ -195,10 +198,34 @@ public class PipelineRunnerExternal {
         
         // Calculate true pareto front
         if (allTools || ptfOption) {
+        	List<String> tools = new ArrayList<String>();
+        	try {
+        		System.out.println("Parsing Acapulco results...");
+            	parseResults(ACAPULCO_TOOL_NAME, fmNameInput, runs, null);
+            	tools.add(ACAPULCO_TOOL_NAME);
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        	try {
+        		System.out.println("Parsing Modagame results...");
+            	parseResults(MODAGAME_TOOL_NAME, fmNameInput, runs, null);
+            	tools.add(MODAGAME_TOOL_NAME);
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        	try {
+        		System.out.println("Parsing Satibea results...");
+            	parseResults(SATIBEA_TOOL_NAME, fmNameInput, runs, null);
+            	tools.add(SATIBEA_TOOL_NAME);
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        	
+        	String[] toolsNames = tools.toArray(new String[0]);
         	System.out.println("Generating pareto true front from results (" + runs + " runs)...");
             Map<String, List<String>> pfMap = new HashMap<>();
-    		for (int i = 0; i < tools1.length; i++) {
-    			MergedPTF.fillMaps(fmNameInput, tools1[i], pfMap, runs);
+    		for (int i = 0; i < toolsNames.length; i++) {
+    			MergedPTF.fillMaps(fmNameInput, toolsNames[i], pfMap, runs);
     		}
     		
     		try {
@@ -215,8 +242,8 @@ public class PipelineRunnerExternal {
     			String ptfSolutionSet = Files.readString(Paths.get(outputPath + "/" + fmNameInput + "-paretotruefront.txt"));
     			double[][] ptf = Results.solutionSetToArray(ptfSolutionSet);
     			
-    			for (int i = 0; i < tools1.length; i++) {
-    				parseResults(tools1[i], fmNameInput, runs, ptf);
+    			for (int i = 0; i < toolsNames.length; i++) {
+    				parseResults(toolsNames[i], fmNameInput, runs, ptf);
         		}
     			
     		} catch (IOException e) {

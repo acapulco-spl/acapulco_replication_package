@@ -32,8 +32,12 @@ import aima.core.logic.propositional.visitors.SymbolCollector;
  * @author Sven Peldszus
  *
  */
-public class SatSolver {	
-	static Map<String, List<SatSolution>> cachedSolutions = new HashMap<>();
+public class SatSolver {
+	// Maximal number of solutions computed when "getAlLSolutions".
+	// -1 = no cap
+	private static int MAX_SOLUTION_CAP = 1;
+
+	static Map<String, List<List<String>>> cachedSolutions = new HashMap<>();
 
 	static Map<String, Boolean> cachedSatisfiable = new HashMap<>();
 
@@ -175,16 +179,16 @@ public class SatSolver {
 		return solution;
 	}
 
-	public static List<SatSolution> getAllSolutions(String expr) {
-		return getAllSolutions(expr, null);
+	public static List<List<String>> getAllSolutions(String expr) {
+		return getAllSolutions(expr, MAX_SOLUTION_CAP );
 	}
-
-	public static List<SatSolution> getAllSolutions(String expr, Long timeoutInMillis) {
+	
+	public static List<List<String>> getAllSolutions(String expr, int maxSolutions) {
 		// TODO: Should perhaps include the timeout in the cache...
-		List<SatSolution> result = cachedSolutions.get(expr);
+		List<List<String>> result = cachedSolutions.get(expr);
 		if (result == null) {
 			ExtendedSentence sentence = FeatureExpression.getExpr(expr);
-			result = calculateAllSolutions(sentence, timeoutInMillis);
+			result = calculateAllSolutions(sentence, maxSolutions);
 			cachedSolutions.put(expr, result);
 		}
 		return result;
@@ -342,42 +346,35 @@ public class SatSolver {
 		return result;
 	}
 
-
-	private static List<SatSolution> calculateAllSolutions(ExtendedSentence expr, Long timeoutInMillis) {
-		final ModelIteratorInfo mii = createIteratorFor(expr);
+	private static List<List<String>> calculateAllSolutions(ExtendedSentence expr, int maxSolutions) {
+		ModelIteratorInfo mii = createIteratorFor(expr);
 
 		if (mii == null) {
 			return new ArrayList<>();
 		}
 
-		List<SatSolution> result = new ArrayList<>();
-		final Map<String, Integer> featureIndex = new HashMap<>();
-		mii.indices.keySet().forEach(ps -> {
-			featureIndex.put(ps.getSymbol(), mii.indices.get(ps) - 1);
-		});
+		List<List<String>> result = new ArrayList<>();
 
-		long startTime = System.currentTimeMillis();
-		
+		int counter = 0;		
 		try {
 			while (mii.mi.isSatisfiable()) {
 				int[] model = mii.mi.model();
-				SatSolution solution = new SatSolution();
-				solution.featureNameIndices = featureIndex;
-				solution.solution = new BitSet(featureIndex.size());
-				
+				List<String> sol = new LinkedList<>();
+
 				for (int i : model) {
-					solution.solution.set(Math.abs(i) - 1, i > 0);
-				}
-								
-				result.add(solution);
-				
-				if (timeoutInMillis != null) {
-					// Check if we still have time for another round
-					long currentTime = System.currentTimeMillis();
-					
-					if ((currentTime-startTime) >= timeoutInMillis) {
-						break;
+					if (i > 0) {
+						PropositionSymbol ps = mii.reverseIndex.get(i);
+						if (ps != null) {
+							sol.add(ps.getSymbol());
+						}
 					}
+				}
+				
+				result.add(sol);
+				
+				counter ++;
+				if (counter == maxSolutions) {
+						break;
 				}
 			}
 			return result;

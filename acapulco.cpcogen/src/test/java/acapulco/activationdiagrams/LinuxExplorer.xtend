@@ -66,7 +66,7 @@ class LinuxExplorer {
 		println('''Rule has «features.size» VB features.''')
 
 		val featureConstraint = XorEncoderUtil.encodeXor(rule.annotations.head.value)
-		val solutions = SatSolver.getAllSolutions(featureConstraint, 60000l).toSet
+		val solutions = SatSolver.getAllSolutions(featureConstraint, 10000).toSet
 
 		println('''Generated «solutions.size» solutions.''')
 
