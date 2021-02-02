@@ -8,9 +8,16 @@ import acapulco.featuremodel.configuration.FMConfigurationMetamodelGenerator
 import acapulco.model.Feature
 import acapulco.model.FeatureModel
 import acapulco.rulesgeneration.ActivationDiagToRuleConverter
+import acapulco.rulesgeneration.activationdiagrams.FASDDotGenerator
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram
+import acapulco.rulesgeneration.activationdiagrams.FeatureDecision
+import java.io.File
+import java.io.FileWriter
 import java.nio.file.Paths
+import java.text.DateFormat
+import java.time.Instant
 import java.util.BitSet
+import java.util.Date
 import java.util.HashMap
 import java.util.Map
 import java.util.Random
@@ -22,63 +29,79 @@ import static java.util.stream.Collectors.*
 
 class LinuxExplorer {
 	def static void main(String[] args) {
-		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get("testdata/linux-2.6.33.3.sxfm.xml").toString)		
+		val fm = FeatureIDEUtils.loadFeatureModel(Paths.get("testdata/linux-2.6.33.3.sxfm.xml").toString)
 		val fad = new FeatureActivationDiagram(fm)
 		val fh = new FeatureModelHelper(fm)
-		
+
+		val outputFolderPath = Paths.
+			get('''testoutputs/«DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date.from(Instant.now)).replaceAll("[/,:]", ".")»/''').
+			toString
+		val outputFolder = new File(outputFolderPath)
+		outputFolder.mkdirs
+
 		val fmName = "testmm"
 		val metamodelGen = new FMConfigurationMetamodelGenerator(fm, fmName, fmName, "http://" + fmName)
 		metamodelGen.generateMetamodel
-		
+
 		val fasd = fad.calculateSubdiagramFor(fh.features.findFirst[name == "X86_32"], false)
-		
+
+		val fasdDotFile = new File(outputFolderPath +
+			'''/«fasd.rootDecision.feature.name»«fasd.rootDecision.activate?'Act':'DeAct'».dot''')
+		try (val writer = new FileWriter(fasdDotFile)) {
+			val generator = new FASDDotGenerator(fasd, true, fh.features.filter [(name == "X86_32")].map[new FeatureDecision(it, false)].toSet)
+			writer.write(generator.render)
+			writer.flush
+		}
+
 		val rule = ActivationDiagToRuleConverter.convert(fasd, metamodelGen.geteClasses)
-		
+
 		val featuresAsString = rule.annotations.get(2).value.replace(" ", "")
 		val features = featuresAsString.split(",").map[trim].toList
-		
+
 		val nodeCount = rule.lhs.nodes.size
-		val averagePCSize = fasd.presenceConditions.values.stream.collect(averagingInt[size])		
-		println('''VB rule for «fasd.rootDecision» has «nodeCount» nodes.''')
+		val rootNodeCount = rule.rhs.nodes.filter[annotations.head.value.contains("root")].size
+		val averagePCSize = fasd.presenceConditions.values.stream.collect(averagingInt[size])
+		println('''VB rule for «fasd.rootDecision» has «nodeCount» nodes, «rootNodeCount» of which have 'root' as their PC.''')
 		println('''Average size of presence-condition for each node is «averagePCSize».''')
 		println('''Rule has «features.size» VB features.''')
-		
+
 		val featureConstraint = XorEncoderUtil.encodeXor(rule.annotations.head.value)
 		val solutions = SatSolver.getAllSolutions(featureConstraint, 60000l).toSet
-		
+
 		println('''Generated «solutions.size» solutions.''')
-		
+
 		val bitSetStartTime = System.currentTimeMillis
 		val bitSetPCs = new HashMap<Node, BitSet>
-		rule.rhs.nodes.forEach[n |
+		rule.rhs.nodes.forEach [ n |
 			bitSetPCs.put(n, n.calculateBitSetPC(solutions.head.featureNameIndices))
 		]
 		val bitSetEndTime = System.currentTimeMillis
 		val bitSetTimeTaken = bitSetEndTime - bitSetStartTime
 		println('''Setting up PC bitsets took: «bitSetTimeTaken» milliseconds.''')
-		
+
 		val time = System.currentTimeMillis
 		val instantiatedRule = rule.activeFeatureDecisionsFor(solutions.random, fh.featureModel, bitSetPCs)
 		val time2 = System.currentTimeMillis
 		val timeTaken = time2 - time
 		println('''Instantiating one rule instance took «timeTaken» milliseconds.''')
-		
+
 		println('''Estimated time for instantiating all rules, thus, is: «((bitSetTimeTaken + (timeTaken * solutions.size))/1000d)/60» minutes.''')
 	}
-	
-	private static def activeFeatureDecisionsFor(Rule rule, SatSolver.SatSolution selectedFeatures, FeatureModel fm, Map<Node, BitSet> bitSetPCs) {
+
+	private static def activeFeatureDecisionsFor(Rule rule, SatSolver.SatSolution selectedFeatures, FeatureModel fm,
+		Map<Node, BitSet> bitSetPCs) {
 		rule.rhs.nodes.filter[pcFulfilled(selectedFeatures.solution, bitSetPCs)].map[createFeatureDecision(fm)].toSet
 	}
-	
+
 	private static def calculateBitSetPC(Node n, Map<String, Integer> featureNameIndices) {
 		val pc = n.annotations.head.value
-		
+
 		new BitSet(featureNameIndices.size) => [
 			if (pc === null || pc.isBlank) {
 				set(0, featureNameIndices.size - 1, true)
 			}
-			
-			pc.split("\\|").map[featureNameIndices.get(it)].forEach[idx | set(idx)]
+
+			pc.split("\\|").map[featureNameIndices.get(it)].forEach[idx|set(idx)]
 		]
 	}
 
