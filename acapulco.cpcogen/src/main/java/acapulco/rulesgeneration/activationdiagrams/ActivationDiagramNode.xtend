@@ -2,6 +2,7 @@ package acapulco.rulesgeneration.activationdiagrams
 
 import java.util.ArrayList
 import java.util.List
+import java.util.Set
 
 /**
  * A node in the feature activation diagram.
@@ -15,4 +16,11 @@ abstract class ActivationDiagramNode {
 	var List<ActivationDiagramNode> consequences = new ArrayList<ActivationDiagramNode>
 	
 	def getConsequences() { consequences }
+
+	/**
+	 * Collect the nearest feature decisions.
+	 */
+	def Set<FeatureDecision> collectFeatureDecisions() {
+		consequences.flatMap[collectFeatureDecisions].toSet
+	}
 }
