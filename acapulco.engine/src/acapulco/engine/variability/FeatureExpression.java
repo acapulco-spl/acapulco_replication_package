@@ -80,7 +80,6 @@ public class FeatureExpression {
 	}
 
 	public static ExtendedSentence getExpr(String condition) {
-		condition = XorEncoderUtil.encodeXor(condition);
 		return new ExtendedSentence(parser.parse(condition));
 	}
 

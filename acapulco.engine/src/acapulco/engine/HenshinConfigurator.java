@@ -17,18 +17,27 @@ import acapulco.engine.variability.XorEncoderUtil;
 
 
 public class HenshinConfigurator {
+	// This cache assumes that we only use one SAT solution.
+	public static Map<Rule,ConfigurationSearchOperator> cache = new HashMap<>();
+	
 	public static ConfigurationSearchOperator removeVariability(Rule rule) throws Exception {
+		if (cache.containsKey(rule))
+			return cache.get(rule);
+		
 		// Assumption: If rules have annotations, they are VB,
 		// and the first annotation is the feature constraint.
 		if (rule.getAnnotations().isEmpty() || rule.getAnnotations().get(0).getValue().isBlank()) {
-			return new RuleBuilder(rule, Collections.emptyMap()).buildRule(false);
+			ConfigurationSearchOperator result = new RuleBuilder(rule, Collections.emptyMap()).buildRule(false);
+			cache.put(rule, result);
+			return result;
 		}
 
-		String featureConstraint = XorEncoderUtil.encodeXor(rule.getAnnotations().get(0).getValue());
+		String featureConstraint = rule.getAnnotations().get(0).getValue();
 		String featuresAsString = rule.getAnnotations().get(2).getValue().replace(" ", "");
 		List<String> features = new ArrayList<String>(Arrays.asList(featuresAsString.split(",")));
 
 		List<List<String>> solutions = SatSolver.getAllSolutions(featureConstraint);
+//		System.out.println(solutions.size());
 		int index = (int) (Math.random() * solutions.size());
 		if (solutions.size() == 0) {
 			System.err.println(rule.getName());
@@ -40,7 +49,9 @@ public class HenshinConfigurator {
 		for (String f : features) {
 			config.put(f, solution.contains(f));
 		}
-		return RuleProvider.provideRule(rule,config);
+		ConfigurationSearchOperator result = RuleProvider.provideRule(rule,config);
+		cache.put(rule, result);
+		return result;
 	}
 
 }
