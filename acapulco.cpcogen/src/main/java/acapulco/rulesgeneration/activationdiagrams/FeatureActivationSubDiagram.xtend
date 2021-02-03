@@ -121,7 +121,7 @@ class FeatureActivationSubDiagram {
 
 	private def initialise() {
 		// 1. Forward sweep the sub-diagram
-		val rootImplications = rootDecision.visit(new FeaturePresenceCondition(vbRuleFeatures), rootDecision, null)
+		val rootImplications = rootDecision.visit(new FeaturePresenceCondition(vbRuleFeatures), rootDecision)
 		orImplications.put(vbRuleFeatures, rootImplications)
 
 		// 2. Resolve presence conditions -- We know this terminates because cycles are broken
@@ -257,8 +257,7 @@ class FeatureActivationSubDiagram {
 		feature.children.forEach[removeUselessFeatures(uselessFeatures)]
 	}
 
-	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom,
-		VBRuleOrFeature predecessorOrNode) {
+	private dispatch def Set<OrImplication> visit(OrNode or, PresenceCondition pc, FeatureDecision comingFrom) {
 		if (subdiagramContents.contains(or)) {
 			// Nothing to be done: dependencies between presence conditions will be sorted out by adding appropriate cross-dependencies
 			// But we must return this node so dependencies can be built
@@ -273,7 +272,7 @@ class FeatureActivationSubDiagram {
 		// 2. Step down
 		or.consequences.forEach [ c, idx |
 			val orAlternativeFeature = orFeature.children.get(idx)
-			val followOnOrs = c.visit(new FeaturePresenceCondition(orAlternativeFeature), comingFrom, orFeature)
+			val followOnOrs = c.visit(new FeaturePresenceCondition(orAlternativeFeature), comingFrom)
 
 			// We put these directly into the Or implications as there is no node to proxy from for an Or alternative
 			orImplications.put(orAlternativeFeature, followOnOrs)
@@ -282,8 +281,7 @@ class FeatureActivationSubDiagram {
 		return #{new FinalisedOrImplication(orFeature)}
 	}
 
-	private dispatch def Set<OrImplication> visit(AndNode and, PresenceCondition pc, FeatureDecision comingFrom,
-		VBRuleOrFeature predecessorOrNode) {
+	private dispatch def Set<OrImplication> visit(AndNode and, PresenceCondition pc, FeatureDecision comingFrom) {
 		if (subdiagramContents.contains(and)) {
 			// Nothing to be done
 			// But we must return the appropriate or-node information
@@ -292,13 +290,12 @@ class FeatureActivationSubDiagram {
 
 		subdiagramContents.add(and)
 
-		val followOrInformation = and.consequences.flatMap[visit(pc, comingFrom, null)].toSet
+		val followOrInformation = and.consequences.flatMap[visit(pc, comingFrom)].toSet
 		followOrs.put(and, followOrInformation) // Store so we can use it in proxy resolution
 		return followOrInformation
 	}
 
-	private dispatch def Set<OrImplication> visit(FeatureDecision fd, PresenceCondition pc, FeatureDecision comingFrom,
-		VBRuleOrFeature predecessorOrNode) {
+	private dispatch def Set<OrImplication> visit(FeatureDecision fd, PresenceCondition pc, FeatureDecision comingFrom) {
 		var pcs = presenceConditions.get(fd)
 		if (pcs === null) {
 			pcs = new HashSet<PresenceCondition>
@@ -322,7 +319,7 @@ class FeatureActivationSubDiagram {
 
 		// 2. step down
 		val presenceCondition = new ProxyPresenceCondition(fd)
-		val followOrInformation = fd.consequences.flatMap[visit(presenceCondition, fd, null)].toSet
+		val followOrInformation = fd.consequences.flatMap[visit(presenceCondition, fd)].toSet
 
 		// 3. Return information about following Ors
 		followOrs.put(fd, followOrInformation) // Store so we can use it in proxy resolution
