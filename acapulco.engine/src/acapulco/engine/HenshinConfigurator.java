@@ -13,6 +13,7 @@ import acapulco.engine.variability.ConfigurationSearchOperator;
 import acapulco.engine.variability.RuleBuilder;
 import acapulco.engine.variability.RuleProvider;
 import acapulco.engine.variability.SatSolver;
+import acapulco.engine.variability.SatSolverCnf;
 import acapulco.engine.variability.XorEncoderUtil;
 
 
@@ -36,7 +37,7 @@ public class HenshinConfigurator {
 		String featuresAsString = rule.getAnnotations().get(2).getValue().replace(" ", "");
 		List<String> features = new ArrayList<String>(Arrays.asList(featuresAsString.split(",")));
 
-		List<List<String>> solutions = SatSolver.getAllSolutions(featureConstraint);
+		List<List<String>> solutions = SatSolverCnf.getAllSolutions(featureConstraint);
 //		System.out.println(solutions.size());
 		int index = (int) (Math.random() * solutions.size());
 		if (solutions.size() == 0) {
