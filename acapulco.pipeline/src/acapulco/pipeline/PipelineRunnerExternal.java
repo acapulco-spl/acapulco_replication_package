@@ -147,9 +147,6 @@ public class PipelineRunnerExternal {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
-			
         }
         
         if (allTools || sTool.equalsIgnoreCase(MODAGAME_TOOL_NAME)) {
