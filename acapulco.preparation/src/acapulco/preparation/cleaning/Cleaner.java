@@ -43,6 +43,7 @@ public class Cleaner {
 		// System.out.println("Dead features: " + dead);
 
 		for (IFeature deadF : dead) {
+			//System.out.println("DeadF: " + deadF);
 			fm.deleteFeature(deadF);
 		}
 
@@ -50,6 +51,7 @@ public class Cleaner {
 		// System.out.println("False optional features: " + falseOpt);
 
 		for (IFeature falseOptF : falseOpt) {
+			//System.out.println("falseOptF: " + falseOptF);
 			IFeatureStructure parent = falseOptF.getStructure().getParent();
 			if (parent.isOr() || parent.isAlternative()) {
 				// remove it from the group, add it as mandatory

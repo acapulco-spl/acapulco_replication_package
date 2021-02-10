@@ -14,4 +14,5 @@ Import-Package: de.ovgu.featureide.fm.core,
 Bundle-RequiredExecutionEnvironment: JavaSE-12
 Automatic-Module-Name: acapulco.preparation
 Export-Package: acapulco.preparation,
+ acapulco.preparation.cleaning,
  acapulco.preparation.converters
