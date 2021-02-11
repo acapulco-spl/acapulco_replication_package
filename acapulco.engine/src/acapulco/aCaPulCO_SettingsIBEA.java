@@ -95,7 +95,6 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 				
 		Map<Integer, String> featureNames = getFeatureNames(allLines);
 		Map<EClass, Integer> class2variable = getClass2Variable(allLines, metamodel);
@@ -150,6 +149,7 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 				nameToId.put(featureName, number);
 			}
 		}
+		
 		Map<Integer, Integer> result = new HashMap<>();
 		for (int i=0; i<rules.size(); i++) {
 			String ruleName = rules.get(i).getName();
@@ -157,7 +157,8 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 				String name = ruleName.substring(1+ruleName.indexOf('_'));
 				if (!nameToId.containsKey(name))
 					System.err.println("Unknown feature: "+name);
-				result.put(nameToId.get(name), i);
+				else
+					result.put(nameToId.get(name), i);
 			}
 		}
 		return result;
