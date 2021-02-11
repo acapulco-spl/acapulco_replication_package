@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.Line;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -20,51 +22,11 @@ import org.eclipse.emf.henshin.model.Node;
 import org.eclipse.emf.henshin.model.Rule;
 import org.eclipse.emf.henshin.model.Unit;
 
-public class HenshinFileReader {
-	public static Module readModuleFromFile(List<String> contentLines, EPackage metamodel) {
-		Module m = HenshinFactory.eINSTANCE.createModule();
-		Map<String,EClass> names2classes = new HashMap<>();
-		for (EClassifier cl : metamodel.getEClassifiers()) {
-			names2classes.put(cl.getName(), (EClass) cl);
-		}
-		
-		Rule currentRule = null;
-		Map<String, Node> kernelNodesLhs = new HashMap<>();
-		Map<String, Node> kernelNodesRhs = new HashMap<>();
-		boolean inMulti = false;
-		for (String line : contentLines) {
-			if (line.startsWith("Rule")) {
-				currentRule = HenshinFactory.eINSTANCE.createRule(line.split(" ")[1]);
-				m.getUnits().add(currentRule);
-				kernelNodesLhs.clear();
-				kernelNodesRhs.clear();
-				inMulti = false;
-			} else if (line.startsWith("FMConstraint")) {
-				Annotation ann = HenshinFactory.eINSTANCE.createAnnotation();
-				ann.setKey("featureModel");
-				ann.setValue(line.substring(13));
-				currentRule.getAnnotations().add(ann);
-				currentRule.getAnnotations().add(HenshinFactory.eINSTANCE.createAnnotation());
-			} else if (line.startsWith("Features")) {
-				Annotation ann = HenshinFactory.eINSTANCE.createAnnotation();
-				ann.setKey("features");
-				ann.setValue(line.substring(9));
-				currentRule.getAnnotations().add(ann);				
-			} else if (line.startsWith("Node")) {
-				nodeTreatment(names2classes, currentRule, line, kernelNodesLhs, kernelNodesRhs, inMulti);
-			} else if (line.startsWith("MultiRule")) {
-				Rule kernelRule = inMulti ? currentRule.getKernelRule() : currentRule;				
-				currentRule = HenshinFactory.eINSTANCE.createRule(line.split(" ")[1]);
-				kernelRule.getMultiRules().add(currentRule);
-				inMulti = true;
-			}
-		}
-		
-		
-		return m;
-	}
+import acapulco.engine.variability.ConfigurationSearchOperator;
 
-	private static void nodeTreatment(Map<String, EClass> names2classes, Rule currentRule, String line, Map<String, Node> kernelNodesLhs, Map<String, Node> kernelNodesRhs, boolean inMulti) {
+public class HenshinFileReader {
+
+	private static void nodeTreatment(Map<String, EClass> names2classes, ConfigurationSearchOperator currentOperator, String line) {
 		int offset = line.startsWith("Node*")?5:4;
 		String[] split = line.substring(offset).split(": ");
 		String typeName = split[0].trim();
@@ -72,61 +34,50 @@ public class HenshinFileReader {
 		if (type == null)
 			throw new RuntimeException("Could not find class for type name: "+typeName);
 		
-		Node lhsNode = HenshinFactory.eINSTANCE.createNode(currentRule.getLhs(),type,"");
-		Node rhsNode = HenshinFactory.eINSTANCE.createNode(currentRule.getRhs(),type,"");
-		currentRule.getMappings().add(lhsNode,rhsNode);
-		
 		String[] split1 = split[1].split(";");
 		String attr = split1[0];
 		if (!attr.equals("noop")) {
 			EAttribute attrType = type.getEAllAttributes().get(0);
 			if (attr.contains("->")) {
 				String[] valueSplit = attr.split("->");
-				HenshinFactory.eINSTANCE.createAttribute(lhsNode, attrType, valueSplit[0]);
 				attr = valueSplit[1];
 			}
-			HenshinFactory.eINSTANCE.createAttribute(rhsNode, attrType, attr);					
 		}
 		
-		
-		if (split1.length > 1) {
-			String pc = split1[1];
-			setPresenceCondition(lhsNode, pc);
-			setPresenceCondition(rhsNode, pc);
-		}
-		
-		if (inMulti) {
-			if (!line.startsWith("Node*")) {
-				Node lhsNodeKernel = kernelNodesLhs.get(typeName); 
-				Node rhsNodeKernel = kernelNodesRhs.get(typeName); 
-				currentRule.getMultiMappings().add(lhsNode, lhsNodeKernel);
-				currentRule.getMultiMappings().add(rhsNode, rhsNodeKernel);				
-			} 
-		} else {
-			kernelNodesLhs.put(typeName, lhsNode);
-			kernelNodesRhs.put(typeName, lhsNode);
-		}
+		currentOperator.addDecision(type, Boolean.parseBoolean(attr));
 	}
 
-	static void setPresenceCondition(ModelElement element, String value) {
-		Annotation ann = null;
-		if (!element.getAnnotations().isEmpty())
-			ann = element.getAnnotations().get(0);
-		else {
-			ann = HenshinFactory.eINSTANCE.createAnnotation();
-			ann.setKey("presenceCondition");
-			element.getAnnotations().add(ann);
-		}
-		ann.setValue(value);
-	}
 
-	public static Module readModuleFromFile(String ruleLocation, EPackage metamodel) {
+	public static ConfigurationSearchOperator readConfigurationSearchOperatorFromFile(List<String> content, EPackage metamodel) {
+		Map<String,EClass> names2classes = new HashMap<>();
+		for (EClassifier cl : metamodel.getEClassifiers()) {
+			names2classes.put(cl.getName(), (EClass) cl);
+		}
+		
+		
+		String operatorName = content.get(0).split(" ")[1];
+		String rootFeatureName = operatorName.split("_")[1];
+		ConfigurationSearchOperator result = new ConfigurationSearchOperator(names2classes.get(rootFeatureName));
+		result.setName(operatorName);
+		
+		for (int i = 1; i<content.size(); i++) {
+			String line = content.get(i);
+			 if (line.startsWith("Node")) {
+				nodeTreatment(names2classes, result, line);
+			}
+		}
+		return result;
+	}
+	
+
+	public static ConfigurationSearchOperator readConfigurationSearchOperatorFromFile(String ruleLocation, EPackage metamodel) {
 		List<String> content = null;
 		try {
 			content = Files.readAllLines(new File(ruleLocation).toPath(), Charset.forName("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return readModuleFromFile(content, metamodel);
+		return readConfigurationSearchOperatorFromFile(content, metamodel);
 	}
+
 }

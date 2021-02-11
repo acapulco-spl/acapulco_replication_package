@@ -16,6 +16,12 @@ import org.eclipse.emf.ecore.EClass;
 public class ConfigurationSearchOperator {
 	private Map<EClass, Boolean> featureDecisions = new HashMap<>(); 
 	private EClass root;
+	private String name;
+	
+
+	public ConfigurationSearchOperator(EClass root) {
+		this.root = root;
+	}
 	
 	public ConfigurationSearchOperator(EClass root, boolean activateRoot) {
 		this.root = root;
@@ -36,5 +42,13 @@ public class ConfigurationSearchOperator {
 	
 	public boolean isRoot(EClass feature) {
 		return root == feature;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -27,6 +27,7 @@ import org.eclipse.emf.henshin.model.Rule;
 import acapulco.algorithm.instrumentation.ToolInstrumenter;
 import acapulco.algorithm.termination.StoppingCondition;
 import acapulco.engine.HenshinFileReader;
+import acapulco.engine.variability.ConfigurationSearchOperator;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -53,7 +54,7 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 	@SuppressWarnings("unchecked")
 	public Algorithm configure(ToolInstrumenter toolInstrumenter, StoppingCondition stoppingCondition,
 			Integer stoppingValue, String fm, String metamodelPath, String rulesPath, int numFeat,
-			List<List<Integer>> constr, List<Rule> rules, EPackage metamodel) throws JMException {
+			List<List<Integer>> constr, List<ConfigurationSearchOperator> rules, EPackage metamodel) throws JMException {
 
 		populationSize_ = 100;
 		archiveSize_ = 100;
@@ -98,8 +99,8 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 				
 		Map<Integer, String> featureNames = getFeatureNames(allLines);
 		Map<EClass, Integer> class2variable = getClass2Variable(allLines, metamodel);
-		Map<Integer, Integer> feature2ActivationRule = getFeature2Rule(allLines, rules, "Act_");
-		Map<Integer, Integer> feature2DeactivationRule = getFeature2Rule(allLines, rules, "De_");
+		Map<Integer, Integer> feature2ActivationRule = getFeature2Operator(allLines, rules, "Act_");
+		Map<Integer, Integer> feature2DeactivationRule = getFeature2Operator(allLines, rules, "De_");
 		List<Integer> trueOptionalFeatures = new ArrayList<>(aCaPulCO_Problem.featureIndicesAllowedFlip);
 				
 		Map<EClass, Set<EClass>> abstract2concrete = getAbstract2Concrete(metamodel);
@@ -138,7 +139,7 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 		return id2Name;
 	}
 
-	private Map<Integer, Integer> getFeature2Rule(List<String> allLines, List<Rule> rules, String prefix) {
+	private Map<Integer, Integer> getFeature2Operator(List<String> allLines, List<ConfigurationSearchOperator> rules, String prefix) {
 		Map<String, Integer> nameToId = new HashMap<>();
 		for (String line : allLines) {
 			if (line.startsWith("c ")) {

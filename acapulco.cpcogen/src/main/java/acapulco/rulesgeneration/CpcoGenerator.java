@@ -12,6 +12,7 @@ import acapulco.model.Feature;
 import acapulco.model.FeatureModel;
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationDiagram;
 import acapulco.rulesgeneration.activationdiagrams.FeatureActivationSubDiagram;
+import emf.utils.HenshinConfigurator;
 import emf.utils.HenshinFileWriter;
 
 public class CpcoGenerator {
@@ -33,10 +34,12 @@ public class CpcoGenerator {
 		for (Feature f : trueOptional) {
 			FeatureActivationSubDiagram sd = ad.calculateSubdiagramFor(f, true); // CPCO-specific
 			Rule rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
+			rule = HenshinConfigurator.removeVariability(rule);
 			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
 			
 			sd = ad.calculateSubdiagramFor(f, false); // CPCO-specific
 			rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
+			rule = HenshinConfigurator.removeVariability(rule);
 			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
 			
 		}

@@ -13,7 +13,6 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.henshin.model.Rule;
 
-import acapulco.engine.HenshinConfigurator;
 import acapulco.engine.variability.ConfigurationSearchOperator;
 import jmetal.core.Solution;
 import jmetal.encodings.variable.ArrayInt;
@@ -27,7 +26,7 @@ public class aCaPulCO_Mutation extends Mutation {
 	private List<List<Integer>> constraints;
 
 	private Double mutationProbability_ = null;
-	private List<Rule> rules;
+	private List<ConfigurationSearchOperator> operators;
 	private Map<EClass, Integer> class2variable;
 	private Map<EClass, Set<EClass>> abstract2concrete;
 
@@ -40,7 +39,7 @@ public class aCaPulCO_Mutation extends Mutation {
 	private List<Integer> trueOptionalFeatures;
 
 	public aCaPulCO_Mutation(HashMap<String, Object> parameters, String fm, Map<Integer, String> featureNames,
-			int nFeat, List<Rule> rules, Map<Integer, Integer> feature2ActivationRule,
+			int nFeat, List<ConfigurationSearchOperator> operators, Map<Integer, Integer> feature2ActivationRule,
 			Map<Integer, Integer> feature2DeactivationRule, List<Integer> trueOptionalFeatures,
 			Map<EClass, Integer> class2variable, Map<EClass, Set<EClass>> abstract2concrete,
 			List<List<Integer>> constraints) {
@@ -48,7 +47,7 @@ public class aCaPulCO_Mutation extends Mutation {
 		if (parameters.get("probability") != null) {
 			mutationProbability_ = (Double) parameters.get("probability");
 		}
-		this.rules = rules;
+		this.operators = operators;
 		this.featureNames = featureNames;
 		this.class2variable = class2variable;
 		this.abstract2concrete = abstract2concrete;
@@ -89,32 +88,26 @@ public class aCaPulCO_Mutation extends Mutation {
 	}
 
 	void applyCpcoRuleToSolution(Solution solution, int ruleIndex) {
-		Rule rule = rules.get(ruleIndex);
-//		Rule rule = null;
-//		for (Rule r : rules) {
-//			if (r.getName().equals("Act_UNICODE_BIDI_SUPPORT"))
-//				rule = r;
-//		}
-//		System.out.println(rule);
+		ConfigurationSearchOperator operator = operators.get(ruleIndex);
 
 		boolean activationRule = activationRule2feature.keySet().contains(ruleIndex);
 		Integer feature = activationRule ? activationRule2feature.get(ruleIndex)
 				: deactivationRule2feature.get(ruleIndex);
 		boolean featureActive = ((Binary) solution.getDecisionVariables()[0]).bits_.get(feature - 1);
 		if (featureActive && activationRule)
-			rule = rules.get(feature2DeactivationRule.get(feature));
+			operator = operators.get(feature2DeactivationRule.get(feature));
 		else if (!featureActive && !activationRule)
-			rule = rules.get(feature2ActivationRule.get(feature));
+			operator = operators.get(feature2ActivationRule.get(feature));
 
 		try {
-			ConfigurationSearchOperator cso = HenshinConfigurator.removeVariability(rule);
-
+			
+			
 			Set<EClass> usedFeatures = new HashSet<>();
 			LinkedHashMap<Integer, Boolean> change = new LinkedHashMap<>();
 
 //			System.out.println("Solution was: " + solution);
 			
-			applyCpcoRuleToSolutionRecursively(solution, cso, usedFeatures, change);
+			applyCpcoRuleToSolutionRecursively(solution, operator, usedFeatures, change);
 
 			for (Entry<Integer, Boolean> entry : change.entrySet()) {
 				Integer variable = entry.getKey();
@@ -152,8 +145,8 @@ public class aCaPulCO_Mutation extends Mutation {
 
 	private void applyCpcoRuleToSolutionRecursively(Solution solution, ConfigurationSearchOperator cso, Set<EClass> usedFeatures,
 			Map<Integer, Boolean> change) {
-		// TODO: Not currently supporting what we used to do with multi-rules -- these would need an extension to ConfigurationSearchOperator
-		// TODO: Not updating used features as this was only needed for multi-rules.
+		// TODO: Not currently supporting what we used to do with multi-operators -- these would need an extension to ConfigurationSearchOperator
+		// TODO: Not updating used features as this was only needed for multi-operators.
 		for (EClass feature: cso.getFeatures()) {
 			boolean isActivate = cso.isActivated(feature);
 			// Don't need to do the below, because the rule will have been selected to ensure it can be applied for the current configuration
@@ -232,7 +225,7 @@ public class aCaPulCO_Mutation extends Mutation {
 			}
 			if (!sat) {
 				String errorMessage = "Rule application lead to constraint violation.\n";
-				errorMessage += "Rule: " + rules.get(lastRuleApplied).getName() + "\n";
+				errorMessage += "Rule: " + operators.get(lastRuleApplied).getName() + "\n";
 				errorMessage += "Constraint: ";
 
 				for (Iterator<Integer> it = constraint.iterator(); it.hasNext();) {
