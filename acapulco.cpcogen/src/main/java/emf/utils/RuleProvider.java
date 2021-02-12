@@ -1,4 +1,4 @@
-package acapulco.engine.variability;
+package emf.utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,12 +6,12 @@ import java.util.Map;
 import org.eclipse.emf.henshin.model.Rule;
 
 public class RuleProvider {
-	static Map<Rule,Map<String, ConfigurationSearchOperator>> ruleCache = new HashMap<>();
+	static Map<Rule,Map<String, Rule>> ruleCache = new HashMap<>();
 	
-	public static ConfigurationSearchOperator provideRule(Rule rule, Map<String,Boolean> config) {
-		Map<String, ConfigurationSearchOperator> map = ruleCache.get(rule);
+	public static Rule provideRule(Rule rule, Map<String,Boolean> config) {
+		Map<String, Rule> map = ruleCache.get(rule);
 		if (map == null) {
-			map = new HashMap<String, ConfigurationSearchOperator>();
+			map = new HashMap<String, Rule>();
 			ruleCache.put(rule, map);
 		}
 		
@@ -19,7 +19,7 @@ public class RuleProvider {
 		config.entrySet().forEach(e -> configCodeSb.append(e.getValue() ? 1 : 0));
 		String configCode = configCodeSb.toString();
 		
-		ConfigurationSearchOperator result = map.get(configCode);
+		Rule result = map.get(configCode);
 		if (result == null) {
 			result = new RuleBuilder(rule, config).buildRule();
 			map.put(configCode, result);

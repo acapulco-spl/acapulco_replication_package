@@ -95,8 +95,8 @@ public class IBEAEvolutionsLimited extends AbstractIBEA {
 				evaluations++;
 			} // while
 				// End Create a offSpring solutionSet
-			System.out.println("Solution set size: :"+ solutionSet.size());
-			System.out.println("Offspring solution set size: :"+ offSpringSolutionSet.size());
+//			System.out.println("Solution set size: :"+ solutionSet.size());
+//			System.out.println("Offspring solution set size: :"+ offSpringSolutionSet.size());
 			solutionSet = offSpringSolutionSet;
 			
 			// Increment the current algorithm step;

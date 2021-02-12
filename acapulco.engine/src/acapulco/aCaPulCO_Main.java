@@ -21,6 +21,7 @@ import org.eclipse.emf.henshin.model.Rule;
 import acapulco.algorithm.instrumentation.ToolInstrumenter;
 import acapulco.algorithm.termination.StoppingCondition;
 import acapulco.engine.HenshinFileReader;
+import acapulco.engine.variability.ConfigurationSearchOperator;
 import acapulco.tool.executor.AbstractExecutor;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
@@ -80,7 +81,7 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		String rules = fm + ".cpcos";
 
 		EPackage metamodel_ = readMetamodel(metamodel);
-		List<Rule> rules_ = readRulesFromDirectory(rules, metamodel_);
+		List<ConfigurationSearchOperator> operators = readOperatorsFromDirectory(rules, metamodel_);
 
 		System.out.println("Finished loading rules");
 		
@@ -93,7 +94,7 @@ public class aCaPulCO_Main extends AbstractExecutor {
 			ToolInstrumenter toolInstrumenter = new ToolInstrumenter(p.getNumberOfObjectives(),
 					p.getNumberOfConstraints(), "ACAPULCO", "acapulco-results", 1);
 			a = new aCaPulCO_SettingsIBEA(p).configure(toolInstrumenter, sc, sv, fm, metamodel, rules,
-					((aCaPulCO_Problem) p).getNumFeatures(), ((aCaPulCO_Problem) p).getConstraints(), rules_, metamodel_);
+					((aCaPulCO_Problem) p).getNumFeatures(), ((aCaPulCO_Problem) p).getConstraints(), operators, metamodel_);
 			pop = a.execute();
 
 		} catch (Exception e) {
@@ -211,13 +212,13 @@ public class aCaPulCO_Main extends AbstractExecutor {
 
 		return pack;
 	}
-	private List<Rule> readRulesFromDirectory(String rulesPath, EPackage metamodel) {
-		List<Rule> result = new ArrayList<>();
+	private List<ConfigurationSearchOperator> readOperatorsFromDirectory(String rulesPath, EPackage metamodel) {
+		List<ConfigurationSearchOperator> result = new ArrayList<>();
 		File rulesDirectory = new File(rulesPath);
 		for (File f : rulesDirectory.listFiles()) {
 			if (f.getName().endsWith(".hen")) {
-				Module module = HenshinFileReader.readModuleFromFile(f.getPath(), metamodel);
-				result.addAll(module.getAllRules());
+				ConfigurationSearchOperator operator = HenshinFileReader.readConfigurationSearchOperatorFromFile(f.getPath(), metamodel);
+				result.add(operator);
 			}
 		}
 		return result;
