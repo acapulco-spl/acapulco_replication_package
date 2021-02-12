@@ -53,16 +53,19 @@ public class CpcoGenerator {
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		
 		for (Feature f : trueOptional) {
-			FeatureActivationSubDiagram sd = ad.calculateSubdiagramFor(f, true); // CPCO-specific
-			Rule rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
-			rule = HenshinConfigurator.removeVariability(rule);
-			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
-			
-			sd = ad.calculateSubdiagramFor(f, false); // CPCO-specific
-			rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
-			rule = HenshinConfigurator.removeVariability(rule);
-			HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");			
+			if (!deadFeatures.contains(f.getName())) {
+				System.out.println("Generating Act CPCO for feature: " + f.getName());	
+				FeatureActivationSubDiagram sd = ad.calculateSubdiagramFor(f, true); // CPCO-specific
+				Rule rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
+				rule = HenshinConfigurator.removeVariability(rule);
+				HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
+				
+				System.out.println("Generating De CPCO for feature: " + f.getName());
+				sd = ad.calculateSubdiagramFor(f, false); // CPCO-specific
+				rule = ActivationDiagToRuleConverter.convert(sd, metamodelGen.geteClasses());
+				rule = HenshinConfigurator.removeVariability(rule);
+				HenshinFileWriter.writeModuleToPath(Collections.singletonList(rule), outpath + "/acapulco/" + fmName+".dimacs.cpcos/"+rule.getName()+".hen");
+			}
 		}
-		
 	}
 }
