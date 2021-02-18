@@ -99,9 +99,11 @@ public class PipelineRunnerExternal {
 		
         if (prepare) {
         	System.out.println("Generating artifacts...");
-			FeatureModel fm = FeatureIDEUtils.loadFeatureModel(Paths.get(inputPath+"/"+fmNameInput+".sxfm.xml").toString());
+        	String originalInputFMPath = inputPath+"/"+fmNameInput+".sxfm.xml";
+			FeatureModel fm = FeatureIDEUtils.loadFeatureModel(Paths.get(originalInputFMPath).toString());
 			PreparationPipeline.generateAllFromFm(inputPath, fmNameInput, fmNameInput, "generated");
-			CpcoGenerator.generatorCPCOs(fm, fmNameInput, generatedPath);
+			
+			CpcoGenerator.generatorCPCOs(fm, fmNameInput, generatedPath, originalInputFMPath);
 			System.out.println("Done!");
 			System.exit(0);
 		}
