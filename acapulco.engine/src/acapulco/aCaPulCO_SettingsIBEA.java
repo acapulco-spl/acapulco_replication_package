@@ -53,7 +53,7 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 
 	@SuppressWarnings("unchecked")
 	public Algorithm configure(ToolInstrumenter toolInstrumenter, StoppingCondition stoppingCondition,
-			Integer stoppingValue, String fm, String metamodelPath, String rulesPath, int numFeat,
+			Integer stoppingValue, String fm,  int numFeat,
 			List<List<Integer>> constr, List<ConfigurationSearchOperator> rules, EPackage metamodel) throws JMException {
 
 		populationSize_ = 100;

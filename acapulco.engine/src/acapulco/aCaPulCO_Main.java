@@ -15,8 +15,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.eclipse.emf.henshin.model.Module;
-import org.eclipse.emf.henshin.model.Rule;
 
 import acapulco.algorithm.instrumentation.ToolInstrumenter;
 import acapulco.algorithm.termination.StoppingCondition;
@@ -28,13 +26,8 @@ import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.encodings.variable.Binary;
-import picocli.CommandLine;
 
 public class aCaPulCO_Main extends AbstractExecutor {
-
-	private static Random r = new Random();
-	private static final int SATtimeout = 1000;
-	private static final long iteratorTimeout = 150000;
 
 	/**
 	 * @param args the command line arguments
@@ -71,19 +64,22 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		Boolean debug = debugMode;
 		run(fm, sc, sv, debug);
 	}
+	
 
 	public void run(String fm, StoppingCondition sc, Integer sv, boolean debug) {
+		String metamodelPath = fm + ".ecore";
+		String rules = fm + ".cpcos";
+		EPackage metamodel = readMetamodel(metamodelPath);
+		List<ConfigurationSearchOperator> operators = readOperatorsFromDirectory(rules, metamodel);
+		run(fm, sc, sv, debug, metamodel, operators);
+	}
+
+	public void run(String fm, StoppingCondition sc, Integer sv, boolean debug, EPackage metamodel, List<ConfigurationSearchOperator> operators) {
 		String augment = fm + ".augment";
 		String dead = fm + ".dead";
 		String mandatory = fm + ".mandatory";
 		String seed = fm + ".richseed";
-		String metamodel = fm + ".ecore";
-		String rules = fm + ".cpcos";
-
-		EPackage metamodel_ = readMetamodel(metamodel);
-		List<ConfigurationSearchOperator> operators = readOperatorsFromDirectory(rules, metamodel_);
-
-		System.out.println("Finished loading rules");
+		
 		
 		Problem p = null;
 		Algorithm a = null;
@@ -93,8 +89,8 @@ public class aCaPulCO_Main extends AbstractExecutor {
 			p = new aCaPulCO_Problem(fm, augment, mandatory, dead, seed);
 			ToolInstrumenter toolInstrumenter = new ToolInstrumenter(p.getNumberOfObjectives(),
 					p.getNumberOfConstraints(), "ACAPULCO", "acapulco-results", 1);
-			a = new aCaPulCO_SettingsIBEA(p).configure(toolInstrumenter, sc, sv, fm, metamodel, rules,
-					((aCaPulCO_Problem) p).getNumFeatures(), ((aCaPulCO_Problem) p).getConstraints(), operators, metamodel_);
+			a = new aCaPulCO_SettingsIBEA(p).configure(toolInstrumenter, sc, sv, fm,
+					((aCaPulCO_Problem) p).getNumFeatures(), ((aCaPulCO_Problem) p).getConstraints(), operators, metamodel);
 			pop = a.execute();
 
 		} catch (Exception e) {
@@ -102,10 +98,6 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		}
 
 		System.out.println("******* END OF RUN! SOLUTIONS: ***");
-//		for (int i = 0; i < pop.size(); i++) {
-//			Variable v = pop.get(i).getDecisionVariables()[0];
-//			System.out.println("Conf" + (i + 1) + ": " + (Binary) v + " ");
-//		}
 
 		for (int i = 0; i < pop.size(); i++) {
 			Variable v = pop.get(i).getDecisionVariables()[0];
@@ -190,7 +182,7 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		return s;
 	}
 
-	private EPackage readMetamodel(String metamodelPath) {
+	public EPackage readMetamodel(String metamodelPath) {
 
 		ResourceSet resourceSet = new ResourceSetImpl();
 		EcorePackage.eINSTANCE.getEBoolean();
@@ -212,7 +204,7 @@ public class aCaPulCO_Main extends AbstractExecutor {
 
 		return pack;
 	}
-	private List<ConfigurationSearchOperator> readOperatorsFromDirectory(String rulesPath, EPackage metamodel) {
+	public List<ConfigurationSearchOperator> readOperatorsFromDirectory(String rulesPath, EPackage metamodel) {
 		List<ConfigurationSearchOperator> result = new ArrayList<>();
 		File rulesDirectory = new File(rulesPath);
 		for (File f : rulesDirectory.listFiles()) {

@@ -36,7 +36,6 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 
 	private static SATIBEA_Mutation mutationOfInitialSolution;
 
-	private String fm;
 	private int nFeat;
 	private List<Integer> mandatoryFeaturesIndices, deadFeaturesIndices;
 	int n = 0;
@@ -58,7 +57,6 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 			List<Integer> deadFeaturesIndices, List<Integer> seed, List<Rule> appliedRules, List<Integer> firmVariables,
 			List<List<Integer>> constraints) throws ClassNotFoundException {
 		super(problem);
-		this.fm = fm;
 		this.nFeat = nFeat;
 		this.mandatoryFeaturesIndices = mandatoryFeaturesIndices;
 		this.deadFeaturesIndices = deadFeaturesIndices;
@@ -70,7 +68,7 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 	}
 
 	public Variable[] createVariables() {
-		Variable[] vars = new Variable[3];
+		Variable[] vars = new Variable[2];
 
 		Binary bin = new Binary(nFeat);
 
@@ -98,7 +96,6 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 		vars[0] = bin;
 
 		vars[1] = new ArrayInt(0);
-		vars[2] = new ArrayInt(0);
 
 		return vars;
 	}
