@@ -27,8 +27,6 @@ public class aCaPulCO_Mutation extends Mutation {
 
 	private Double mutationProbability_ = null;
 	private List<ConfigurationSearchOperator> operators;
-	private Map<EClass, Integer> class2variable;
-	private Map<EClass, Set<EClass>> abstract2concrete;
 
 	private Map<Integer, String> featureNames;
 	private Map<Integer, Integer> feature2ActivationRule;
@@ -41,7 +39,6 @@ public class aCaPulCO_Mutation extends Mutation {
 	public aCaPulCO_Mutation(HashMap<String, Object> parameters, String fm, Map<Integer, String> featureNames,
 			int nFeat, List<ConfigurationSearchOperator> operators, Map<Integer, Integer> feature2ActivationRule,
 			Map<Integer, Integer> feature2DeactivationRule, List<Integer> trueOptionalFeatures,
-			Map<EClass, Integer> class2variable, Map<EClass, Set<EClass>> abstract2concrete,
 			List<List<Integer>> constraints) {
 		super(parameters);
 		if (parameters.get("probability") != null) {
@@ -49,8 +46,6 @@ public class aCaPulCO_Mutation extends Mutation {
 		}
 		this.operators = operators;
 		this.featureNames = featureNames;
-		this.class2variable = class2variable;
-		this.abstract2concrete = abstract2concrete;
 		this.feature2ActivationRule = feature2ActivationRule;
 		this.feature2DeactivationRule = feature2DeactivationRule;
 		this.trueOptionalFeatures = new ArrayList<>(feature2DeactivationRule.keySet());
@@ -80,8 +75,7 @@ public class aCaPulCO_Mutation extends Mutation {
 		boolean active = ((Binary) solution.getDecisionVariables()[0]).bits_.get(featureIndex);
 		Integer ruleIndexInteger = active ? feature2DeactivationRule.get(featureIndex)
 				: feature2ActivationRule.get(featureIndex);
-		
-		
+
 		int ruleIndex = (int) ruleIndexInteger;
 
 		applyCpcoRuleToSolution(solution, ruleIndex);
@@ -100,13 +94,12 @@ public class aCaPulCO_Mutation extends Mutation {
 			operator = operators.get(feature2ActivationRule.get(feature));
 
 		try {
-			
-			
+
 			Set<EClass> usedFeatures = new HashSet<>();
 			LinkedHashMap<Integer, Boolean> change = new LinkedHashMap<>();
 
 //			System.out.println("Solution was: " + solution);
-			
+
 			applyCpcoRuleToSolutionRecursively(solution, operator, usedFeatures, change);
 
 			for (Entry<Integer, Boolean> entry : change.entrySet()) {
@@ -135,7 +128,7 @@ public class aCaPulCO_Mutation extends Mutation {
 			if (DEBUG_MODE) {
 				checkViolatedConstraints(((Binary) solution.getDecisionVariables()[0]), ruleIndex);
 			}
-			
+
 //			System.out.println("Solution now is: " + solution);
 //			System.out.println();
 		} catch (Exception e) {
@@ -143,22 +136,20 @@ public class aCaPulCO_Mutation extends Mutation {
 		}
 	}
 
-	private void applyCpcoRuleToSolutionRecursively(Solution solution, ConfigurationSearchOperator cso, Set<EClass> usedFeatures,
-			Map<Integer, Boolean> change) {
-		// TODO: Not currently supporting what we used to do with multi-operators -- these would need an extension to ConfigurationSearchOperator
+	private void applyCpcoRuleToSolutionRecursively(Solution solution, ConfigurationSearchOperator cso,
+			Set<EClass> usedFeatures, Map<Integer, Boolean> change) {
+		// TODO: Not currently supporting what we used to do with multi-operators --
+		// these would need an extension to ConfigurationSearchOperator
 		// TODO: Not updating used features as this was only needed for multi-operators.
-		for (EClass feature: cso.getFeatures()) {
+		for (Integer feature : cso.getFeatures()) {
 			boolean isActivate = cso.isActivated(feature);
-			// Don't need to do the below, because the rule will have been selected to ensure it can be applied for the current configuration
+			// Don't need to do the below, because the rule will have been selected to
+			// ensure it can be applied for the current configuration
 //			boolean needChecking = cso.isRoot(feature);
-						
-			Integer varIndex = class2variable.get(feature);
-			if (varIndex != null) {
-				change.put(varIndex, isActivate);
-			}
+
+			change.put(feature, isActivate);
 		}
-		
-		
+
 //		for (Node node : rule.getRhs().getNodes()) {
 //			if (rule.isMultiRule() && rule.getMultiMappings().getOrigin(node) != null)
 //				continue;

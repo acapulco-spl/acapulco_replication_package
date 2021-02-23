@@ -54,7 +54,7 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 	@SuppressWarnings("unchecked")
 	public Algorithm configure(ToolInstrumenter toolInstrumenter, StoppingCondition stoppingCondition,
 			Integer stoppingValue, String fm,  int numFeat,
-			List<List<Integer>> constr, List<ConfigurationSearchOperator> rules, EPackage metamodel) throws JMException {
+			List<List<Integer>> constr, List<ConfigurationSearchOperator> rules) throws JMException {
 
 		populationSize_ = 100;
 		archiveSize_ = 100;
@@ -97,14 +97,12 @@ public class aCaPulCO_SettingsIBEA extends Settings {
 		}
 				
 		Map<Integer, String> featureNames = getFeatureNames(allLines);
-		Map<EClass, Integer> class2variable = getClass2Variable(allLines, metamodel);
 		Map<Integer, Integer> feature2ActivationRule = getFeature2Operator(allLines, rules, "Act_");
 		Map<Integer, Integer> feature2DeactivationRule = getFeature2Operator(allLines, rules, "De_");
 		List<Integer> trueOptionalFeatures = new ArrayList<>(aCaPulCO_Problem.featureIndicesAllowedFlip);
 				
-		Map<EClass, Set<EClass>> abstract2concrete = getAbstract2Concrete(metamodel);
-		aCaPulCO_Mutation mutation_ = new aCaPulCO_Mutation(parameters,  fm, featureNames, numFeat, rules, feature2ActivationRule, feature2DeactivationRule, trueOptionalFeatures, class2variable,
-				abstract2concrete, constr);
+		aCaPulCO_Mutation mutation_ = new aCaPulCO_Mutation(parameters,  fm, featureNames, numFeat, rules, feature2ActivationRule, feature2DeactivationRule, trueOptionalFeatures, 
+				 constr);
 		mutation = mutation_;
 
 		parameters = new HashMap<>();

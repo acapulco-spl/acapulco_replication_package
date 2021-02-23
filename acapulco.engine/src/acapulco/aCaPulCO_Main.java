@@ -1,11 +1,15 @@
 package acapulco;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.eclipse.emf.ecore.EPackage;
@@ -64,23 +68,21 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		Boolean debug = debugMode;
 		run(fm, sc, sv, debug);
 	}
-	
 
 	public void run(String fm, StoppingCondition sc, Integer sv, boolean debug) {
-		String metamodelPath = fm + ".ecore";
 		String rules = fm + ".cpcos";
-		EPackage metamodel = readMetamodel(metamodelPath);
-		List<ConfigurationSearchOperator> operators = readOperatorsFromDirectory(rules, metamodel);
-		run(fm, sc, sv, debug, metamodel, operators);
+		Map<String, Integer> featureName2index = readFeatureNameMapFromFile(fm);
+		List<ConfigurationSearchOperator> operators = readOperatorsFromDirectory(rules, featureName2index);
+		run(fm, sc, sv, debug, operators);
 	}
 
-	public void run(String fm, StoppingCondition sc, Integer sv, boolean debug, EPackage metamodel, List<ConfigurationSearchOperator> operators) {
+	public void run(String fm, StoppingCondition sc, Integer sv, boolean debug,
+			List<ConfigurationSearchOperator> operators) {
 		String augment = fm + ".augment";
 		String dead = fm + ".dead";
 		String mandatory = fm + ".mandatory";
 		String seed = fm + ".richseed";
-		
-		
+
 		Problem p = null;
 		Algorithm a = null;
 		SolutionSet pop = null;
@@ -90,7 +92,7 @@ public class aCaPulCO_Main extends AbstractExecutor {
 			ToolInstrumenter toolInstrumenter = new ToolInstrumenter(p.getNumberOfObjectives(),
 					p.getNumberOfConstraints(), "ACAPULCO", "acapulco-results", 1);
 			a = new aCaPulCO_SettingsIBEA(p).configure(toolInstrumenter, sc, sv, fm,
-					((aCaPulCO_Problem) p).getNumFeatures(), ((aCaPulCO_Problem) p).getConstraints(), operators, metamodel);
+					((aCaPulCO_Problem) p).getNumFeatures(), ((aCaPulCO_Problem) p).getConstraints(), operators);
 			pop = a.execute();
 
 		} catch (Exception e) {
@@ -158,8 +160,6 @@ public class aCaPulCO_Main extends AbstractExecutor {
 	}
 
 	public static int numViolatedConstraints(boolean[] b) {
-
-		// IVecInt v = bitSetToVecInt(b);
 		int s = 0;
 		for (List<Integer> constraint : aCaPulCO_Problem.constraints) {
 
@@ -182,34 +182,44 @@ public class aCaPulCO_Main extends AbstractExecutor {
 		return s;
 	}
 
-	public EPackage readMetamodel(String metamodelPath) {
+	private Map<String, Integer> readFeatureNameMapFromFile(String fm) {
+		HashMap<String, Integer> result = new HashMap<String, Integer>();
 
-		ResourceSet resourceSet = new ResourceSetImpl();
-		EcorePackage.eINSTANCE.getEBoolean();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore",
-				new EcoreResourceFactoryImpl());
-		resourceSet.getResources().add(EcorePackage.eINSTANCE.eResource());
-		Registry packageRegistry = resourceSet.getPackageRegistry();
-		packageRegistry.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
-		EPackage pack = null;
+		BufferedReader objReader = null;
 		try {
-			File sourceMetamodel = new File(metamodelPath);
-			XMIResourceImpl resourceMetamodel = new XMIResourceImpl();
-			resourceSet.getResources().add(resourceMetamodel);
-			resourceMetamodel.load(new FileInputStream(sourceMetamodel), new HashMap<Object, Object>());
-			pack = (EPackage) resourceMetamodel.getContents().get(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			String line;
+			objReader = new BufferedReader(new FileReader(fm));
+			boolean done = false;
+			while (!done && (line = objReader.readLine()) != null) {
+				if (line.startsWith("c")) {
+					String[] lineSplit = line.split(" ");
+					result.put(lineSplit[2], Integer.parseInt(lineSplit[1]));
+				} else {
+					done = true;
+				}
+			}
 
-		return pack;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (objReader != null)
+					objReader.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return result;
 	}
-	public List<ConfigurationSearchOperator> readOperatorsFromDirectory(String rulesPath, EPackage metamodel) {
+
+	public List<ConfigurationSearchOperator> readOperatorsFromDirectory(String rulesPath,
+			Map<String, Integer> featureName2index) {
 		List<ConfigurationSearchOperator> result = new ArrayList<>();
 		File rulesDirectory = new File(rulesPath);
 		for (File f : rulesDirectory.listFiles()) {
 			if (f.getName().endsWith(".hen")) {
-				ConfigurationSearchOperator operator = HenshinFileReader.readConfigurationSearchOperatorFromFile(f.getPath(), metamodel);
+				ConfigurationSearchOperator operator = HenshinFileReader
+						.readConfigurationSearchOperatorFromFile(f.getPath(), featureName2index);
 				result.add(operator);
 			}
 		}
