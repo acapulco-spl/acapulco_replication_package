@@ -55,7 +55,7 @@ import jmetal.util.JMException;
 public class MoDagameStudy extends Experiment {
 
     private static final String FILE_SEPARATOR = File.separator;
-    private static final int NUMBER_OF_THREADS = 4;
+    private static final int NUMBER_OF_THREADS = 1;
 
     private StoppingCondition stoppingCondition;
 	private int stoppingValue;
@@ -103,26 +103,25 @@ public class MoDagameStudy extends Experiment {
             ObjectivesValuesParser.parse(objFile, fm);
             Configuration seed = ConfigurationParser.parse(seedFile, fm);
 
-            algorithm[0] =
-                    new MoDagameNSGAIIsettings(problemName, fm, seed).configure(parameters[0]);
+            //algorithm[0] = new MoDagameNSGAIIsettings(problemName, fm, seed).configure(parameters[0]);
             
 
             //Configure an algorithm run with an instrumenter and termination condition type
     		this.toolInstrumenter = new ToolInstrumenter(fm.getNumberOfObjectives(), 0, "MoDagame", "modagame-results", 1);
     		
-            algorithm[1] = new MoDagameIBEAsettings(problemName, fm, seed, this.stoppingCondition, this.stoppingValue, toolInstrumenter).configure(parameters[1]);
+            algorithm[0] = new MoDagameIBEAsettings(problemName, fm, seed, this.stoppingCondition, this.stoppingValue, toolInstrumenter).configure(parameters[0]);
     		//algorithm[1] = new MoDagameIBEAsettings(problemName, fm, seed, this.stoppingCondition, this.stoppingValue, toolInstrumenter).configure();
             
             //toolInstrumenter.serialiseAccumulator();
             
             
-            algorithm[2] =
-                    new MoDagameMOCHCsettings(problemName, fm, seed).configure(parameters[2]);
-            algorithm[3] =
-                    new MoDagameMOCELLsettings(problemName, fm, seed).configure(parameters[3]);
-            algorithm[4] = new MoDagamePAESsettings(problemName, fm, seed).configure(parameters[4]);
-            algorithm[5] =
-                    new MoDagameSPEA2settings(problemName, fm, seed).configure(parameters[5]);
+//            algorithm[2] =
+//                    new MoDagameMOCHCsettings(problemName, fm, seed).configure(parameters[2]);
+//            algorithm[3] =
+//                    new MoDagameMOCELLsettings(problemName, fm, seed).configure(parameters[3]);
+//            algorithm[4] = new MoDagamePAESsettings(problemName, fm, seed).configure(parameters[4]);
+//            algorithm[5] =
+//                    new MoDagameSPEA2settings(problemName, fm, seed).configure(parameters[5]);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(MoDagameStudy.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -165,7 +164,8 @@ public class MoDagameStudy extends Experiment {
         exp.experimentName_ = args[0];
         exp.experimentBaseDirectory_ = args[1] + FILE_SEPARATOR + exp.experimentName_;
 
-        exp.algorithmNameList_ = new String[]{"MoDagameNSGAII", "MoDagameIBEA", "MoDagameMOCHC", "MoDagameMOCell", "MoDagamePAES", "MoDagameSPEA2"};
+        //exp.algorithmNameList_ = new String[]{"MoDagameNSGAII", "MoDagameIBEA", "MoDagameMOCHC", "MoDagameMOCell", "MoDagamePAES", "MoDagameSPEA2"};
+        exp.algorithmNameList_ = new String[]{"MoDagameIBEA"};
 
         File modelsFolder = new File(exp.experimentBaseDirectory_ +
                 FILE_SEPARATOR + "models");
@@ -209,7 +209,7 @@ public class MoDagameStudy extends Experiment {
         exp.generateQualityIndicators(8);
 
         // Generate latex tables
-        exp.generateLatexTables();
+        //exp.generateLatexTables();
 
         // Configure the R scripts to be generated
         int rows = 1;
