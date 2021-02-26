@@ -39,7 +39,7 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 	private int nFeat;
 	private List<Integer> mandatoryFeaturesIndices, deadFeaturesIndices;
 	int n = 0;
-	private List<Integer> seed;
+	private int[] seed;
 	private List<Rule> appliedRules;
 
 	public List<Rule> getAppliedRules() {
@@ -54,7 +54,7 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 	private static Random r = new Random();
 
 	public aCaPulCO_BinarySolution(Problem problem, int nFeat, String fm, List<Integer> mandatoryFeaturesIndices,
-			List<Integer> deadFeaturesIndices, List<Integer> seed, List<Rule> appliedRules, List<Integer> firmVariables,
+			List<Integer> deadFeaturesIndices, int[] seed, List<Rule> appliedRules, List<Integer> firmVariables,
 			List<List<Integer>> constraints) throws ClassNotFoundException {
 		super(problem);
 		this.nFeat = nFeat;
@@ -74,16 +74,17 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 
 		if (r.nextBoolean()) {
 			for (int j = 0; j < bin.getNumberOfBits(); j++) {
-				bin.setIth(j, seed.contains(j+1));
+//				bin.setIth(j, seed.contains(j+1));
+				bin.setIth(j, seed[j]==1);
 			}
 
-			for (Integer f : this.mandatoryFeaturesIndices) {
-				bin.setIth(f, true);
-			}
-
-			for (Integer f : this.deadFeaturesIndices) {
-				bin.setIth(f, false);
-			}
+//			for (Integer f : this.mandatoryFeaturesIndices) {
+//				bin.setIth(f, true);
+//			}
+//
+//			for (Integer f : this.deadFeaturesIndices) {
+//				bin.setIth(f, false);
+//			}
 		} else {
 			try {
 				mutationOfInitialSolution.doMutation(bin);

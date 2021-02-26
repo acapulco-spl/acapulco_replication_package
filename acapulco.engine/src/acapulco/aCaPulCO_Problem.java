@@ -25,7 +25,7 @@ public class aCaPulCO_Problem extends Problem {
     private static int n = 0;
     private List<Integer> mandatoryFeaturesIndices, deadFeaturesIndices;
     public static List<Integer> featureIndicesAllowedFlip;
-    private List<Integer> seed;
+    private int[] seed;
 
     
     private static final int N_VARS = 1, N_OBJS = 5;
@@ -200,10 +200,7 @@ public class aCaPulCO_Problem extends Problem {
     }
     
     public void loadSeed(String seedfile) throws Exception{
-        
-        seed = new ArrayList<Integer>(numFeatures);
-        
-        Binary bin = new Binary(numFeatures);
+        seed = new int[numFeatures];
         
         BufferedReader in = new BufferedReader(new FileReader(seedfile));
         String line;
@@ -212,7 +209,8 @@ public class aCaPulCO_Problem extends Problem {
             StringTokenizer st = new StringTokenizer(line, " ");
             while(st.hasMoreElements()){
                 int i = Integer.parseInt(st.nextToken());
-                seed.add(i);
+                int iAbs = (i>0)?i:-i;
+                seed[iAbs-1] = (i>0)?1:-1;
             }
         }
         in.close();
