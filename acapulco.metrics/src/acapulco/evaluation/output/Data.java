@@ -8,14 +8,16 @@ public class Data {
 	private double[][] approximationSet;
 	private double[][] population;
 	private int populationSize;
+	private int numberOfInvalidSolutions;
 	
-	public Data(int nfe, double elapsedTime, double[][] approximationSet, double[][] population, int populationSize) {
+	public Data(int nfe, double elapsedTime, double[][] approximationSet, double[][] population, int populationSize, int invalidSolutions) {
 		super();
 		this.nfe = nfe;
 		this.elapsedTime = elapsedTime;
 		this.approximationSet = approximationSet;
 		this.population = population;
 		this.populationSize = populationSize;
+		this.numberOfInvalidSolutions = invalidSolutions;
 	}
 
 	public int getNfe() {
@@ -58,10 +60,19 @@ public class Data {
 		this.populationSize = populationSize;
 	}
 
+	
+	public int getNumberOfInvalidSolutions() {
+		return numberOfInvalidSolutions;
+	}
+
+	public void setNumberOfInvalidSolutions(int numberOfInvalidSolutions) {
+		this.numberOfInvalidSolutions = numberOfInvalidSolutions;
+	}
+
 	@Override
 	public String toString() {
 		return "Data [nfe=" + nfe + ", elapsedTime=" + elapsedTime + ", approximationSet="
 				+ Arrays.toString(approximationSet) + ", population=" + Arrays.toString(population)
-				+ ", populationSize=" + populationSize + "]";
+				+ ", populationSize=" + populationSize + numberOfInvalidSolutions + "]";
 	}
 }
