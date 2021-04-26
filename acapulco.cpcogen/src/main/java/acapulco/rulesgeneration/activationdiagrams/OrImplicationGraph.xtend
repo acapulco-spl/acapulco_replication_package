@@ -196,6 +196,7 @@ class OrImplicationGraph {
 				result -= feature
 				result.forEach [ cycleFeature |
 					internalCycleEntries.get(cycleFeature) += cycleEntriesForFeature
+					internalCycleEntries.get(cycleFeature) -= comingFrom
 				]
 			} else {
 				/*
@@ -211,6 +212,7 @@ class OrImplicationGraph {
 					cycleEntriesForLoopedFeature += nodesToAdd
 					cycleEntriesForLoopedFeature -= comingFrom
 				]
+				System.err.println("Entered the second branch")
 			}
 
 			result
