@@ -36,11 +36,10 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 
 	private static SATIBEA_Mutation mutationOfInitialSolution;
 
-	private String fm;
 	private int nFeat;
 	private List<Integer> mandatoryFeaturesIndices, deadFeaturesIndices;
 	int n = 0;
-	private List<Integer> seed;
+	private int[] seed;
 	private List<Rule> appliedRules;
 
 	public List<Rule> getAppliedRules() {
@@ -55,10 +54,9 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 	private static Random r = new Random();
 
 	public aCaPulCO_BinarySolution(Problem problem, int nFeat, String fm, List<Integer> mandatoryFeaturesIndices,
-			List<Integer> deadFeaturesIndices, List<Integer> seed, List<Rule> appliedRules, List<Integer> firmVariables,
+			List<Integer> deadFeaturesIndices, int[] seed, List<Rule> appliedRules, List<Integer> firmVariables,
 			List<List<Integer>> constraints) throws ClassNotFoundException {
 		super(problem);
-		this.fm = fm;
 		this.nFeat = nFeat;
 		this.mandatoryFeaturesIndices = mandatoryFeaturesIndices;
 		this.deadFeaturesIndices = deadFeaturesIndices;
@@ -70,22 +68,23 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 	}
 
 	public Variable[] createVariables() {
-		Variable[] vars = new Variable[3];
+		Variable[] vars = new Variable[2];
 
 		Binary bin = new Binary(nFeat);
 
 		if (r.nextBoolean()) {
 			for (int j = 0; j < bin.getNumberOfBits(); j++) {
-				bin.setIth(j, seed.contains(j+1));
+//				bin.setIth(j, seed.contains(j+1));
+				bin.setIth(j, seed[j]==1);
 			}
 
-			for (Integer f : this.mandatoryFeaturesIndices) {
-				bin.setIth(f, true);
-			}
-
-			for (Integer f : this.deadFeaturesIndices) {
-				bin.setIth(f, false);
-			}
+//			for (Integer f : this.mandatoryFeaturesIndices) {
+//				bin.setIth(f, true);
+//			}
+//
+//			for (Integer f : this.deadFeaturesIndices) {
+//				bin.setIth(f, false);
+//			}
 		} else {
 			try {
 				mutationOfInitialSolution.doMutation(bin);
@@ -98,7 +97,6 @@ public class aCaPulCO_BinarySolution extends BinarySolutionType {
 		vars[0] = bin;
 
 		vars[1] = new ArrayInt(0);
-		vars[2] = new ArrayInt(0);
 
 		return vars;
 	}

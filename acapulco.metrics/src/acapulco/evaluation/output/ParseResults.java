@@ -89,17 +89,19 @@ public class ParseResults {
 				double elapsedTime = Double.parseDouble(line[1].trim());
 				double[][] approximationSet = null;
 				double[][] population = null;
+				int invalidSolutions = 0;
 				if (tool.equalsIgnoreCase("modagame")) {
 					approximationSet = solutionSetToArraySimple(line[2].trim());
 					population = solutionSetToArraySimple(line[3].trim());
 				} else {
 					approximationSet = solutionSetToArray(line[2].trim());
 					population = solutionSetToArray(line[3].trim());	
+					invalidSolutions = getNumberOfInvalidSolutions(line[2].trim());
 				}
 				
 				int populationSize = Integer.parseInt(line[4].trim());
 			
-				Data data = new Data(nfe, elapsedTime, approximationSet, population, populationSize);
+				Data data = new Data(nfe, elapsedTime, approximationSet, population, populationSize, invalidSolutions);
 				results.put(nfe, data);
 			}
 			csvReader.close();
@@ -145,6 +147,21 @@ public class ParseResults {
 			}
 		}
 		return results.toArray(new double[results.size()][]);
+	}
+	
+	public static int getNumberOfInvalidSolutions(String solutionSet) {
+		if (solutionSet.equals("[]")) {
+			return 0;
+		}
+		int invalidSolutions = 0;
+		String[] sols = solutionSet.split(", ");
+		for (int s = 0; s < sols.length; s++) {
+			String[] values = sols[s].split(",");
+			if (!values[0].equals("[0.0")) {
+				invalidSolutions += 1;
+			}
+		}
+		return invalidSolutions;
 	}
 	
 	/**

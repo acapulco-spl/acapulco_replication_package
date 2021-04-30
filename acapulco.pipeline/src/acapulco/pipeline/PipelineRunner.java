@@ -16,21 +16,24 @@ import satibea.SATIBEA_Main;
 
 public class PipelineRunner {
 	public static void main(String[] args) throws IOException {
-//		boolean prepare = true; 		boolean run = false;
-		boolean prepare = false ; 		boolean run = true;
+		boolean prepare = true; 		boolean run = false;
+//		boolean prepare = false ; 		boolean run = true;
 
 		String inputPath = "input";
 		String generatedPath = "generated";
 
 //		String fmNameInput = "ad-test-1";		String fmNameCanonical = "test1";
-		String fmNameInput = "TankWar";			String fmNameCanonical = "tankwar";
-//		String fmNameInput = "WeaFQAs";			String fmNameCanonical = "weafqas";
+//		String fmNameInput = "TankWar";			String fmNameCanonical = "tankwar";
+		String fmNameInput = "WeaFQAs";			String fmNameCanonical = "weafqas";
 //		String fmNameInput = "mobile_media2";	String fmNameCanonical = "mobilemedia";
 		
 		if (prepare) {
 			FeatureModel fm = FeatureIDEUtils.loadFeatureModel(Paths.get(inputPath+"/"+fmNameInput+".sxfm.xml").toString());
 			PreparationPipeline.generateAllFromFm(inputPath, fmNameInput, fmNameCanonical, "generated");
+			long time = System.currentTimeMillis();
 			CpcoGenerator.generatorCPCOs(fm, fmNameCanonical, generatedPath);
+			long time2 = System.currentTimeMillis() - time;
+			System.out.println("time: " +time2);
 		}
 
 		if (run) {

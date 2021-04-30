@@ -56,7 +56,23 @@ public class Results {
 	public int getNumberOfSolutions(int run, int nfe) {
 		return getParetoFront(run, nfe).length;
 	}
+	
+	public int getNumberOfInvalidSolutions(int run, int nfe) {
+		Map<Integer, Data> nfeData = results.get(run); 
+		if (!nfeData.containsKey(nfe)) {
+			return -1;
+		}
+		return nfeData.get(nfe).getNumberOfInvalidSolutions();
+	}
 
+	public double[] getNumberOfInvalidSolutions(int nfe) {
+		List<Double> is = new ArrayList<Double>(results.size());
+		for (Integer run : results.keySet()) {
+			is.add((double) getNumberOfInvalidSolutions(run, nfe));
+		}
+		return Doubles.toArray(is);	
+	}
+	
 	public int getNumberOfObjectives(int run, int nfe) {
 		return getParetoFront(run, nfe)[0].length;
 	}
@@ -144,7 +160,7 @@ public class Results {
 			String[] headers = {"NFE", "Runs", 
 								"Time Median (s)", "Time Mean (s)", "Time SD (s)", 
 								"Hypervolume Median", "Hypervolume Mean", "Hypervolume SD",
-								"Solutions", "ParetoFront"};
+								"Solutions", "ParetoFront", "InvalidSolutions Median", "InvalidSolutions Mean", "InvalidSolutions SD"};
 			
 			String headerLine = String.join(",", headers);
 			bw.write(headerLine);
@@ -156,9 +172,11 @@ public class Results {
 				double[] hvs = getHypervolumes(nfe);
 				double[][] pf = getParetoFront(maxRun, nfe);
 				int sols = getNumberOfSolutions(maxRun, nfe);
+				double[] invalidSols = getNumberOfInvalidSolutions(nfe);
 			
 				Stats timeStats = new Stats(times);
 				Stats hvStats = new Stats(hvs);
+				Stats invalidSolsStats = new Stats(invalidSols);
 				
 				// CSV Line
 				String line = String.join(",", 
@@ -171,7 +189,11 @@ public class Results {
 										  String.valueOf(hvStats.getMean()),
 										  String.valueOf(hvStats.getStandardDeviation()),		
 										  String.valueOf(sols),
-										  getParetoFrontRepresentation(pf));
+										  getParetoFrontRepresentation(pf),
+										  String.valueOf(invalidSolsStats.getMedian()),
+										  String.valueOf(invalidSolsStats.getMean()),
+										  String.valueOf(invalidSolsStats.getStandardDeviation())
+										  );
 				bw.write(line);
 				bw.newLine();
 			}
@@ -207,7 +229,7 @@ public class Results {
 								"Time Median (s)", "Time Mean (s)", "Time SD (s)", 
 								"HV Median", "HV Mean", "HV SD",
 								"GD Median", "GD Mean", "GD SD",
-								"Solutions", "ParetoFront"};
+								"Solutions", "ParetoFront", "InvalidSolutions Median", "InvalidSolutions Mean", "InvalidSolutions SD"};
 			
 			String headerLine = String.join(",", headers);
 			bw.write(headerLine);
@@ -221,10 +243,12 @@ public class Results {
 					double[] hvs = getHypervolumes(nfe, paretotruefront);
 					double[] gds = getGenerationalDistances(nfe, paretotruefront);
 					int sols = getNumberOfSolutions(maxRun, nfe);
-				
+					double[] invalidSols = getNumberOfInvalidSolutions(nfe);
+					
 					Stats timeStats = new Stats(times);
 					Stats hvStats = new Stats(hvs);
 					Stats gdStats = new Stats(gds);
+					Stats invalidSolsStats = new Stats(invalidSols);
 					
 					// CSV Line
 					String line = String.join(",", 
@@ -246,7 +270,10 @@ public class Results {
 											  String.valueOf(gdStats.getMean()),
 											  String.valueOf(gdStats.getStandardDeviation()),	
 											  String.valueOf(sols),
-											  getParetoFrontRepresentation(pf));
+											  getParetoFrontRepresentation(pf),
+											  String.valueOf(invalidSolsStats.getMedian()),
+											  String.valueOf(invalidSolsStats.getMean()),
+											  String.valueOf(invalidSolsStats.getStandardDeviation()));
 					bw.write(line);
 					bw.newLine();
 				//}
@@ -279,7 +306,7 @@ public class Results {
 			String[] headers = {"Run", "NFE", 
 								"Time (s)", 
 								"Hypervolume",
-								"Solutions", "ParetoFront"};
+								"Solutions", "ParetoFront", "InvalidSolutions"};
 			
 			String headerLine = String.join(",", headers);
 			bw.write(headerLine);
@@ -291,6 +318,7 @@ public class Results {
 				double hv = getHypervolume(run, nfe);
 				double[][] pf = getParetoFront(run, nfe);
 				int sols = getNumberOfSolutions(run, nfe);
+				int invalidSols = getNumberOfInvalidSolutions(run, nfe);
 				
 				// CSV Line
 				String line = String.join(",", 
@@ -299,7 +327,8 @@ public class Results {
 										  String.valueOf(time),
 										  String.valueOf(hv),
 										  String.valueOf(sols),
-										  getParetoFrontRepresentation(pf));
+										  getParetoFrontRepresentation(pf),
+										  String.valueOf(invalidSols));
 				bw.write(line);
 				bw.newLine();
 			}
@@ -334,7 +363,7 @@ public class Results {
 								"Time (s)", 
 								"HV",
 								"GD",
-								"Solutions", "ParetoFront"};
+								"Solutions", "ParetoFront", "InvalidSolutions"};
 			
 			String headerLine = String.join(",", headers);
 			bw.write(headerLine);
@@ -349,6 +378,7 @@ public class Results {
 					double gd = getGenerationalDistance(run, nfe, paretotruefront);
 					
 					int sols = getNumberOfSolutions(run, nfe);
+					int invalidSols = getNumberOfInvalidSolutions(run, nfe);
 					
 					// CSV Line
 					String line = String.join(",", 
@@ -360,7 +390,8 @@ public class Results {
 											  String.valueOf(hv),
 											  String.valueOf(gd),
 											  String.valueOf(sols),
-											  getParetoFrontRepresentation(pf));
+											  getParetoFrontRepresentation(pf),
+											  String.valueOf(invalidSols));
 					bw.write(line);
 					bw.newLine();
 				//}
