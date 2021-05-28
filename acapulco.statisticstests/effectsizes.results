@@ -1,0 +1,300 @@
+> setwd("C:\\Users\\danie\\git\\acapulco\\acapulco.statisticstests")
+> 
+> #install.packages("effsize")
+> library(effsize)
+> 
+> cases <- c(
++ "wget",
++ "tankwar",
++ "mobile_media2",
++ "weafqas",
++ "busybox-1.18.0",
++ "ea2468",
++ "embtoolkit",
++ "uclinux-distribution",
++ "linux-2.6.33.3",
++ "automotive2_1"
++ )
+> 
+> print(paste("Effect size computations for HV"))
+[1] "Effect size computations for HV"
+> 
+> for(case in cases) {
++ colname = "HV"
++ print(paste("Case:",case))
++ 
++ acapulco_data = read.csv(paste("results//acapulco_",case,"_30runs_results.dat", sep=""))
++ satibea_data = read.csv(paste("results//satibea_",case,"_30runs_results.dat", sep=""))
++ 
++ print("Comparison: acapulco vs. satibea")
++ print(VD.A(unlist(acapulco_data[col]),unlist(satibea_data[col])))
++ 
++ if (case != "automotive2_1" && case != "linux-2.6.33.3") { 
++ modagame_data = read.csv(paste("results//modagame_",case,"_30runs_results.dat", sep=""))
++ print("Comparison:  acapulco vs. modagame")
++ print(VD.A(unlist(acapulco_data[col]),unlist(modagame_data[col])))
++ }
++ }
+[1] "Case: wget"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.9322222 (large)
+
+[1] "Case: tankwar"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.1066667 (large)
+
+[1] "Case: mobile_media2"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.05222222 (large)
+
+[1] "Case: weafqas"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Case: busybox-1.18.0"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0 (large)
+
+[1] "Case: ea2468"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0 (large)
+
+[1] "Case: embtoolkit"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0 (large)
+
+[1] "Case: uclinux-distribution"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0 (large)
+
+[1] "Case: linux-2.6.33.3"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03111111 (large)
+
+[1] "Case: automotive2_1"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0 (large)
+
+> 
+> 
+> 
+> print(paste("Effect size computations for Time"))
+[1] "Effect size computations for Time"
+> 
+> for(case in cases) {
++ colname = "Time .s.."
++ print(paste("Case:",case))
++ 
++ acapulco_data = read.csv(paste("results//acapulco_",case,"_30runs_results.dat", sep=""))
++ satibea_data = read.csv(paste("results//satibea_",case,"_30runs_results.dat", sep=""))
++ 
++ print("Comparison: acapulco vs. satibea")
++ print(VD.A(unlist(satibea_data[col]),unlist(acapulco_data[col])))
++ 
++ if (case != "automotive2_1" && case != "linux-2.6.33.3") { 
++ modagame_data = read.csv(paste("results//modagame_",case,"_30runs_results.dat", sep=""))
++ print("Comparison:  acapulco vs. modagame")
++ print(VD.A(unlist(modagame_data[col]),unlist(acapulco_data[col])))
++ }
++ }
+[1] "Case: wget"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.06777778 (large)
+
+[1] "Case: tankwar"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.8933333 (large)
+
+[1] "Case: mobile_media2"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.9477778 (large)
+
+[1] "Case: weafqas"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Case: busybox-1.18.0"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 1 (large)
+
+[1] "Case: ea2468"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.03222222 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 1 (large)
+
+[1] "Case: embtoolkit"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 1 (large)
+
+[1] "Case: uclinux-distribution"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9677778 (large)
+
+[1] "Comparison:  acapulco vs. modagame"
+
+Vargha and Delaney A
+
+A estimate: 1 (large)
+
+[1] "Case: linux-2.6.33.3"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 0.9688889 (large)
+
+[1] "Case: automotive2_1"
+[1] "Comparison: acapulco vs. satibea"
+
+Vargha and Delaney A
+
+A estimate: 1 (large)
+
+> 
+> 
+> local({fn<-choose.files(filters=Filters[c('R','txt','All'),],index=4)
++ file.show(fn,header=fn,title='')})
+> 
