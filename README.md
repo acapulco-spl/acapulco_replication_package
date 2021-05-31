@@ -7,7 +7,7 @@ Consistency-preserving configuration operators (CPCOs) are mutation  operators  
 ## Project structure
 This repository is organized into three parts:
 - **aCaPulCO**: A  new  search-based optimization tool  based  on  the CPCOs. aCaPulCO implements the IBEA algorithm with custom mutation and crossover operators that apply the CPCOs to a binary vector-based encoding o fconfigurations. CPCOs are represented as transformation rules in the model transformation language [Henshin](https://www.eclipse.org/henshin/).
-- [**Comparator tools**]: The two state-of-the-art tools for multi-objective optimization in software product lines: [MODAGAME](http://caosd.lcc.uma.es/famware/tools/) and [SATIBEA](https://research.henard.net/SPL/ICSE_2015/). This contains the adaptations performed in terms of quality attributes, algorithms and parameters settings, in order to enable a fair comparison between the tools.
+- **Comparator tools**: The two state-of-the-art tools for multi-objective optimization in software product lines: [MODAGAME](http://caosd.lcc.uma.es/famware/tools/) and [SATIBEA](https://research.henard.net/SPL/ICSE_2015/). This contains the adaptations performed in terms of quality attributes, algorithms and parameters settings, in order to enable a fair comparison between the tools.
 - **Results**: Complete experimentation results.
 
 The image below explains the project structure ([editable source](https://docs.google.com/presentation/d/1zrxTfQnYK6VBkblaSKF1hr0gAGKRlGz8-E12-qcwU3g/edit#slide=id.p)).

@@ -7,7 +7,7 @@ import scipy.stats
 tools = ['acapulco', 'modagame', 'satibea']
 
 
-dataFiles = ['wget', 'tankwar', 'mobile_media2', 'weafqas', 'busybox-1.18.0', 'embtoolkit', 'uclinux-distribution']
+dataFiles = ['wget', 'tankwar', 'mobile_media2', 'weafqas', 'busybox-1.18.0', 'embtoolkit', 'uclinux-distribution', 'ea2468']
 
 	
 
@@ -44,7 +44,7 @@ def case_study(name, AcapulcoDataFile, modagameDataFile, satibeaDataFile):
 
 	# Acapulco vs MODAGAME
 	statistics, pvalue = scipy.stats.mannwhitneyu(Acapulco_hv, modagame_hv, False, 'greater')
-	print("HD: Acapulco vs MODAGAME -> stats: " + str(statistics) + " , p:" + str(pvalue))
+	print("HV: Acapulco vs MODAGAME -> stats: " + str(statistics) + " , p:" + str(pvalue))
 	alpha = 0.05
 	if pvalue > alpha:
 		print('Same distribution (fail to reject H0) for alpha: ' + str(alpha))
@@ -53,7 +53,7 @@ def case_study(name, AcapulcoDataFile, modagameDataFile, satibeaDataFile):
 
 	# Acapulco vs SATIBEA
 	statistics, pvalue = scipy.stats.mannwhitneyu(Acapulco_hv, satibea_hv, False, 'greater')
-	print("HD: Acapulco vs SATIBEA -> stats: " + str(statistics) + " , p:" + str(pvalue))
+	print("HV: Acapulco vs SATIBEA -> stats: " + str(statistics) + " , p:" + str(pvalue))
 	alpha = 0.05
 	if pvalue > alpha:
 		print('Same distribution (fail to reject H0) for alpha: ' + str(alpha))
@@ -65,7 +65,7 @@ def case_study(name, AcapulcoDataFile, modagameDataFile, satibeaDataFile):
 	print()
 	# Acapulco vs MODAGAME
 	statistics, pvalue = scipy.stats.mannwhitneyu(modagame_hv, Acapulco_hv, False, 'greater')
-	print("HD: MODAGAME vs Acapulco -> stats: " + str(statistics) + " , p:" + str(pvalue))
+	print("HV: MODAGAME vs Acapulco -> stats: " + str(statistics) + " , p:" + str(pvalue))
 	alpha = 0.05
 	if pvalue > alpha:
 		print('Same distribution (fail to reject H0) for alpha: ' + str(alpha))
@@ -74,7 +74,7 @@ def case_study(name, AcapulcoDataFile, modagameDataFile, satibeaDataFile):
 
 	# Acapulco vs SATIBEA
 	statistics, pvalue = scipy.stats.mannwhitneyu(satibea_hv, Acapulco_hv, False, 'greater')
-	print("HD: SATIBEA vs Acapulco -> stats: " + str(statistics) + " , p:" + str(pvalue))
+	print("HV: SATIBEA vs Acapulco -> stats: " + str(statistics) + " , p:" + str(pvalue))
 	alpha = 0.05
 	if pvalue > alpha:
 		print('Same distribution (fail to reject H0) for alpha: ' + str(alpha))
@@ -182,7 +182,7 @@ def case_study2(name, AcapulcoDataFile, satibeaDataFile):
 
 	# Acapulco vs SATIBEA
 	statistics, pvalue = scipy.stats.mannwhitneyu(Acapulco_hv, satibea_hv, False, 'greater')
-	print("HD: Acapulco vs SATIBEA -> stats: " + str(statistics) + " , p:" + str(pvalue))
+	print("HV: Acapulco vs SATIBEA -> stats: " + str(statistics) + " , p:" + str(pvalue))
 	alpha = 0.05
 	if pvalue > alpha:
 		print('Same distribution (fail to reject H0) for alpha: ' + str(alpha))
@@ -194,7 +194,7 @@ def case_study2(name, AcapulcoDataFile, satibeaDataFile):
 	print()
 	# Acapulco vs SATIBEA
 	statistics, pvalue = scipy.stats.mannwhitneyu(satibea_hv, Acapulco_hv, False, 'greater')
-	print("HD: SATIBEA vs Acapulco -> stats: " + str(statistics) + " , p:" + str(pvalue))
+	print("HV: SATIBEA vs Acapulco -> stats: " + str(statistics) + " , p:" + str(pvalue))
 	alpha = 0.05
 	if pvalue > alpha:
 		print('Same distribution (fail to reject H0) for alpha: ' + str(alpha))
