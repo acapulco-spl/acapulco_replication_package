@@ -21,7 +21,10 @@ The image below explains the project structure ([editable source](https://docs.g
 ## Execution and experiment replication
 1. Clone/Download this repository.
 2. Import all projects into Eclipse.
-3. The entrypoint is located at *acapulco.pipeline.PipelineRunnerExternal*. Execute it with the following program arguments:
+3. Dependencies.
+    - [Eclipse Henshin](https://www.eclipse.org/henshin/) is needed. Version 1.7.0 was used. The required plugin is `org.eclipse.emf.henshin.model`.
+    - [Eclipse Xtend](https://www.eclipse.org/xtend) is needed to build the `acapulco.cpcogen` project. Version 2.26.0 was used.
+4. The entrypoint is located at *acapulco.pipeline.PipelineRunnerExternal*. Execute it with the following program arguments:
     - To generate all required artifacts for the tools (models, quality attributes,...) including our CPCOs for aCaPulCO:
 
         `-p -fm <feature_model_name>`
@@ -42,7 +45,7 @@ The image below explains the project structure ([editable source](https://docs.g
 
         `<stopping_condition>`: use `evols` for a number of evolutions (default), or `time` for a specific timeout.
 
-        `<stopping_value>` is an integer number: in case of `evols` as stopping condition it represents the number of evolutions (default 50), in case of `time` it represents the timeout in seconds.
+        `<stopping_value>` is an integer number: in case of `evols` as stopping condition it represents the number of evolutions (default 50), in case of `time` it represents the timeout in milliseconds.
 
         `<runs>`: an integer specifing the number of runs to be performed.
 
