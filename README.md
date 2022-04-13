@@ -1,4 +1,7 @@
 # Consistency-Preserving Operators for Efficient Product Line Configuration
+
+**Replication package**  [![DOI](https://zenodo.org/badge/306005002.svg)](https://zenodo.org/badge/latestdoi/306005002)
+
 This repository contains all the resources and artifacts of the paper entitled *We're Not Gonna Break It! Consistency-Preserving Operators for Efficient Product Line Configuration*.
 
 Consistency-preserving configuration operators (CPCOs) are mutation  operators  that  bundle  coherent  sets of  changes in a feature model configuration,  specifically,  the  activation  or  deactivation  of  a particular feature together with other (de)activations that are needed to preserve validity.
